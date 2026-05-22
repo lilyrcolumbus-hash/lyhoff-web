@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Static-assets deployment (Cloudflare Workers + Static Assets), same model as
+  // kdp-book-factory. `npm run build` produces ./out; this serves it as-is.
+  // No OpenNext / server runtime — the site is a fully static export.
+  "name": "smartgrowth-web",
+  "compatibility_date": "2026-05-22",
+  "assets": {
+    "directory": "./out",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}

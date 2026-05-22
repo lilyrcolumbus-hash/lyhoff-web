@@ -169,6 +169,7 @@ export const dictionary: Record<Locale, Dict> = {
 export const t = (locale: Locale) => dictionary[locale];
 
 // Single source of truth for the production URL (used for SEO/canonical/sitemap).
-// Swap this to the custom domain (e.g. https://smartgrowth.farm) when it's connected.
-export const SITE_URL = "https://smartgrowth.pages.dev";
+// Currently the Cloudflare Workers Static Assets URL; swap to the custom domain
+// (e.g. https://smartgrowth.farm) when it's connected.
+export const SITE_URL = "https://smartgrowth-web.lilyrcolumbus.workers.dev";
 export const SITE_NAME = "SmartGrowth";
