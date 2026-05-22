@@ -1,0 +1,3 @@
+# Cloudflare Pages redirects. The root index.html (generated in postbuild) does
+# language-aware redirection client-side; this is an edge fallback.
+/  /en/  302

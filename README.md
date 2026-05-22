@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SmartGrowth — Website
 
-## Getting Started
+Bilingual (EN/ES) homesteading & self-sufficiency content site. It's the **destination for the SmartGrowth Pinterest pins**: each pin links to an article here (recipes, preserving, herbal, garden, off-grid).
 
-First, run the development server:
+- **Stack:** Next.js 16 (App Router, static export) · Tailwind v4 · MDX · Cloudflare Pages
+- **Newsletter:** Resend, via a Cloudflare Pages Function (`functions/api/subscribe.ts`)
+- **i18n:** `/en/…` and `/es/…` routes, language toggle, hreflang + sitemap
+
+## Develop
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev          # http://localhost:3000  (root redirects to /en)
+npm run build        # static export → ./out  (+ language-aware out/index.html)
+npm run preview      # serve the built ./out locally
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Add an article
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Create a folder under `content/articles/<slug>/`.
+2. Add `en.mdx` and `es.mdx`. Frontmatter schema:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```yaml
+---
+title: "Pinterest-friendly, keyword-front-loaded title"
+description: "140–160 char SEO description with the main keyword."
+category: "preserving"   # recipes | preserving | herbal | garden | offgrid
+tags: ["canning", "strawberry"]
+publishedAt: "2026-05-22"
+draft: true              # true = shows a 'Draft — pending review' badge
+featured: false          # true = appears in the homepage "Start here" row
+# heroImage: "/images/articles/<slug>/hero.jpg"   # 16:9, optional
+# pinImage:  "/images/articles/<slug>/pin.jpg"    # 2:3 vertical, used for Pinterest/OG
+---
 
-## Learn More
+Body in Markdown/MDX…
+```
 
-To learn more about Next.js, take a look at the following resources:
+The body is plain Markdown (headings, lists, **bold**, links, > quotes). Reading time is computed automatically.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Add real photos
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Without `heroImage`/`pinImage` the site shows a branded placeholder. To use real photos:
 
-## Deploy on Vercel
+1. Put files in `public/images/articles/<slug>/hero.jpg` and `pin.jpg`.
+2. Uncomment/add `heroImage` and `pinImage` in the article frontmatter.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`pinImage` should be a **tall 2:3 image** — it's what Pinterest and social cards use.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deploy to Cloudflare Pages
+
+Create a Pages project from this repo (or `wrangler pages deploy out`). Build settings:
+
+| Setting | Value |
+|---|---|
+| Build command | `npm run build` |
+| Build output directory | `out` |
+| Functions | auto-detected from `/functions` |
+
+### Environment variables (Cloudflare Pages → Settings → Variables)
+
+| Name | Required | Notes |
+|---|---|---|
+| `RESEND_API_KEY` | for newsletter | Resend API key |
+| `RESEND_AUDIENCE_ID` | for newsletter | Resend Audience to add contacts to |
+| `RESEND_FROM` | optional | e.g. `SmartGrowth <hello@smartgrowth.farm>` — sends a welcome email |
+
+If the Resend vars are missing, the signup form returns an honest error instead of faking success.
+
+## Connect the custom domain later
+
+1. Add the domain in Cloudflare Pages → Custom domains.
+2. Update `SITE_URL` in `lib/i18n.ts` to the real domain (e.g. `https://smartgrowth.farm`) so canonical URLs, hreflang and the sitemap are correct.
+3. Rebuild/redeploy.
+
+## Project layout
+
+```
+app/[lang]/            # all routes (en/es) — root layout sets <html lang>
+  page.tsx             # homepage
+  articles/[slug]/     # article page (SEO meta + JSON-LD + Save to Pinterest)
+  category/[category]/ # category listing
+  topics/              # all guides
+  about/               # about (draft — personalize)
+app/not-found.tsx      # global 404
+app/sitemap.ts         # sitemap.xml (with hreflang)
+app/robots.ts          # robots.txt
+components/             # Header, Footer, ArticleCard, Newsletter, Mdx, …
+content/articles/      # the MDX content
+functions/api/         # Cloudflare Pages Functions (newsletter)
+lib/i18n.ts            # locales, categories, UI strings, SITE_URL
+lib/content.ts         # MDX reader
+```
