@@ -7,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import {
   isLocale,
   locales,
+  PINTEREST_DOMAIN_VERIFY,
   SITE_NAME,
   SITE_URL,
   t,
@@ -53,6 +54,11 @@ export async function generateMetadata({
       locale: locale === "en" ? "en_US" : "es_ES",
       type: "website",
     },
+    // Pinterest domain verification (Rich Pins + Pinterest analytics). Renders
+    // <meta name="p:domain_verify" content="..."> only when the code is set.
+    ...(PINTEREST_DOMAIN_VERIFY
+      ? { other: { "p:domain_verify": PINTEREST_DOMAIN_VERIFY } }
+      : {}),
   };
 }
 

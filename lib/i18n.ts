@@ -173,3 +173,10 @@ export const t = (locale: Locale) => dictionary[locale];
 // (e.g. https://smartgrowth.farm) when it's connected.
 export const SITE_URL = "https://smartgrowth-web.lilyrcolumbus.workers.dev";
 export const SITE_NAME = "SmartGrowth";
+
+// Pinterest "Claim your website" verification. In Pinterest (business account) →
+// Settings → Claimed accounts → Claim a website → "Add HTML tag", copy ONLY the
+// content value of <meta name="p:domain_verify" content="THIS"> and paste it
+// here, then redeploy. Empty = nothing rendered. Enables Rich Pins + Pinterest
+// analytics for traffic coming from your pins.
+export const PINTEREST_DOMAIN_VERIFY = "";
