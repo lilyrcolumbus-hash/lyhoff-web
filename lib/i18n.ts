@@ -12,10 +12,10 @@ export const otherLocale = (l: Locale): Locale => (l === "en" ? "es" : "en");
 
 // Category slugs are English-based and shared across both languages (one URL per category).
 export type CategorySlug =
-  | "extracts"
+  | "garden"
+  | "food"
   | "bodycare"
-  | "mushrooms"
-  | "garden";
+  | "remedies";
 
 export interface Category {
   slug: CategorySlug;
@@ -26,39 +26,39 @@ export interface Category {
 
 export const categories: Category[] = [
   {
-    slug: "extracts",
-    emoji: "🌿",
-    label: { en: "Herbal Extracts & Tinctures", es: "Extractos y Tinturas Herbales" },
+    slug: "garden",
+    emoji: "🌱",
+    label: { en: "Garden & Plants", es: "Huerto y Plantas" },
     blurb: {
-      en: "Concentrated plant extracts and tinctures made from our own harvest.",
-      es: "Extractos y tinturas concentrados, hechos con nuestra propia cosecha.",
+      en: "Growing our own food and herbs, seed to harvest — the start of everything.",
+      es: "Cultivamos nuestra comida y hierbas, de la semilla a la cosecha — el inicio de todo.",
+    },
+  },
+  {
+    slug: "food",
+    emoji: "🍲",
+    label: { en: "Homemade Food & Preserving", es: "Comida Casera y Conservas" },
+    blurb: {
+      en: "What we cook, ferment and preserve (canning) from the garden.",
+      es: "Lo que cocinamos, fermentamos y conservamos (canning) de la cosecha.",
     },
   },
   {
     slug: "bodycare",
     emoji: "🧴",
-    label: { en: "Natural Skin & Body Care", es: "Cuidado Natural de Piel y Cuerpo" },
+    label: { en: "Skin & Hair Care", es: "Cuidado de Piel y Cabello" },
     blurb: {
-      en: "Handmade creams, body oils, face masks and sea-salt deodorant — all natural.",
-      es: "Cremas, aceites corporales, mascarillas y desodorante de sal marina, hechos a mano.",
+      en: "Creams, oils, masks and hair care we make ourselves — no chemicals.",
+      es: "Cremas, aceites, mascarillas y cuidado del cabello hechos por nosotros — sin químicos.",
     },
   },
   {
-    slug: "mushrooms",
-    emoji: "🍄",
-    label: { en: "Functional Mushrooms", es: "Hongos Funcionales" },
+    slug: "remedies",
+    emoji: "🌿",
+    label: { en: "Herbal Remedies & Extracts", es: "Remedios y Extractos Herbales" },
     blurb: {
-      en: "Lion's mane and other functional mushrooms — grown, dried, powdered and extracted.",
-      es: "Lion's mane y otros hongos funcionales — cultivados, secados, en polvo y extracto.",
-    },
-  },
-  {
-    slug: "garden",
-    emoji: "🌱",
-    label: { en: "Garden & Growing", es: "Huerto y Cultivo" },
-    blurb: {
-      en: "Growing the plants and ingredients behind everything we make.",
-      es: "Cómo cultivamos las plantas e ingredientes detrás de todo lo que hacemos.",
+      en: "Tinctures, extracts and functional mushrooms (like lion's mane) from our harvest.",
+      es: "Tinturas, extractos y hongos funcionales (como lion's mane) de nuestra cosecha.",
     },
   },
 ];
@@ -101,10 +101,10 @@ type Dict = {
 
 export const dictionary: Record<Locale, Dict> = {
   en: {
-    tagline: "Grown by us, made by hand.",
-    heroTitle: "Natural remedies & skincare, grown from scratch",
+    tagline: "Homemade. Natural. No chemicals.",
+    heroTitle: "Everything we make at home, naturally",
     heroSubtitle:
-      "Herbal extracts, handmade skincare and functional mushrooms — made from the plants we grow and harvest ourselves. Natural, organic, nothing synthetic.",
+      "We grow our own food and herbs and turn the harvest into what we actually use — meals, ferments and preserves, and our own skin, hair and herbal care. All organic and handmade, because we'd rather not buy the chemicals on the shelf.",
     heroCta: "Join the list",
     featured: "Start here",
     browseByTopic: "Browse by topic",
@@ -113,7 +113,7 @@ export const dictionary: Record<Locale, Dict> = {
     minRead: "min read",
     newsletterTitle: "Get the weekly homestead notes",
     newsletterBody:
-      "One short email a week: a remedy or product we made, what's growing right now, and a natural-living tip. No spam, unsubscribe anytime.",
+      "One short email a week: something we grew, cooked, fermented or brewed — and how you can too. Natural living, no chemicals, no spam. Unsubscribe anytime.",
     emailPlaceholder: "you@email.com",
     subscribe: "Subscribe",
     subscribing: "Subscribing…",
@@ -133,10 +133,10 @@ export const dictionary: Record<Locale, Dict> = {
     publishedOn: "Published",
   },
   es: {
-    tagline: "Cultivado por nosotros, hecho a mano.",
-    heroTitle: "Remedios naturales y cuidado de la piel, desde la raíz",
+    tagline: "Hecho en casa. Natural. Sin químicos.",
+    heroTitle: "Todo lo que hacemos en casa, natural",
     heroSubtitle:
-      "Extractos herbales, cuidado de la piel hecho a mano y hongos funcionales — hechos con las plantas que cultivamos y cosechamos nosotros mismos. Natural, orgánico, sin nada sintético.",
+      "Cultivamos nuestra propia comida y hierbas, y convertimos la cosecha en lo que de verdad usamos — comida, fermentos y conservas, y nuestro propio cuidado de piel, cabello y remedios. Todo orgánico y hecho a mano, porque preferimos no comprar los químicos del supermercado.",
     heroCta: "Únete a la lista",
     featured: "Empieza aquí",
     browseByTopic: "Explorar por tema",
@@ -145,7 +145,7 @@ export const dictionary: Record<Locale, Dict> = {
     minRead: "min de lectura",
     newsletterTitle: "Recibe las notas semanales de la finca",
     newsletterBody:
-      "Un correo corto por semana: un remedio o producto que hicimos, qué está creciendo ahora, y un consejo de vida natural. Sin spam, cancela cuando quieras.",
+      "Un correo corto por semana: algo que cultivamos, cocinamos, fermentamos o preparamos — y cómo tú también puedes. Vida natural, sin químicos, sin spam. Cancela cuando quieras.",
     emailPlaceholder: "tu@correo.com",
     subscribe: "Suscribirme",
     subscribing: "Suscribiendo…",

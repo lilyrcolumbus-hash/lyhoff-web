@@ -25,18 +25,18 @@ const copy: Record<Locale, { title: string; draft: string; body: string[] }> = {
     title: "About SmartGrowth",
     draft: "Draft — review and personalize before launch.",
     body: [
-      "SmartGrowth is a small, hands-on operation making natural remedies and personal-care products from the plants we grow and harvest ourselves.",
-      "We make herbal extracts and tinctures, handmade skincare — creams, body oils and face masks — and natural personal care like sea-salt deodorant. We also grow and process functional mushrooms such as lion's mane into powders and extracts. When a recipe needs an ingredient we can't grow, we source it natural and organic.",
-      "Everything is organic, made by hand, in small batches. This is where we share what we make and how we grow it.",
+      "SmartGrowth is the two of us making everything we use at home — naturally, by hand, from what we grow.",
+      "It started with a simple decision: we didn't want the chemicals packed into so much of what's sold here, so we learned to make it ourselves. We grow our own food and herbs, then turn the harvest into meals, ferments and preserves (canning), and our own skin, hair and herbal care — with our own tools and plenty of trial and error.",
+      "This is where we share all of it: what we grow, what we cook and put up, and what we make for our bodies — what worked, what didn't, and how you can do it too. Real, organic, honest. No chemicals, no perfect homestead — just the good stuff, made at home.",
     ],
   },
   es: {
     title: "Sobre SmartGrowth",
     draft: "Borrador — revísalo y personalízalo antes de lanzar.",
     body: [
-      "SmartGrowth es un proyecto pequeño y artesanal donde hacemos remedios naturales y productos de cuidado personal con las plantas que cultivamos y cosechamos nosotros mismos.",
-      "Hacemos extractos y tinturas herbales, cuidado de la piel hecho a mano — cremas, aceites corporales y mascarillas faciales — y cuidado personal natural como desodorante de sal marina. También cultivamos y procesamos hongos funcionales como el lion's mane en polvos y extractos. Cuando una receta necesita un ingrediente que no podemos cultivar, lo conseguimos natural y orgánico.",
-      "Todo es orgánico, hecho a mano y en lotes pequeños. Aquí compartimos lo que hacemos y cómo lo cultivamos.",
+      "SmartGrowth somos los dos haciendo en casa todo lo que usamos — natural, a mano, de lo que cultivamos.",
+      "Empezó con una decisión simple: no queríamos los químicos que traen tantas cosas que se venden aquí, así que aprendimos a hacerlo nosotros mismos. Cultivamos nuestra comida y hierbas, y convertimos la cosecha en comida, fermentos y conservas (canning), y nuestro propio cuidado de piel, cabello y remedios — con nuestras propias herramientas y mucho ensayo y error.",
+      "Aquí compartimos todo: lo que cultivamos, lo que cocinamos y conservamos, y lo que hacemos para el cuerpo — lo que funcionó, lo que no, y cómo tú también puedes. Real, orgánico, honesto. Sin químicos, sin finca perfecta — solo lo bueno, hecho en casa.",
     ],
   },
 };
