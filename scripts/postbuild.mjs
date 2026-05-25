@@ -20,10 +20,8 @@ const html = `<!doctype html>
     <meta name="robots" content="noindex" />
     <meta http-equiv="refresh" content="0; url=/en/" />
     <script>
-      (function () {
-        var lang = (navigator.language || "en").toLowerCase();
-        location.replace(lang.indexOf("es") === 0 ? "/es/" : "/en/");
-      })();
+      // English is the default; visitors can switch to Spanish via the top banner.
+      location.replace("/en/");
     </script>
   </head>
   <body>

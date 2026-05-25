@@ -25,18 +25,18 @@ const copy: Record<Locale, { title: string; draft: string; body: string[] }> = {
     title: "About SmartGrowth",
     draft: "Draft — review and personalize before launch.",
     body: [
-      "SmartGrowth is the two of us making everything we use at home — naturally, by hand, from what we grow.",
-      "It started with a simple decision: we didn't want the chemicals packed into so much of what's sold here, so we learned to make it ourselves. We grow our own food and herbs, then turn the harvest into meals, ferments and preserves (canning), and our own skin, hair and herbal care — with our own tools and plenty of trial and error.",
-      "This is where we share all of it: what we grow, what we cook and put up, and what we make for our bodies — what worked, what didn't, and how you can do it too. Real, organic, honest. No chemicals, no perfect homestead — just the good stuff, made at home.",
+      "SmartGrowth began with a simple belief: that what you put on your body and in your kitchen should be natural, honest, and free of synthetic chemicals.",
+      "Frustrated by how much of what's sold today is full of additives, we chose a different path — to grow our own and create what we use, with real plants and a great deal of care.",
+      "Here we share that journey: what we grow, what we make, and what we've learned along the way. Everything organic, everything intentional. No chemicals, no shortcuts — just good things, done right.",
     ],
   },
   es: {
     title: "Sobre SmartGrowth",
     draft: "Borrador — revísalo y personalízalo antes de lanzar.",
     body: [
-      "SmartGrowth somos los dos haciendo en casa todo lo que usamos — natural, a mano, de lo que cultivamos.",
-      "Empezó con una decisión simple: no queríamos los químicos que traen tantas cosas que se venden aquí, así que aprendimos a hacerlo nosotros mismos. Cultivamos nuestra comida y hierbas, y convertimos la cosecha en comida, fermentos y conservas (canning), y nuestro propio cuidado de piel, cabello y remedios — con nuestras propias herramientas y mucho ensayo y error.",
-      "Aquí compartimos todo: lo que cultivamos, lo que cocinamos y conservamos, y lo que hacemos para el cuerpo — lo que funcionó, lo que no, y cómo tú también puedes. Real, orgánico, honesto. Sin químicos, sin finca perfecta — solo lo bueno, hecho en casa.",
+      "SmartGrowth nació de una idea simple: que lo que pones en tu cuerpo y en tu cocina debería ser natural, honesto y libre de químicos sintéticos.",
+      "Cansados de cuánto de lo que se vende hoy está lleno de aditivos, elegimos otro camino — cultivar lo nuestro y crear lo que usamos, con plantas reales y mucho cuidado.",
+      "Aquí compartimos ese camino: lo que cultivamos, lo que creamos, y lo que hemos aprendido. Todo orgánico, todo con intención. Sin químicos, sin atajos — solo cosas buenas, bien hechas.",
     ],
   },
 };
