@@ -2,22 +2,29 @@
  * Cloudflare Worker entry for smartgrowth-web (Workers + Static Assets).
  *
  * Routing: static assets in ./out are served first (the Worker only runs on a
- * miss). The Worker handles POST /api/subscribe (newsletter → Resend) and falls
+ * miss). The Worker handles POST /api/subscribe (newsletter signup) and falls
  * back to the static assets for everything else.
  *
- * Newsletter env (Cloudflare → Settings → Variables):
- *   RESEND_API_KEY      — Resend API key
- *   RESEND_AUDIENCE_ID  — Resend Audience id to add contacts to
- *   RESEND_FROM         — optional verified sender, e.g. "SmartGrowth <hello@smartgrowth.farm>"
- * Without the first two, /api/subscribe returns an honest error (no fake success).
+ * Newsletter storage = OUR OWN Supabase (no third party for storage). The email
+ * is inserted into the `subscribers` table in the shared Supabase project. The
+ * anon key is public-safe; RLS allows INSERT only (nobody can read the list with
+ * it — the owner reads it from the Supabase dashboard). Run the SQL in
+ * supabase/subscribers.sql once to create the table + policy.
+ *
+ * Sending newsletters is a separate, later step (you own the list, so you can
+ * use any sender — e.g. Resend free tier — when you're ready).
  */
 
 interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
-  RESEND_API_KEY?: string;
-  RESEND_AUDIENCE_ID?: string;
-  RESEND_FROM?: string;
+  SUPABASE_URL?: string;
+  SUPABASE_ANON_KEY?: string;
 }
+
+// Public-safe defaults (same anon key already shipped in the sibling apps'
+// client bundles). Overridable via Worker env vars if you ever rotate them.
+const DEFAULT_SUPABASE_URL = "https://xgprfrckkziglufsxyfm.supabase.co";
+const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhncHJmcmNra3ppZ2x1ZnN4eWZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1ODM0MDcsImV4cCI6MjA5NDE1OTQwN30.j6xgkfyboWbLzOdH-AGZqI-MqbwVJRn4LBLgG55tc4Y";
 
 const json = (data: unknown, status = 200) =>
   new Response(JSON.stringify(data), {
@@ -40,50 +47,31 @@ async function handleSubscribe(request: Request, env: Env): Promise<Response> {
 
   if (!EMAIL_RE.test(email)) return json({ error: "invalid_email" }, 400);
 
-  if (!env.RESEND_API_KEY || !env.RESEND_AUDIENCE_ID) {
+  const url = env.SUPABASE_URL || DEFAULT_SUPABASE_URL;
+  const key = env.SUPABASE_ANON_KEY || DEFAULT_SUPABASE_ANON_KEY;
+  if (!url || !key || key.startsWith("__")) {
     return json({ error: "not_configured" }, 503);
   }
 
-  // Add the contact to the Resend audience.
-  const res = await fetch(
-    `https://api.resend.com/audiences/${env.RESEND_AUDIENCE_ID}/contacts`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${env.RESEND_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, unsubscribed: false }),
+  // Insert into our own Supabase `subscribers` table via PostgREST.
+  const res = await fetch(`${url}/rest/v1/subscribers`, {
+    method: "POST",
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+      Prefer: "return=minimal",
     },
-  );
+    body: JSON.stringify({ email, locale, source: "smartgrowth-web" }),
+  });
 
-  if (!res.ok) {
-    const detail = await res.text().catch(() => "");
-    if (res.status === 409) return json({ ok: true, already: true }); // already subscribed
-    return json({ error: "resend_failed", status: res.status, detail }, 502);
-  }
+  if (res.ok) return json({ ok: true });
 
-  // Optional welcome email (best-effort).
-  if (env.RESEND_FROM) {
-    const subject =
-      locale === "es"
-        ? "Bienvenido/a a SmartGrowth 🌿"
-        : "Welcome to SmartGrowth 🌿";
-    const text =
-      locale === "es"
-        ? "¡Gracias por suscribirte! Cada semana te compartimos un remedio o producto natural que hicimos, qué está creciendo en el huerto, y un consejo de vida natural. — SmartGrowth"
-        : "Thanks for subscribing! Each week we share a natural remedy or product we made, what's growing in the garden, and a natural-living tip. — SmartGrowth";
-    await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${env.RESEND_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ from: env.RESEND_FROM, to: email, subject, text }),
-    }).catch(() => {});
-  }
+  // 409 = duplicate email (unique constraint) → already on the list, that's fine.
+  if (res.status === 409) return json({ ok: true, already: true });
 
-  return json({ ok: true });
+  const detail = await res.text().catch(() => "");
+  return json({ error: "store_failed", status: res.status, detail }, 502);
 }
 
 export default {
