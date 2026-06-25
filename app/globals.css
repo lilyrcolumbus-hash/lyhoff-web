@@ -29,6 +29,19 @@
   --color-earth-600: #a96a2c;
   --color-earth-700: #884f25;
 
+  /* Warm clay / terracotta — the LYHOFF store palette. Cozier and more
+     "made-by-hand" than the green content side; carries the shop CTAs. */
+  --color-clay-50: #fbf3ee;
+  --color-clay-100: #f6e3d6;
+  --color-clay-200: #ecc6ad;
+  --color-clay-300: #e0a37e;
+  --color-clay-400: #d4805a;
+  --color-clay-500: #c2683f;
+  --color-clay-600: #a8512f;
+  --color-clay-700: #8a4028;
+  --color-clay-800: #6f3624;
+  --color-clay-900: #5c2f21;
+
   --color-cream: #faf8f3;
   --color-ink: #1c1917;
 }

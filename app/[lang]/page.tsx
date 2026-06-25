@@ -102,6 +102,27 @@ export default async function HomePage({
           </section>
         )}
 
+        {/* Shop band — content → product funnel */}
+        <section className="py-12">
+          <div className="flex flex-col items-start gap-4 rounded-3xl bg-gradient-to-br from-clay-100 to-clay-50 px-6 py-10 sm:px-10 md:flex-row md:items-center md:justify-between">
+            <div className="max-w-xl">
+              <p className="font-display text-sm font-semibold uppercase tracking-[0.2em] text-clay-600">
+                {dict.shopKicker}
+              </p>
+              <h2 className="mt-2 font-display text-2xl font-bold text-clay-900">
+                {dict.shopTitle}
+              </h2>
+              <p className="mt-2 text-stone-700">{dict.shopWhyBody}</p>
+            </div>
+            <Link
+              href={`/${locale}/shop/`}
+              className="shrink-0 rounded-full bg-clay-600 px-6 py-3 text-sm font-semibold text-cream transition hover:bg-clay-700"
+            >
+              {dict.shopCta}
+            </Link>
+          </div>
+        </section>
+
         {/* Newsletter */}
         <section id="newsletter" className="scroll-mt-20 py-12">
           <Newsletter locale={locale} variant="panel" />

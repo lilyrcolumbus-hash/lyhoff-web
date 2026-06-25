@@ -95,8 +95,27 @@ type Dict = {
   draftBadge: string;
   navTopics: string;
   navAbout: string;
+  navShop: string;
   footerTagline: string;
   publishedOn: string;
+  // Shop
+  shopKicker: string;
+  shopTitle: string;
+  shopSubtitle: string;
+  shopCta: string;
+  shopAllProducts: string;
+  shopBuyAmazon: string;
+  shopBuyEtsy: string;
+  shopBuyNote: string;
+  shopIngredients: string;
+  shopBenefits: string;
+  shopWhatWeMake: string;
+  shopWhyTitle: string;
+  shopWhyBody: string;
+  shopRelated: string;
+  shopComingSoon: string;
+  shopBackToShop: string;
+  shopFooterLink: string;
 };
 
 export const dictionary: Record<Locale, Dict> = {
@@ -129,8 +148,28 @@ export const dictionary: Record<Locale, Dict> = {
     draftBadge: "Draft — pending review",
     navTopics: "Topics",
     navAbout: "About",
+    navShop: "Shop",
     footerTagline: "Natural, organic, chemical-free.",
     publishedOn: "Published",
+    shopKicker: "What we use, we make",
+    shopTitle: "Small-batch, naturally made",
+    shopSubtitle:
+      "A couple in Ohio formulating, testing and using everything before it reaches you — for your skin, your hair, your garden and your home. No toxins. Tested by us first.",
+    shopCta: "Shop the collection",
+    shopAllProducts: "All products",
+    shopBuyAmazon: "Buy on Amazon",
+    shopBuyEtsy: "Buy on Etsy",
+    shopBuyNote: "Ships from our trusted marketplace — secure checkout.",
+    shopIngredients: "Ingredients",
+    shopBenefits: "Why you'll love it",
+    shopWhatWeMake: "What we make",
+    shopWhyTitle: "Made by hand, tested by us",
+    shopWhyBody:
+      "We reject the synthetic chemicals in everyday store products — so we make our own, in small batches, and use them at home before they ever reach you. Transparent ingredients, every time.",
+    shopRelated: "You might also like",
+    shopComingSoon: "More products are on the way.",
+    shopBackToShop: "Back to shop",
+    shopFooterLink: "Our products",
   },
   es: {
     tagline: "Puro. Natural. Sin químicos.",
@@ -161,8 +200,28 @@ export const dictionary: Record<Locale, Dict> = {
     draftBadge: "Borrador — pendiente de revisión",
     navTopics: "Temas",
     navAbout: "Nosotros",
+    navShop: "Tienda",
     footerTagline: "Natural, orgánico, sin químicos.",
     publishedOn: "Publicado",
+    shopKicker: "Lo que usamos, lo hacemos",
+    shopTitle: "Hecho al natural, en pequeños lotes",
+    shopSubtitle:
+      "Una pareja en Ohio que formula, prueba y usa cada producto antes de que llegue a ti — para tu piel, tu cabello, tu jardín y tu hogar. Sin tóxicos. Probado por nosotros primero.",
+    shopCta: "Ver la colección",
+    shopAllProducts: "Todos los productos",
+    shopBuyAmazon: "Comprar en Amazon",
+    shopBuyEtsy: "Comprar en Etsy",
+    shopBuyNote: "Se envía desde nuestro marketplace de confianza — pago seguro.",
+    shopIngredients: "Ingredientes",
+    shopBenefits: "Por qué te va a encantar",
+    shopWhatWeMake: "Lo que hacemos",
+    shopWhyTitle: "Hecho a mano, probado por nosotros",
+    shopWhyBody:
+      "Rechazamos los químicos sintéticos de los productos comunes de tienda — por eso hacemos los nuestros, en pequeños lotes, y los usamos en casa antes de que lleguen a ti. Ingredientes transparentes, siempre.",
+    shopRelated: "También te puede gustar",
+    shopComingSoon: "Pronto hay más productos.",
+    shopBackToShop: "Volver a la tienda",
+    shopFooterLink: "Nuestros productos",
   },
 };
 

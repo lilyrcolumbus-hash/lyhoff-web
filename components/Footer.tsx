@@ -34,10 +34,15 @@ export function Footer({ locale }: { locale: Locale }) {
         </div>
 
         <div className="mt-10 flex flex-col gap-2 border-t border-forest-800 pt-6 text-xs text-stone-500 sm:flex-row sm:justify-between">
-          <span>© {new Date().getFullYear()} SmartGrowth</span>
-          <Link href={`/${locale}/about/`} className="hover:text-cream">
-            {dict.navAbout}
-          </Link>
+          <span>© {new Date().getFullYear()} SmartGrowth · LYHOFF</span>
+          <div className="flex gap-4">
+            <Link href={`/${locale}/shop/`} className="hover:text-cream">
+              {dict.shopFooterLink}
+            </Link>
+            <Link href={`/${locale}/about/`} className="hover:text-cream">
+              {dict.navAbout}
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

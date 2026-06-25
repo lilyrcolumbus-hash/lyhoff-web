@@ -27,6 +27,9 @@ export function Header({ locale }: { locale: Locale }) {
           <Link href={`/${locale}/topics/`} className="hover:text-forest-700">
             {dict.navTopics}
           </Link>
+          <Link href={`/${locale}/shop/`} className="hover:text-clay-700">
+            {dict.navShop}
+          </Link>
           <Link href={`/${locale}/about/`} className="hover:text-forest-700">
             {dict.navAbout}
           </Link>
@@ -57,6 +60,13 @@ export function Header({ locale }: { locale: Locale }) {
               onClick={() => setOpen(false)}
             >
               {dict.navTopics}
+            </Link>
+            <Link
+              href={`/${locale}/shop/`}
+              className="rounded-lg px-2 py-2 hover:bg-clay-50"
+              onClick={() => setOpen(false)}
+            >
+              {dict.navShop}
             </Link>
             {categories.map((c) => (
               <Link
