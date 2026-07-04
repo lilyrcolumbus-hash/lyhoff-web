@@ -97,6 +97,9 @@ type Dict = {
   navAbout: string;
   footerTagline: string;
   publishedOn: string;
+  shopAll: string;
+  featuredProducts: string;
+  ourProcess: string;
 };
 
 export const dictionary: Record<Locale, Dict> = {
@@ -125,12 +128,15 @@ export const dictionary: Record<Locale, Dict> = {
     allArticles: "All guides",
     inCategory: "Guides in",
     noArticles: "New guides are on the way. Subscribe to hear first.",
-    aboutTitle: "About SmartGrowth",
+    aboutTitle: "About LYHOFF",
     draftBadge: "Draft — pending review",
     navTopics: "Topics",
     navAbout: "About",
     footerTagline: "Natural, organic, chemical-free.",
     publishedOn: "Published",
+    shopAll: "Shop all",
+    featuredProducts: "Featured products",
+    ourProcess: "How we make it",
   },
   es: {
     tagline: "Puro. Natural. Sin químicos.",
@@ -157,12 +163,15 @@ export const dictionary: Record<Locale, Dict> = {
     allArticles: "Todas las guías",
     inCategory: "Guías en",
     noArticles: "Pronto hay guías nuevas. Suscríbete para enterarte primero.",
-    aboutTitle: "Sobre SmartGrowth",
+    aboutTitle: "Sobre LYHOFF",
     draftBadge: "Borrador — pendiente de revisión",
     navTopics: "Temas",
     navAbout: "Nosotros",
     footerTagline: "Natural, orgánico, sin químicos.",
     publishedOn: "Publicado",
+    shopAll: "Ver toda la tienda",
+    featuredProducts: "Productos destacados",
+    ourProcess: "Cómo lo hacemos",
   },
 };
 
@@ -171,8 +180,8 @@ export const t = (locale: Locale) => dictionary[locale];
 // Single source of truth for the production URL (used for SEO/canonical/sitemap).
 // Currently the Cloudflare Workers Static Assets URL; swap to the custom domain
 // (e.g. https://smartgrowth.farm) when it's connected.
-export const SITE_URL = "https://smartgrowth-web.lilyrcolumbus.workers.dev";
-export const SITE_NAME = "SmartGrowth";
+export const SITE_URL = "https://lyhoff-web.lilyrcolumbus.workers.dev";
+export const SITE_NAME = "LYHOFF";
 
 // Pinterest "Claim your website" verification. In Pinterest (business account) →
 // Settings → Claimed accounts → Claim a website → "Add HTML tag", copy ONLY the
