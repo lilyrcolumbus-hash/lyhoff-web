@@ -1,5 +1,5 @@
 {
-  "name": "smartgrowth-web",
+  "name": "lyhoff",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,6 +8,7 @@
     "preview": "npx serve out"
   },
   "dependencies": {
+    "framer-motion": "^12.42.0",
     "gray-matter": "^4.0.3",
     "next": "16.2.6",
     "next-mdx-remote": "^6.0.0",

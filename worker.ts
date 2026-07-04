@@ -1,5 +1,5 @@
 /**
- * Cloudflare Worker entry for smartgrowth-web (Workers + Static Assets).
+ * Cloudflare Worker entry for lyhoff (Workers + Static Assets).
  *
  * Routing: static assets in ./out are served first (the Worker only runs on a
  * miss). The Worker handles POST /api/subscribe (newsletter signup) and falls
@@ -62,7 +62,7 @@ async function handleSubscribe(request: Request, env: Env): Promise<Response> {
       "Content-Type": "application/json",
       Prefer: "return=minimal",
     },
-    body: JSON.stringify({ email, locale, source: "smartgrowth-web" }),
+    body: JSON.stringify({ email, locale, source: "lyhoff" }),
   });
 
   if (res.ok) return json({ ok: true });

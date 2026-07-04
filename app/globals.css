@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 /*
-  SmartGrowth brand — matches the SmartGrowth app palette:
-  - Forest/olive green (verde natural)  → Tailwind `lime` deep shades + custom `forest`
-  - Earth (tierra)                      → Tailwind `amber`
-  - Cream / warm neutral (crema)        → Tailwind `stone`
+  LYHOFF brand palette:
+  - Forest/olive green  → custom `forest`
+  - Earth/amber         → custom `earth`
+  - Cream / warm white  → `cream`
 */
 @theme {
   --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
