@@ -6,7 +6,6 @@ import { activeProducts, dedupeVariants } from "@/lib/products";
 import { getProductImageUrl } from "@/lib/product-images";
 import { ArticleCard } from "@/components/ArticleCard";
 import { ProductCard } from "@/components/ProductCard";
-import { PlaceholderPhoto } from "@/components/PlaceholderPhoto";
 import { StockPhoto } from "@/components/StockPhoto";
 import { TrustBadges } from "@/components/TrustBadges";
 import { CategoryTiles } from "@/components/CategoryTiles";
@@ -71,13 +70,10 @@ export default async function HomePage({
           />
           <div className="relative">
             <Blob className="pointer-events-none absolute -top-10 -right-10 h-64 w-64 text-earth-200/70 -z-10" />
-            <PlaceholderPhoto
+            <StockPhoto
               ratio="portrait"
-              locale={locale}
-              note={{
-                en: "Lifestyle hero photo — the couple in the garden or applying the tallow cream",
-                es: "Foto principal — la pareja en el huerto o aplicando la crema de sebo",
-              }}
+              src="https://images.unsplash.com/photo-1693004926638-d2e47d705229?w=700&h=875&q=80&auto=format&fit=crop"
+              alt={locale === "en" ? "Applying the tallow cream" : "Aplicando la crema de sebo"}
             />
           </div>
         </div>

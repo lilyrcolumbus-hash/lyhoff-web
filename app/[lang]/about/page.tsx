@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, t, type Locale } from "@/lib/i18n";
 import { Newsletter } from "@/components/Newsletter";
-import { PlaceholderPhoto } from "@/components/PlaceholderPhoto";
 import { StockPhoto } from "@/components/StockPhoto";
 import { Blob } from "@/components/illustrations";
 
@@ -22,11 +21,9 @@ export async function generateMetadata({
   };
 }
 
-// Draft copy — honest framing of the project; personalize before launch.
-const copy: Record<Locale, { title: string; draft: string; body: string[] }> = {
+const copy: Record<Locale, { title: string; body: string[] }> = {
   en: {
     title: "About LYHOFF",
-    draft: "Draft — review and personalize before launch.",
     body: [
       "LYHOFF started with a simple belief: what we put on our skin and use in our home should be natural, honest, and free of synthetic chemicals.",
       "We're a bilingual couple who grow much of what we use ourselves — then turn that harvest into what we make: tallow skincare, hair care, and home essentials. Every formula is small-batch, and every one of them we use on ourselves first, every day, before it ever reaches a jar for sale.",
@@ -35,7 +32,6 @@ const copy: Record<Locale, { title: string; draft: string; body: string[] }> = {
   },
   es: {
     title: "Sobre LYHOFF",
-    draft: "Borrador — revísalo y personalízalo antes de lanzar.",
     body: [
       "LYHOFF nació de una idea simple: lo que ponemos en nuestra piel y usamos en casa debería ser natural, honesto y libre de químicos sintéticos.",
       "Somos una pareja bilingüe que cultiva gran parte de lo que usa — y convierte esa cosecha en lo que hacemos: skincare de sebo, cuidado capilar y esenciales para el hogar. Cada fórmula es en pequeños lotes, y cada una la usamos nosotros primero, a diario, antes de que llegue a un frasco a la venta.",
@@ -56,21 +52,15 @@ export default async function AboutPage({
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
-      <p className="mb-6 rounded-lg border border-earth-400/40 bg-earth-500/10 px-3 py-2 text-xs font-semibold text-earth-700">
-        ⚠️ {c.draft}
-      </p>
       <h1 className="font-display text-3xl font-bold text-forest-950 sm:text-4xl">
         {c.title}
       </h1>
       <div className="relative mt-8 max-w-sm">
         <Blob className="pointer-events-none absolute -bottom-8 -left-8 h-48 w-48 text-forest-100 -z-10" />
-        <PlaceholderPhoto
+        <StockPhoto
           ratio="portrait"
-          locale={locale}
-          note={{
-            en: "Couple portrait / founders photo",
-            es: "Foto de la pareja / fundadores",
-          }}
+          src="https://images.unsplash.com/photo-1651592280676-a01949b60cd7?w=700&h=875&q=80&auto=format&fit=crop"
+          alt={locale === "en" ? "Hands in the garden" : "Manos en el huerto"}
         />
       </div>
       <div className="prose-sg mt-8">
