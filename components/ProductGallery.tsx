@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { TiltImage } from "@/components/TiltImage";
+import { AnimatePresence, motion } from "framer-motion";
 
 export function ProductGallery({
   images,
@@ -19,28 +19,48 @@ export function ProductGallery({
 
   return (
     <div>
-      <TiltImage src={images[active]} alt={alt} priority className="aspect-[4/5] w-full bg-stone-50">
+      <div className="relative aspect-[4/5] w-full overflow-hidden bg-stone-50">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={images[active]}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="absolute inset-0"
+          >
+            <Image
+              src={images[active]}
+              alt={alt}
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover"
+              priority
+            />
+          </motion.div>
+        </AnimatePresence>
         {isPlaceholder && (
-          <span className="absolute top-3 left-3 bg-earth-600 text-cream text-[10px] font-semibold uppercase tracking-widest px-3 py-1">
+          <span className="absolute top-3 left-3 z-10 bg-earth-600 text-cream text-[10px] font-semibold uppercase tracking-widest px-3 py-1">
             {placeholderLabel}
           </span>
         )}
-      </TiltImage>
+      </div>
       {images.length > 1 && (
         <div className="mt-3 grid grid-cols-4 gap-3">
-          {images.map((src, i) =>
-            i === active ? null : (
-              <button
-                key={src}
-                type="button"
-                onClick={() => setActive(i)}
-                className="relative aspect-square overflow-hidden bg-stone-50 ring-1 ring-transparent transition hover:ring-forest-500"
-                aria-label={`${alt} ${i + 1}`}
-              >
-                <Image src={src} alt={alt} fill sizes="25vw" className="object-cover" />
-              </button>
-            ),
-          )}
+          {images.map((src, i) => (
+            <button
+              key={src}
+              type="button"
+              onClick={() => setActive(i)}
+              className={`relative aspect-square overflow-hidden bg-stone-50 ring-1 transition ${
+                i === active ? "ring-forest-950" : "ring-transparent hover:ring-forest-500"
+              }`}
+              aria-label={`${alt} ${i + 1}`}
+              aria-current={i === active}
+            >
+              <Image src={src} alt={alt} fill sizes="25vw" className="object-cover" />
+            </button>
+          ))}
         </div>
       )}
     </div>
