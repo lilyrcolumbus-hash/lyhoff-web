@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useCartStore } from "@/lib/cart-store";
 import { startCheckout } from "@/lib/checkout";
 import { t, type Locale } from "@/lib/i18n";
+import { FreeShippingProgress } from "@/components/FreeShippingProgress";
 
 export function CartPageClient({ locale }: { locale: Locale }) {
   const dict = t(locale);
@@ -87,7 +88,11 @@ export function CartPageClient({ locale }: { locale: Locale }) {
             ))}
           </ul>
 
-          <div className="mt-8 flex items-center justify-between">
+          <div className="mt-8">
+            <FreeShippingProgress subtotal={total()} locale={locale} />
+          </div>
+
+          <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-stone-600">{dict.cartSubtotal}</span>
             <span className="font-display text-2xl font-bold text-forest-950">
               ${total().toFixed(2)}

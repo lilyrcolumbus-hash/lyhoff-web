@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore } from "@/lib/cart-store";
 import { startCheckout } from "@/lib/checkout";
 import { t, type Locale } from "@/lib/i18n";
+import { FreeShippingProgress } from "@/components/FreeShippingProgress";
 
 export function CartDrawer({ locale }: { locale: Locale }) {
   const dict = t(locale);
@@ -115,6 +116,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
 
         {items.length > 0 && (
           <div className="border-t border-stone-200 px-6 py-6">
+            <FreeShippingProgress subtotal={total()} locale={locale} />
             <div className="flex items-center justify-between text-sm font-medium text-stone-600">
               <span>{dict.cartSubtotal}</span>
               <span className="font-display text-lg font-bold text-forest-950">
