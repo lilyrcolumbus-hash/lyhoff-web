@@ -20,7 +20,7 @@ export function WelcomePopup({ locale }: { locale: Locale }) {
 
   useEffect(() => {
     if (localStorage.getItem(STORAGE_KEY)) return;
-    const timer = setTimeout(() => setVisible(true), 4000);
+    const timer = setTimeout(() => setVisible(true), 15000);
     return () => clearTimeout(timer);
   }, []);
 
