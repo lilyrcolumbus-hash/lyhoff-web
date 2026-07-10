@@ -59,6 +59,7 @@ export default async function AboutPage({
         <Blob className="pointer-events-none absolute -bottom-8 -left-8 h-48 w-48 text-forest-100 -z-10" />
         <StockPhoto
           ratio="portrait"
+          rounded
           src="https://images.unsplash.com/photo-1651592280676-a01949b60cd7?w=700&h=875&q=80&auto=format&fit=crop"
           alt={locale === "en" ? "Hands in the garden" : "Manos en el huerto"}
         />
@@ -71,11 +72,13 @@ export default async function AboutPage({
       <div className="mt-10 grid gap-4 sm:grid-cols-2">
         <StockPhoto
           ratio="square"
-          src="https://images.unsplash.com/photo-1693004926638-d2e47d705229?w=600&h=600&q=80&auto=format&fit=crop"
-          alt={locale === "en" ? "Hands making a product" : "Manos elaborando un producto"}
+          rounded
+          src="https://images.unsplash.com/photo-1709666414115-47ecd5143293?w=600&h=600&q=80&auto=format&fit=crop"
+          alt={locale === "en" ? "Hand-bottled, small batch" : "Envasado a mano, en pequeños lotes"}
         />
         <StockPhoto
           ratio="square"
+          rounded
           src="https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?w=600&h=600&q=80&auto=format&fit=crop"
           alt={locale === "en" ? "Garden or harvest shot" : "Foto del huerto o la cosecha"}
         />

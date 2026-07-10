@@ -21,7 +21,7 @@ const processPhotos: { note: Record<Locale, string>; stockSrc: string }[] = [
       es: "Manos mezclando la crema de sebo",
     },
     stockSrc:
-      "https://images.unsplash.com/photo-1693004926638-d2e47d705229?w=600&h=600&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1651592280676-a01949b60cd7?w=600&h=600&q=80&auto=format&fit=crop",
   },
   {
     note: {
@@ -70,11 +70,21 @@ export default async function HomePage({
           />
           <div className="relative">
             <Blob className="pointer-events-none absolute -top-10 -right-10 h-64 w-64 text-earth-200/70 -z-10" />
+            <Blob className="pointer-events-none absolute -bottom-12 -left-8 h-40 w-40 text-forest-100 -z-10" />
             <StockPhoto
               ratio="portrait"
-              src="https://images.unsplash.com/photo-1693004926638-d2e47d705229?w=700&h=875&q=80&auto=format&fit=crop"
-              alt={locale === "en" ? "Applying the tallow cream" : "Aplicando la crema de sebo"}
-            />
+              rounded
+              className="shadow-2xl shadow-forest-950/10"
+              src="https://images.unsplash.com/photo-1582745741856-1a5d68158ba3?w=700&h=875&q=80&auto=format&fit=crop"
+              alt={locale === "en" ? "Naturally grown rosemary" : "Romero cultivado al natural"}
+            >
+              <div className="absolute bottom-5 left-5 flex items-center gap-2 rounded-full bg-cream/95 px-4 py-2.5 shadow-lg backdrop-blur-sm">
+                <span className="text-base" aria-hidden>🌿</span>
+                <span className="font-display text-xs font-semibold text-forest-950">
+                  {locale === "en" ? "Zero synthetic chemicals" : "Sin químicos sintéticos"}
+                </span>
+              </div>
+            </StockPhoto>
           </div>
         </div>
       </section>
@@ -179,7 +189,7 @@ export default async function HomePage({
           </h2>
           <div className="grid gap-6 sm:grid-cols-3">
             {processPhotos.map((photo, i) => (
-              <StockPhoto key={i} ratio="square" src={photo.stockSrc} alt={photo.note[locale]} />
+              <StockPhoto key={i} ratio="square" rounded src={photo.stockSrc} alt={photo.note[locale]} />
             ))}
           </div>
         </div>
