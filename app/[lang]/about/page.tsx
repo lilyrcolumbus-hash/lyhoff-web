@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { isLocale, t, type Locale } from "@/lib/i18n";
 import { Newsletter } from "@/components/Newsletter";
 import { PlaceholderPhoto } from "@/components/PlaceholderPhoto";
+import { Blob } from "@/components/illustrations";
 
 export async function generateMetadata({
   params,
@@ -60,15 +61,17 @@ export default async function AboutPage({
       <h1 className="font-display text-3xl font-bold text-forest-950 sm:text-4xl">
         {c.title}
       </h1>
-      <PlaceholderPhoto
-        ratio="portrait"
-        locale={locale}
-        className="mt-8 max-w-sm"
-        note={{
-          en: "Couple portrait / founders photo",
-          es: "Foto de la pareja / fundadores",
-        }}
-      />
+      <div className="relative mt-8 max-w-sm">
+        <Blob className="pointer-events-none absolute -bottom-8 -left-8 h-48 w-48 text-forest-100 -z-10" />
+        <PlaceholderPhoto
+          ratio="portrait"
+          locale={locale}
+          note={{
+            en: "Couple portrait / founders photo",
+            es: "Foto de la pareja / fundadores",
+          }}
+        />
+      </div>
       <div className="prose-sg mt-8">
         {c.body.map((p, i) => (
           <p key={i}>{p}</p>

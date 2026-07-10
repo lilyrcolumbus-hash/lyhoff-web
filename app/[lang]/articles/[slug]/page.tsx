@@ -193,8 +193,8 @@ export default async function ArticlePage({
             {dict.relatedTitle}
           </h2>
           <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {related.map((a) => (
-              <ArticleCard key={a.slug} article={a} locale={locale} />
+            {related.map((a, i) => (
+              <ArticleCard key={a.slug} article={a} locale={locale} index={i} />
             ))}
           </div>
         </section>

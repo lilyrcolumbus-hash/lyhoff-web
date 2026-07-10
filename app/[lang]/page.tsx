@@ -1,13 +1,16 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { categories, isLocale, t, type Locale } from "@/lib/i18n";
+import { isLocale, t, type Locale } from "@/lib/i18n";
 import { getAllArticles, getFeatured } from "@/lib/content";
 import { activeProducts } from "@/lib/products";
 import { getProductImageUrl } from "@/lib/product-images";
 import { ArticleCard } from "@/components/ArticleCard";
 import { ProductCard } from "@/components/ProductCard";
 import { PlaceholderPhoto } from "@/components/PlaceholderPhoto";
+import { TrustBadges } from "@/components/TrustBadges";
+import { CategoryTiles } from "@/components/CategoryTiles";
 import { Newsletter } from "@/components/Newsletter";
+import { Blob, WaveDivider } from "@/components/illustrations";
 
 const processPhotos: { note: Record<Locale, string> }[] = [
   {
@@ -74,19 +77,22 @@ export default async function HomePage({
               </Link>
             </div>
           </div>
-          <PlaceholderPhoto
-            ratio="portrait"
-            locale={locale}
-            note={{
-              en: "Lifestyle hero photo — the couple in the garden or applying the tallow cream",
-              es: "Foto principal — la pareja en el huerto o aplicando la crema de sebo",
-            }}
-          />
+          <div className="relative">
+            <Blob className="pointer-events-none absolute -top-10 -right-10 h-64 w-64 text-earth-200/70 -z-10" />
+            <PlaceholderPhoto
+              ratio="portrait"
+              locale={locale}
+              note={{
+                en: "Lifestyle hero photo — the couple in the garden or applying the tallow cream",
+                es: "Foto principal — la pareja en el huerto o aplicando la crema de sebo",
+              }}
+            />
+          </div>
         </div>
       </section>
 
       {/* Divider */}
-      <div className="border-t border-stone-200" />
+      <WaveDivider className="bg-white py-6" />
 
       {/* Featured Products */}
       {featuredProducts.length > 0 && (
@@ -97,12 +103,20 @@ export default async function HomePage({
                 <h2 className="font-display text-xs font-semibold uppercase tracking-[0.25em] text-stone-400">
                   {dict.featuredProducts}
                 </h2>
-                <Link
-                  href={`/${locale}/products/`}
-                  className="text-xs font-medium text-forest-700 hover:underline"
-                >
-                  {dict.shopAll} →
-                </Link>
+                <div className="flex items-center gap-5">
+                  <Link
+                    href={`/${locale}/quiz/`}
+                    className="text-xs font-medium text-earth-700 hover:underline"
+                  >
+                    {locale === "en" ? "Not sure? Take the quiz" : "¿No sabes? Haz el quiz"}
+                  </Link>
+                  <Link
+                    href={`/${locale}/products/`}
+                    className="text-xs font-medium text-forest-700 hover:underline"
+                  >
+                    {dict.shopAll} →
+                  </Link>
+                </div>
               </div>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {featuredProducts.map((product, i) => {
@@ -131,27 +145,7 @@ export default async function HomePage({
           <h2 className="font-display text-xs font-semibold uppercase tracking-[0.25em] text-stone-400 mb-10">
             {dict.browseByTopic}
           </h2>
-          <div className="grid gap-px bg-stone-200 border border-stone-200 sm:grid-cols-2 lg:grid-cols-4">
-            {categories.map((c) => (
-              <Link
-                key={c.slug}
-                href={`/${locale}/category/${c.slug}/`}
-                className="group flex flex-col justify-between bg-white p-8 transition hover:bg-forest-950"
-              >
-                <div>
-                  <h3 className="font-display text-lg font-semibold text-forest-950 group-hover:text-cream transition-colors">
-                    {c.label[locale]}
-                  </h3>
-                  <p className="mt-2 text-sm text-stone-500 leading-relaxed group-hover:text-stone-300 transition-colors">
-                    {c.blurb[locale]}
-                  </p>
-                </div>
-                <span className="mt-8 text-xs font-medium text-stone-400 group-hover:text-stone-300 transition-colors">
-                  {locale === "en" ? "Read guides →" : "Ver guías →"}
-                </span>
-              </Link>
-            ))}
-          </div>
+          <CategoryTiles locale={locale} />
         </div>
       </section>
 
@@ -179,35 +173,15 @@ export default async function HomePage({
             </div>
           </div>
 
-          <div className="mt-14 grid gap-8 border-t border-forest-800 pt-14 sm:grid-cols-3">
-            {[
-              {
-                label: locale === "en" ? "Small-batch crafted" : "Elaborado en pequeños lotes",
-                desc: locale === "en"
-                  ? "Every product made by hand, in limited quantities."
-                  : "Cada producto hecho a mano, en cantidades limitadas.",
-              },
-              {
-                label: locale === "en" ? "Tested on ourselves first" : "Probado en nosotros primero",
-                desc: locale === "en"
-                  ? "We use everything we make — daily."
-                  : "Usamos todo lo que hacemos — a diario.",
-              },
-              {
-                label: locale === "en" ? "Zero synthetic chemicals" : "Sin químicos sintéticos",
-                desc: locale === "en"
-                  ? "Ingredients you can pronounce. Nothing hidden."
-                  : "Ingredientes que puedes pronunciar. Nada oculto.",
-              },
-            ].map((item) => (
-              <div key={item.label}>
-                <h3 className="font-display text-base font-semibold text-cream">{item.label}</h3>
-                <p className="mt-2 text-sm text-stone-400 leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
-          </div>
+          <TrustBadges
+            locale={locale}
+            theme="dark"
+            className="mt-14 border-t border-forest-800 pt-14"
+          />
         </div>
       </section>
+
+      <WaveDivider className="bg-forest-950 py-6" tone="dark" />
 
       {/* Process strip */}
       <section className="bg-white">
@@ -231,8 +205,8 @@ export default async function HomePage({
               {dict.featured}
             </h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {featured.map((a) => (
-                <ArticleCard key={a.slug} article={a} locale={locale} />
+              {featured.map((a, i) => (
+                <ArticleCard key={a.slug} article={a} locale={locale} index={i} />
               ))}
             </div>
           </section>
@@ -253,8 +227,8 @@ export default async function HomePage({
               </Link>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {latest.map((a) => (
-                <ArticleCard key={a.slug} article={a} locale={locale} />
+              {latest.map((a, i) => (
+                <ArticleCard key={a.slug} article={a} locale={locale} index={i} />
               ))}
             </div>
           </section>
