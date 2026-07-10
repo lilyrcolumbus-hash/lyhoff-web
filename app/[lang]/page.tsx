@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale, t, type Locale } from "@/lib/i18n";
 import { getAllArticles, getFeatured } from "@/lib/content";
-import { activeProducts } from "@/lib/products";
+import { activeProducts, dedupeVariants } from "@/lib/products";
 import { getProductImageUrl } from "@/lib/product-images";
 import { ArticleCard } from "@/components/ArticleCard";
 import { ProductCard } from "@/components/ProductCard";
@@ -11,6 +11,8 @@ import { TrustBadges } from "@/components/TrustBadges";
 import { CategoryTiles } from "@/components/CategoryTiles";
 import { Newsletter } from "@/components/Newsletter";
 import { Blob, WaveDivider } from "@/components/illustrations";
+import { HeroText } from "@/components/HeroText";
+import { FloatingLeaves } from "@/components/FloatingLeaves";
 
 const processPhotos: { note: Record<Locale, string> }[] = [
   {
@@ -45,38 +47,21 @@ export default async function HomePage({
 
   const featured = getFeatured(locale);
   const latest = getAllArticles(locale).slice(0, 6);
-  const featuredProducts = activeProducts.slice(0, 3);
+  const featuredProducts = dedupeVariants(activeProducts).slice(0, 3);
 
   return (
     <>
       {/* Hero */}
-      <section className="bg-cream">
-        <div className="mx-auto grid max-w-6xl gap-12 px-6 pt-20 pb-24 md:pt-28 md:pb-32 lg:grid-cols-2 lg:items-center lg:gap-16">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-earth-600 mb-6">
-              {dict.tagline}
-            </p>
-            <h1 className="font-display text-5xl font-bold leading-[1.08] text-forest-950 max-w-2xl md:text-6xl lg:text-7xl">
-              {dict.heroTitle}
-            </h1>
-            <p className="mt-6 max-w-xl text-base text-stone-500 leading-relaxed md:text-lg">
-              {dict.heroSubtitle}
-            </p>
-            <div className="mt-10 flex flex-wrap gap-4">
-              <a
-                href="#newsletter"
-                className="inline-flex items-center rounded-full bg-forest-950 px-7 py-3.5 text-sm font-semibold text-cream transition hover:bg-forest-800"
-              >
-                {dict.heroCta}
-              </a>
-              <Link
-                href={`/${locale}/about/`}
-                className="inline-flex items-center rounded-full border border-stone-300 px-7 py-3.5 text-sm font-semibold text-forest-950 transition hover:border-forest-400 hover:bg-forest-50"
-              >
-                {locale === "en" ? "Our story" : "Nuestra historia"}
-              </Link>
-            </div>
-          </div>
+      <section className="relative bg-cream overflow-hidden">
+        <FloatingLeaves />
+        <div className="relative mx-auto grid max-w-6xl gap-12 px-6 pt-20 pb-24 md:pt-28 md:pb-32 lg:grid-cols-2 lg:items-center lg:gap-16">
+          <HeroText
+            locale={locale}
+            tagline={dict.tagline}
+            title={dict.heroTitle}
+            subtitle={dict.heroSubtitle}
+            cta={dict.heroCta}
+          />
           <div className="relative">
             <Blob className="pointer-events-none absolute -top-10 -right-10 h-64 w-64 text-earth-200/70 -z-10" />
             <PlaceholderPhoto

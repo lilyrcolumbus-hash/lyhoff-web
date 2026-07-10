@@ -2,13 +2,24 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { otherLocale, t, type Locale } from "@/lib/i18n";
 import { useCartStore } from "@/lib/cart-store";
 
 function CartButton() {
   const { count, openCart } = useCartStore();
   const itemCount = count();
+  const prevCount = useRef(itemCount);
+  const [bumpId, setBumpId] = useState(0);
+
+  useEffect(() => {
+    if (itemCount > prevCount.current) {
+      setBumpId((id) => id + 1);
+    }
+    prevCount.current = itemCount;
+  }, [itemCount]);
+
   return (
     <button
       type="button"
@@ -16,7 +27,16 @@ function CartButton() {
       aria-label="Cart"
       className="relative text-forest-950 hover:text-forest-700 transition-colors"
     >
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <motion.svg
+        key={bumpId}
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden
+        animate={bumpId > 0 ? { scale: [1, 1.35, 0.9, 1], rotate: [0, -8, 8, 0] } : undefined}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+      >
         <path
           d="M6 8h12l-1.2 10.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6 8z"
           stroke="currentColor"
@@ -31,12 +51,26 @@ function CartButton() {
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-      </svg>
+      </motion.svg>
       {itemCount > 0 && (
         <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-earth-600 text-[9px] font-bold text-cream">
           {itemCount}
         </span>
       )}
+      <AnimatePresence>
+        {bumpId > 0 && (
+          <motion.span
+            key={bumpId}
+            initial={{ opacity: 1, y: 0, scale: 0.8 }}
+            animate={{ opacity: 0, y: -28, scale: 1.1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="pointer-events-none absolute -top-3 right-0 text-xs font-bold text-earth-600"
+          >
+            +1
+          </motion.span>
+        )}
+      </AnimatePresence>
     </button>
   );
 }

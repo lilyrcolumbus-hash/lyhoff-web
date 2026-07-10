@@ -13,6 +13,11 @@ export interface Product {
   image: string;
   badge?: { en: string; es: string };
   active: boolean;
+  /** Products sharing this id are shown as one product with a size/variant selector. */
+  variantGroup?: string;
+  /** Short scannable claims, pulled from the description — shown as bullets on the product page. */
+  benefits: { en: string; es: string }[];
+  howToUse: { en: string; es: string };
 }
 
 const UNSPLASH = (id: string, w = 800, h = 900) =>
@@ -45,6 +50,16 @@ export const products: Product[] = [
     image: UNSPLASH("1596755389378-c31d21fd1273"),
     badge: { en: "Best Seller", es: "Más Vendido" },
     active: true,
+    variantGroup: "tallow-cream",
+    benefits: [
+      { en: "Two ingredients, nothing else", es: "Dos ingredientes, nada más" },
+      { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
+      { en: "Absorbs fast, no greasy residue", es: "Absorción rápida, sin residuo graso" },
+    ],
+    howToUse: {
+      en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
+      es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
+    },
   },
   {
     asin: "B0FHTHNH56",
@@ -69,6 +84,16 @@ export const products: Product[] = [
     image: UNSPLASH("1611080541599-8c6dbde7ad3e"),
     badge: { en: "Best Value", es: "Mejor Valor" },
     active: true,
+    variantGroup: "tallow-cream",
+    benefits: [
+      { en: "Same two-ingredient formula", es: "La misma fórmula de dos ingredientes" },
+      { en: "Bigger jar, better value per oz", es: "Frasco más grande, mejor valor por onza" },
+      { en: "Jade roller included", es: "Incluye jade roller" },
+    ],
+    howToUse: {
+      en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
+      es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
+    },
   },
   {
     asin: "B0FPMDLPQL",
@@ -91,6 +116,15 @@ export const products: Product[] = [
     size: "2 oz",
     image: UNSPLASH("1617714651703-d4e8b66efb73"),
     active: true,
+    benefits: [
+      { en: "Traditional \"knitbone\" herb, organic", es: "Hierba tradicional \"suelda huesos\", orgánica" },
+      { en: "Whipped light, fast-absorbing texture", es: "Textura batida, ligera, absorción rápida" },
+      { en: "Unscented — safe for sensitive skin", es: "Sin fragancia — segura para piel sensible" },
+    ],
+    howToUse: {
+      en: "Massage a small amount into the area of concern 1–2 times daily. For external use only.",
+      es: "Masajea una pequeña cantidad en la zona de interés 1–2 veces al día. Solo para uso externo.",
+    },
   },
   {
     asin: "B0DX7J7N6B",
@@ -114,6 +148,15 @@ export const products: Product[] = [
     image: UNSPLASH("1527799820374-87036042f89f"),
     badge: { en: "New", es: "Nuevo" },
     active: true,
+    benefits: [
+      { en: "Ultrasonic micronized for deeper penetration", es: "Micronizado con ultrasonido para mayor penetración" },
+      { en: "Non-greasy, no heavy residue", es: "No graso, sin residuo pesado" },
+      { en: "Includes satin bonnet + scalp massager", es: "Incluye gorro de satén + masajeador de cuero cabelludo" },
+    ],
+    howToUse: {
+      en: "Apply a few drops directly to the scalp and massage in circular motions for 2–3 minutes. Use 3–4 times per week.",
+      es: "Aplica unas gotas directo en el cuero cabelludo y masajea en círculos por 2–3 minutos. Usa 3–4 veces por semana.",
+    },
   },
   {
     asin: "B0FMQPDLFN",
@@ -136,6 +179,15 @@ export const products: Product[] = [
     size: "8 oz",
     image: UNSPLASH("1505118380757-91f5f5632de0"),
     active: true,
+    benefits: [
+      { en: "Ancient inland sea salt — no microplastics", es: "Sal de mar interior antiguo — sin microplásticos" },
+      { en: "Matte finish, non-sticky", es: "Acabado mate, no pegajoso" },
+      { en: "Works on all hair types", es: "Funciona en todo tipo de cabello" },
+    ],
+    howToUse: {
+      en: "Spray into damp or dry hair from mid-length to ends. Scrunch or twist for texture. Reapply as needed.",
+      es: "Rocía sobre cabello húmedo o seco, desde el medio hasta las puntas. Enrosca o presiona para dar textura. Reaplica si es necesario.",
+    },
   },
   {
     asin: "B0FHJB99W4",
@@ -158,6 +210,15 @@ export const products: Product[] = [
     size: "4-Pack / 8 oz each",
     image: UNSPLASH("1552728089-57bdde30beb3"),
     active: true,
+    benefits: [
+      { en: "Dissolves instantly — no boiling", es: "Se disuelve al instante — sin hervir" },
+      { en: "No dyes, no preservatives", es: "Sin colorantes, sin conservantes" },
+      { en: "Each pouch makes 64oz of nectar", es: "Cada bolsa rinde 64oz de néctar" },
+    ],
+    howToUse: {
+      en: "Empty one pouch into a clean feeder and add 8 cups of water. Stir until dissolved. Replace every 3–4 days.",
+      es: "Vacía una bolsa en un bebedero limpio y agrega 8 tazas de agua. Revuelve hasta disolver. Cambia cada 3–4 días.",
+    },
   },
   {
     asin: "B0FBHD84ZX",
@@ -180,6 +241,15 @@ export const products: Product[] = [
     size: "2 oz / 59 ml",
     image: UNSPLASH("1587854692152-cbe660dbde88"),
     active: true,
+    benefits: [
+      { en: "USP pharmaceutical grade", es: "Grado farmacéutico USP" },
+      { en: "No formaldehyde, no alcohol", es: "Sin formaldehído, sin alcohol" },
+      { en: "Gluten-free", es: "Libre de gluten" },
+    ],
+    howToUse: {
+      en: "Use strictly according to the product label. Consult a healthcare provider before use.",
+      es: "Usar estrictamente según la etiqueta del producto. Consulta a un profesional de salud antes de usar.",
+    },
   },
 ];
 
@@ -190,3 +260,20 @@ export const productsByCategory = (cat: ProductCategory) =>
 
 export const getProduct = (slug: string) =>
   products.find((p) => p.slug === slug);
+
+/** All active products sharing a variantGroup, sorted by price. */
+export const getVariants = (variantGroup: string) =>
+  activeProducts
+    .filter((p) => p.variantGroup === variantGroup)
+    .sort((a, b) => a.price - b.price);
+
+/** Listing-grid dedupe: keep only the first (cheapest) product per variantGroup. */
+export const dedupeVariants = (list: Product[]) => {
+  const seen = new Set<string>();
+  return list.filter((p) => {
+    if (!p.variantGroup) return true;
+    if (seen.has(p.variantGroup)) return false;
+    seen.add(p.variantGroup);
+    return true;
+  });
+};

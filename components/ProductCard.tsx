@@ -1,11 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
 import { type Product } from "@/lib/products";
 import { useCartStore } from "@/lib/cart-store";
 import { t, type Locale } from "@/lib/i18n";
+import { TiltImage } from "@/components/TiltImage";
 
 interface Props {
   product: Product;
@@ -49,27 +49,24 @@ export function ProductCard({
       className="group flex flex-col bg-white border border-stone-200 hover:border-stone-300 hover:shadow-lg transition-all duration-300"
     >
       {/* Image */}
-      <Link
-        href={`/${locale}/products/${product.slug}/`}
-        className="relative block overflow-hidden bg-stone-50 aspect-[4/5]"
-      >
-        <Image
+      <Link href={`/${locale}/products/${product.slug}/`} className="block">
+        <TiltImage
           src={imageUrl}
           alt={name}
-          fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-        {badge && !isPlaceholderImage && (
-          <span className="absolute top-3 left-3 bg-forest-950 text-cream text-[10px] font-semibold uppercase tracking-widest px-3 py-1">
-            {badge}
-          </span>
-        )}
-        {isPlaceholderImage && (
-          <span className="absolute top-3 left-3 bg-earth-600 text-cream text-[10px] font-semibold uppercase tracking-widest px-3 py-1">
-            {locale === "en" ? "Photo needed" : "Foto pendiente"}
-          </span>
-        )}
+          className="aspect-[4/5] bg-stone-50"
+        >
+          {badge && !isPlaceholderImage && (
+            <span className="absolute top-3 left-3 bg-forest-950 text-cream text-[10px] font-semibold uppercase tracking-widest px-3 py-1">
+              {badge}
+            </span>
+          )}
+          {isPlaceholderImage && (
+            <span className="absolute top-3 left-3 bg-earth-600 text-cream text-[10px] font-semibold uppercase tracking-widest px-3 py-1">
+              {locale === "en" ? "Photo needed" : "Foto pendiente"}
+            </span>
+          )}
+        </TiltImage>
       </Link>
 
       {/* Content */}

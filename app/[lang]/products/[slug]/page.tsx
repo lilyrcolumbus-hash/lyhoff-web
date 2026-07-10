@@ -3,11 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale, locales, SITE_NAME, SITE_URL, type Locale } from "@/lib/i18n";
-import { getProduct, products, productsByCategory } from "@/lib/products";
+import { dedupeVariants, getProduct, getVariants, products, productsByCategory } from "@/lib/products";
 import { getProductImageUrl, getProductImageUrls } from "@/lib/product-images";
+import { FREE_SHIPPING_THRESHOLD_CENTS } from "@/lib/shipping";
 import { ProductCard } from "@/components/ProductCard";
 import { TrustBadges } from "@/components/TrustBadges";
 import { AddToBagButton } from "@/components/AddToBagButton";
+import { TiltImage } from "@/components/TiltImage";
 import { Newsletter } from "@/components/Newsletter";
 
 export const dynamicParams = false;
@@ -70,9 +72,10 @@ export default async function ProductDetailPage({
   const gallery = localImages.length > 0 ? localImages : [fallback.url];
   const isPlaceholderGallery = localImages.length === 0 && fallback.isPlaceholder;
 
-  const related = productsByCategory(product.category).filter(
-    (p) => p.slug !== product.slug,
+  const related = dedupeVariants(productsByCategory(product.category)).filter(
+    (p) => p.slug !== product.slug && p.variantGroup !== product.variantGroup,
   );
+  const variants = product.variantGroup ? getVariants(product.variantGroup) : [];
 
   return (
     <div className="bg-cream">
@@ -94,21 +97,13 @@ export default async function ProductDetailPage({
       <div className="mx-auto grid max-w-6xl gap-12 px-6 py-10 lg:grid-cols-2 lg:gap-16">
         {/* Gallery */}
         <div>
-          <div className="relative aspect-[4/5] w-full overflow-hidden bg-stone-50">
-            <Image
-              src={gallery[0]}
-              alt={name}
-              fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover"
-              priority
-            />
+          <TiltImage src={gallery[0]} alt={name} priority className="aspect-[4/5] w-full bg-stone-50">
             {isPlaceholderGallery && (
               <span className="absolute top-3 left-3 bg-earth-600 text-cream text-[10px] font-semibold uppercase tracking-widest px-3 py-1">
                 {locale === "en" ? "Photo needed" : "Foto pendiente"}
               </span>
             )}
-          </div>
+          </TiltImage>
           {gallery.length > 1 && (
             <div className="mt-3 grid grid-cols-4 gap-3">
               {gallery.slice(1, 5).map((src) => (
@@ -136,6 +131,38 @@ export default async function ProductDetailPage({
           <p className="mt-2 text-base font-medium text-stone-500 italic">{tagline}</p>
           <p className="mt-5 text-base text-stone-600 leading-relaxed">{description}</p>
 
+          <ul className="mt-4 flex flex-col gap-1.5">
+            {product.benefits.map((b) => (
+              <li key={b.en} className="flex items-start gap-2 text-sm text-stone-600">
+                <span className="mt-1 text-earth-500" aria-hidden>✓</span>
+                {b[locale]}
+              </li>
+            ))}
+          </ul>
+
+          {variants.length > 1 && (
+            <div className="mt-6">
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-2">
+                {locale === "en" ? "Size" : "Tamaño"}
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {variants.map((v) => (
+                  <Link
+                    key={v.slug}
+                    href={`/${locale}/products/${v.slug}/`}
+                    className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
+                      v.slug === product.slug
+                        ? "border-forest-950 bg-forest-950 text-cream"
+                        : "border-stone-300 text-forest-950 hover:border-forest-500"
+                    }`}
+                  >
+                    {v.size}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="mt-6">
             <h2 className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-2">
               {locale === "en" ? "Ingredients" : "Ingredientes"}
@@ -158,6 +185,13 @@ export default async function ProductDetailPage({
             </Link>
           </div>
 
+          <div className="mt-6">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-2">
+              {locale === "en" ? "How to use" : "Cómo usar"}
+            </h2>
+            <p className="text-sm text-stone-600 leading-relaxed">{product.howToUse[locale]}</p>
+          </div>
+
           <div className="mt-8 flex items-center justify-between border-t border-stone-200 pt-8">
             <span className="font-display text-2xl font-bold text-forest-950">
               ${product.price.toFixed(2)}
@@ -171,6 +205,12 @@ export default async function ProductDetailPage({
               locale={locale}
             />
           </div>
+
+          <p className="mt-4 text-xs text-stone-400">
+            {locale === "en"
+              ? `Free shipping on orders over $${(FREE_SHIPPING_THRESHOLD_CENTS / 100).toFixed(0)} · Packed and shipped by us, not a warehouse · Questions? Email us directly.`
+              : `Envío gratis en pedidos mayores a $${(FREE_SHIPPING_THRESHOLD_CENTS / 100).toFixed(0)} · Empacado y enviado por nosotros, no por una bodega · ¿Dudas? Escríbenos directo.`}
+          </p>
 
           <TrustBadges locale={locale} theme="light" className="mt-10 border-t border-stone-200 pt-8 sm:grid-cols-1 gap-6" />
         </div>

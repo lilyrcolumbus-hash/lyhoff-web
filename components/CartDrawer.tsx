@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore } from "@/lib/cart-store";
 import { startCheckout } from "@/lib/checkout";
 import { t, type Locale } from "@/lib/i18n";
@@ -23,17 +24,26 @@ export function CartDrawer({ locale }: { locale: Locale }) {
     }
   }
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
-      <button
-        type="button"
-        aria-label="Close"
-        className="absolute inset-0 bg-forest-950/40 backdrop-blur-sm"
-        onClick={closeCart}
-      />
-      <div className="relative flex h-full w-full max-w-md flex-col bg-cream shadow-2xl">
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex justify-end">
+          <motion.button
+            type="button"
+            aria-label="Close"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="absolute inset-0 bg-forest-950/40 backdrop-blur-sm"
+            onClick={closeCart}
+          />
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", stiffness: 340, damping: 34 }}
+            className="relative flex h-full w-full max-w-md flex-col bg-cream shadow-2xl">
         <div className="flex items-center justify-between border-b border-stone-200 px-6 py-5">
           <h2 className="font-display text-lg font-bold text-forest-950">{dict.cartTitle}</h2>
           <button
@@ -116,7 +126,9 @@ export function CartDrawer({ locale }: { locale: Locale }) {
             {error && <p className="mt-3 text-xs text-earth-700">{dict.cartError}</p>}
           </div>
         )}
-      </div>
-    </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   );
 }

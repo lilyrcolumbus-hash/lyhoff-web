@@ -23,6 +23,7 @@
  */
 
 import { getProduct } from "./lib/products";
+import { FREE_SHIPPING_THRESHOLD_CENTS, FLAT_SHIPPING_CENTS } from "./lib/shipping";
 
 interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
@@ -105,9 +106,6 @@ function toStripeFormBody(params: Record<string, unknown>): string {
   return pairs.join("&");
 }
 
-// Placeholder shipping rates — owner action: set your real costs before launch.
-const FREE_SHIPPING_THRESHOLD_CENTS = 5000; // free shipping at $50+ subtotal
-const FLAT_SHIPPING_CENTS = 699; // $6.99 flat rate below that
 
 async function handleCheckout(request: Request, env: Env): Promise<Response> {
   if (!env.STRIPE_SECRET_KEY) return json({ error: "not_configured" }, 503);

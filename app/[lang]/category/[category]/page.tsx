@@ -10,7 +10,7 @@ import {
   type Locale,
 } from "@/lib/i18n";
 import { getArticlesByCategory } from "@/lib/content";
-import { productsByCategory } from "@/lib/products";
+import { dedupeVariants, productsByCategory } from "@/lib/products";
 import { getProductImageUrl } from "@/lib/product-images";
 import { ArticleCard } from "@/components/ArticleCard";
 import { ProductCard } from "@/components/ProductCard";
@@ -62,7 +62,7 @@ export default async function CategoryPage({
   // (bodycare/hair/home/hoff) only cleanly overlap on "bodycare" — only cross-sell there.
   const shopProducts =
     category === "bodycare"
-      ? [...productsByCategory("bodycare"), ...productsByCategory("hair")]
+      ? dedupeVariants([...productsByCategory("bodycare"), ...productsByCategory("hair")])
       : [];
 
   return (

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale, t, type Locale } from "@/lib/i18n";
-import { activeProducts, productsByCategory } from "@/lib/products";
+import { activeProducts, dedupeVariants, productsByCategory } from "@/lib/products";
 import { getProductImageUrl } from "@/lib/product-images";
 import { ProductCard } from "@/components/ProductCard";
 
@@ -14,10 +14,10 @@ export default async function ProductsPage({
   if (!isLocale(lang)) notFound();
   const locale: Locale = lang;
 
-  const bodycare = productsByCategory("bodycare");
-  const hair = productsByCategory("hair");
-  const home = productsByCategory("home");
-  const hoff = productsByCategory("hoff");
+  const bodycare = dedupeVariants(productsByCategory("bodycare"));
+  const hair = dedupeVariants(productsByCategory("hair"));
+  const home = dedupeVariants(productsByCategory("home"));
+  const hoff = dedupeVariants(productsByCategory("hoff"));
 
   const sections = [
     {
