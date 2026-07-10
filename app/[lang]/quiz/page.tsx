@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { isLocale, locales, SITE_NAME, type Locale } from "@/lib/i18n";
+import { isLocale, locales, type Locale } from "@/lib/i18n";
 import { products } from "@/lib/products";
 import { getProductImageUrl } from "@/lib/product-images";
 import { ProductQuiz } from "@/components/ProductQuiz";
@@ -17,7 +17,7 @@ export async function generateMetadata({
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : "en";
   return {
-    title: locale === "en" ? `Find your product — ${SITE_NAME}` : `Encuentra tu producto — ${SITE_NAME}`,
+    title: locale === "en" ? "Find your product" : "Encuentra tu producto",
     alternates: {
       canonical: `/${locale}/quiz/`,
       languages: { en: "/en/quiz/", es: "/es/quiz/" },

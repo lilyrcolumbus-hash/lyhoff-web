@@ -30,7 +30,7 @@ export async function generateMetadata({
   if (!product) return {};
 
   return {
-    title: `${product.name[locale]} — ${SITE_NAME}`,
+    title: product.name[locale],
     description: product.description[locale],
     alternates: {
       canonical: `/${locale}/products/${slug}/`,
