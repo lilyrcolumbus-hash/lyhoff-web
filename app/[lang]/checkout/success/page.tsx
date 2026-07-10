@@ -1,9 +1,20 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { isLocale, locales } from "@/lib/i18n";
+import { isLocale, locales, SITE_NAME, type Locale } from "@/lib/i18n";
 import { CheckoutSuccessClient } from "@/components/CheckoutSuccessClient";
 
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : "en";
+  return { title: locale === "en" ? `Thank you — ${SITE_NAME}` : `Gracias — ${SITE_NAME}` };
 }
 
 export default async function CheckoutSuccessPage({

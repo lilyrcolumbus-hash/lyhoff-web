@@ -9,16 +9,25 @@ import { useCartStore } from "@/lib/cart-store";
 
 function CartButton() {
   const { count, openCart } = useCartStore();
-  const itemCount = count();
+  const [mounted, setMounted] = useState(false);
+  // Cart state comes from localStorage, which the server can never see — the
+  // very first client render must match the server's "empty" render exactly,
+  // or React throws a hydration mismatch. So itemCount is forced to 0 until
+  // after mount, then the real (possibly rehydrated) count takes over.
+  const itemCount = mounted ? count() : 0;
   const prevCount = useRef(itemCount);
   const [bumpId, setBumpId] = useState(0);
 
   useEffect(() => {
-    if (itemCount > prevCount.current) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && itemCount > prevCount.current) {
       setBumpId((id) => id + 1);
     }
     prevCount.current = itemCount;
-  }, [itemCount]);
+  }, [itemCount, mounted]);
 
   return (
     <button

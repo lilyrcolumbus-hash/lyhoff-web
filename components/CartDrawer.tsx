@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore } from "@/lib/cart-store";
@@ -12,6 +12,12 @@ export function CartDrawer({ locale }: { locale: Locale }) {
   const { items, isOpen, closeCart, removeItem, updateQty, total } = useCartStore();
   const [checkingOut, setCheckingOut] = useState(false);
   const [error, setError] = useState(false);
+
+  // The cart store's persist middleware is skipHydration'd (see lib/cart-store.ts) —
+  // rehydrate once, here, since this component is always mounted (in the root layout).
+  useEffect(() => {
+    useCartStore.persist.rehydrate();
+  }, []);
 
   async function onCheckout() {
     setError(false);

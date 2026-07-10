@@ -1,9 +1,26 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { isLocale, t, type Locale } from "@/lib/i18n";
+import { isLocale, SITE_NAME, t, type Locale } from "@/lib/i18n";
 import { activeProducts, dedupeVariants, productsByCategory } from "@/lib/products";
 import { getProductImageUrl } from "@/lib/product-images";
 import { ProductCard } from "@/components/ProductCard";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : "en";
+  return {
+    title: locale === "en" ? `Shop — ${SITE_NAME}` : `Tienda — ${SITE_NAME}`,
+    alternates: {
+      canonical: `/${locale}/products/`,
+      languages: { en: "/en/products/", es: "/es/products/" },
+    },
+  };
+}
 
 export default async function ProductsPage({
   params,

@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
+
+export const metadata: Metadata = {
+  title: "Page not found — LYHOFF",
+};
 
 // Global 404. Self-contained html/body because the root layout lives under
 // app/[lang] and does not wrap this boundary.

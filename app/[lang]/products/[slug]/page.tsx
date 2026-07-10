@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale, locales, SITE_NAME, SITE_URL, type Locale } from "@/lib/i18n";
@@ -9,7 +8,7 @@ import { FREE_SHIPPING_THRESHOLD_CENTS } from "@/lib/shipping";
 import { ProductCard } from "@/components/ProductCard";
 import { TrustBadges } from "@/components/TrustBadges";
 import { AddToBagButton } from "@/components/AddToBagButton";
-import { TiltImage } from "@/components/TiltImage";
+import { ProductGallery } from "@/components/ProductGallery";
 import { Newsletter } from "@/components/Newsletter";
 
 export const dynamicParams = false;
@@ -96,24 +95,12 @@ export default async function ProductDetailPage({
 
       <div className="mx-auto grid max-w-6xl gap-12 px-6 py-10 lg:grid-cols-2 lg:gap-16">
         {/* Gallery */}
-        <div>
-          <TiltImage src={gallery[0]} alt={name} priority className="aspect-[4/5] w-full bg-stone-50">
-            {isPlaceholderGallery && (
-              <span className="absolute top-3 left-3 bg-earth-600 text-cream text-[10px] font-semibold uppercase tracking-widest px-3 py-1">
-                {locale === "en" ? "Photo needed" : "Foto pendiente"}
-              </span>
-            )}
-          </TiltImage>
-          {gallery.length > 1 && (
-            <div className="mt-3 grid grid-cols-4 gap-3">
-              {gallery.slice(1, 5).map((src) => (
-                <div key={src} className="relative aspect-square overflow-hidden bg-stone-50">
-                  <Image src={src} alt={name} fill sizes="25vw" className="object-cover" />
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <ProductGallery
+          images={gallery}
+          alt={name}
+          isPlaceholder={isPlaceholderGallery}
+          placeholderLabel={locale === "en" ? "Photo needed" : "Foto pendiente"}
+        />
 
         {/* Info */}
         <div>
