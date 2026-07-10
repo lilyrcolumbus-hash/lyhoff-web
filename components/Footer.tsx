@@ -14,6 +14,12 @@ export function Footer({ locale }: { locale: Locale }) {
             <p className="mt-3 text-sm text-stone-400 leading-relaxed">
               {dict.footerTagline}
             </p>
+            <a
+              href="mailto:lyhoffllc.info@gmail.com"
+              className="mt-3 inline-block text-sm text-stone-400 hover:text-cream transition-colors"
+            >
+              lyhoffllc.info@gmail.com
+            </a>
           </div>
 
           <div>
@@ -72,6 +78,38 @@ export function Footer({ locale }: { locale: Locale }) {
                 >
                   Etsy
                 </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">
+              {locale === "en" ? "Legal" : "Legal"}
+            </h2>
+            <ul className="flex flex-col gap-2 text-sm">
+              <li>
+                <Link
+                  href={`/${locale}/shipping-returns/`}
+                  className="text-stone-400 hover:text-cream transition-colors"
+                >
+                  {locale === "en" ? "Shipping & Returns" : "Envíos y Devoluciones"}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/privacy/`}
+                  className="text-stone-400 hover:text-cream transition-colors"
+                >
+                  {locale === "en" ? "Privacy Policy" : "Política de Privacidad"}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/terms/`}
+                  className="text-stone-400 hover:text-cream transition-colors"
+                >
+                  {locale === "en" ? "Terms of Service" : "Términos de Servicio"}
+                </Link>
               </li>
             </ul>
           </div>
