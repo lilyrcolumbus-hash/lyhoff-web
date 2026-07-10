@@ -7,6 +7,7 @@ import { getProductImageUrl } from "@/lib/product-images";
 import { ArticleCard } from "@/components/ArticleCard";
 import { ProductCard } from "@/components/ProductCard";
 import { PlaceholderPhoto } from "@/components/PlaceholderPhoto";
+import { StockPhoto } from "@/components/StockPhoto";
 import { TrustBadges } from "@/components/TrustBadges";
 import { CategoryTiles } from "@/components/CategoryTiles";
 import { Newsletter } from "@/components/Newsletter";
@@ -14,24 +15,30 @@ import { Blob, WaveDivider } from "@/components/illustrations";
 import { HeroText } from "@/components/HeroText";
 import { FloatingLeaves } from "@/components/FloatingLeaves";
 
-const processPhotos: { note: Record<Locale, string> }[] = [
+const processPhotos: { note: Record<Locale, string>; stockSrc: string }[] = [
   {
     note: {
       en: "Hands mixing the tallow cream",
       es: "Manos mezclando la crema de sebo",
     },
+    stockSrc:
+      "https://images.unsplash.com/photo-1693004926638-d2e47d705229?w=600&h=600&q=80&auto=format&fit=crop",
   },
   {
     note: {
       en: "Fresh herbs from the garden",
       es: "Hierbas frescas del huerto",
     },
+    stockSrc:
+      "https://images.unsplash.com/photo-1749655248287-d1e0acb5f8d1?w=600&h=600&q=80&auto=format&fit=crop",
   },
   {
     note: {
       en: "Bottling & labeling by hand",
       es: "Envasado y etiquetado a mano",
     },
+    stockSrc:
+      "https://images.unsplash.com/photo-1709666414115-47ecd5143293?w=600&h=600&q=80&auto=format&fit=crop",
   },
 ];
 
@@ -176,7 +183,7 @@ export default async function HomePage({
           </h2>
           <div className="grid gap-6 sm:grid-cols-3">
             {processPhotos.map((photo, i) => (
-              <PlaceholderPhoto key={i} ratio="square" locale={locale} note={photo.note} />
+              <StockPhoto key={i} ratio="square" src={photo.stockSrc} alt={photo.note[locale]} />
             ))}
           </div>
         </div>

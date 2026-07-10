@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { isLocale, t, type Locale } from "@/lib/i18n";
 import { Newsletter } from "@/components/Newsletter";
 import { PlaceholderPhoto } from "@/components/PlaceholderPhoto";
+import { StockPhoto } from "@/components/StockPhoto";
 import { Blob } from "@/components/illustrations";
 
 export async function generateMetadata({
@@ -78,21 +79,15 @@ export default async function AboutPage({
         ))}
       </div>
       <div className="mt-10 grid gap-4 sm:grid-cols-2">
-        <PlaceholderPhoto
+        <StockPhoto
           ratio="square"
-          locale={locale}
-          note={{
-            en: "Hands making a product",
-            es: "Manos elaborando un producto",
-          }}
+          src="https://images.unsplash.com/photo-1693004926638-d2e47d705229?w=600&h=600&q=80&auto=format&fit=crop"
+          alt={locale === "en" ? "Hands making a product" : "Manos elaborando un producto"}
         />
-        <PlaceholderPhoto
+        <StockPhoto
           ratio="square"
-          locale={locale}
-          note={{
-            en: "Garden or harvest shot",
-            es: "Foto del huerto o la cosecha",
-          }}
+          src="https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?w=600&h=600&q=80&auto=format&fit=crop"
+          alt={locale === "en" ? "Garden or harvest shot" : "Foto del huerto o la cosecha"}
         />
       </div>
       <section className="mt-12">
