@@ -65,7 +65,7 @@ export function Footer({ locale }: { locale: Locale }) {
               </li>
               <li>
                 <a
-                  href="https://www.etsy.com"
+                  href="https://www.etsy.com/shop/lyhoff"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-stone-400 hover:text-cream transition-colors"

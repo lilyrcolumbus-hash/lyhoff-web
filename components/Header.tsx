@@ -97,8 +97,11 @@ export function Header({ locale }: { locale: Locale }) {
           <Link href={`/${locale}/products/`} className="hover:text-forest-900 transition-colors font-semibold text-forest-950">
             {locale === "en" ? "Shop" : "Tienda"}
           </Link>
-          <Link href={`/${locale}/category/garden/`} className="hover:text-forest-900 transition-colors">
+          <Link href={`/${locale}/topics/`} className="hover:text-forest-900 transition-colors">
             {dict.navTopics}
+          </Link>
+          <Link href={`/${locale}/ingredients/`} className="hover:text-forest-900 transition-colors">
+            {locale === "en" ? "Ingredients" : "Ingredientes"}
           </Link>
           <Link href={`/${locale}/about/`} className="hover:text-forest-900 transition-colors">
             {dict.navAbout}
@@ -146,6 +149,9 @@ export function Header({ locale }: { locale: Locale }) {
             </Link>
             <Link href={`/${locale}/category/remedies/`} onClick={() => setOpen(false)}>
               {locale === "en" ? "Herbal Remedies" : "Remedios Herbales"}
+            </Link>
+            <Link href={`/${locale}/ingredients/`} onClick={() => setOpen(false)}>
+              {locale === "en" ? "Ingredients" : "Ingredientes"}
             </Link>
             <Link href={`/${locale}/about/`} onClick={() => setOpen(false)}>
               {dict.navAbout}

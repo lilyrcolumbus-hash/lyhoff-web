@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale, locales, SITE_NAME, type Locale } from "@/lib/i18n";
 import { ingredients } from "@/lib/ingredients";
-import { getProduct } from "@/lib/products";
+import { IngredientCard, type IngredientIcon } from "@/components/IngredientCard";
+
+const ICONS: IngredientIcon[] = ["jar", "droplet", "leaf", "sprout", "leaf", "droplet", "droplet", "jar"];
 
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
@@ -36,50 +37,32 @@ export default async function IngredientsPage({
 
   return (
     <div className="bg-cream">
-      <div className="mx-auto max-w-3xl px-6 pt-20 pb-16">
+      <div className="mx-auto max-w-3xl px-6 pt-20 pb-16 text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.25em] text-earth-600 mb-4">
           {locale === "en" ? "Full transparency" : "Transparencia total"}
         </p>
         <h1 className="font-display text-5xl font-bold text-forest-950 md:text-6xl">
           {locale === "en" ? "What's actually in it" : "Lo que de verdad lleva"}
         </h1>
-        <p className="mt-5 text-base text-stone-500 leading-relaxed">
+        <p className="mx-auto mt-5 max-w-lg text-base text-stone-500 leading-relaxed">
           {locale === "en"
-            ? "Every ingredient we use, in plain language — what it is, why it's in the jar, and which products it's in. No proprietary blends hiding what's really inside."
-            : "Cada ingrediente que usamos, en palabras simples — qué es, por qué está en el frasco, y en qué productos lo encuentras. Sin mezclas \"propietarias\" que escondan lo que realmente lleva."}
+            ? "Every ingredient we use, in plain language. No proprietary blends hiding what's really inside — tap a card to flip it."
+            : "Cada ingrediente que usamos, en palabras simples. Sin mezclas \"propietarias\" que escondan lo que realmente lleva — toca una tarjeta para voltearla."}
         </p>
       </div>
 
-      <div className="border-t border-stone-200" />
-
-      <div className="mx-auto max-w-3xl px-6 py-16">
-        <ul className="flex flex-col divide-y divide-stone-200">
-          {ingredients.map((ing) => (
-            <li key={ing.slug} className="py-8">
-              <h2 className="font-display text-xl font-bold text-forest-950">
-                {ing.name[locale]}
-              </h2>
-              <p className="mt-2 text-sm text-stone-600 leading-relaxed">
-                {ing.blurb[locale]}
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {ing.usedIn.map((slug) => {
-                  const product = getProduct(slug);
-                  if (!product) return null;
-                  return (
-                    <Link
-                      key={slug}
-                      href={`/${locale}/products/${slug}/`}
-                      className="text-[10px] font-medium uppercase tracking-wide text-earth-700 border border-earth-300 px-2 py-0.5 hover:bg-earth-50 transition-colors"
-                    >
-                      {product.name[locale]}
-                    </Link>
-                  );
-                })}
-              </div>
-            </li>
+      <div className="mx-auto max-w-5xl px-6 pb-24">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {ingredients.map((ing, i) => (
+            <IngredientCard
+              key={ing.slug}
+              ingredient={ing}
+              icon={ICONS[i % ICONS.length]}
+              locale={locale}
+              index={i}
+            />
           ))}
-        </ul>
+        </div>
       </div>
     </div>
   );
