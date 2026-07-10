@@ -48,14 +48,20 @@ export function Footer({ locale }: { locale: Locale }) {
                 </Link>
               </li>
               <li>
-                <a
-                  href="https://www.amazon.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href={`/${locale}/cart/`}
                   className="text-stone-400 hover:text-cream transition-colors"
                 >
-                  Amazon
-                </a>
+                  {dict.viewCart}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/ingredients/`}
+                  className="text-stone-400 hover:text-cream transition-colors"
+                >
+                  {locale === "en" ? "Ingredients" : "Ingredientes"}
+                </Link>
               </li>
               <li>
                 <a

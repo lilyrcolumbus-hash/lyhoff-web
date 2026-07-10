@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import "../globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { CartDrawer } from "@/components/CartDrawer";
 import {
   isLocale,
   locales,
@@ -81,6 +82,7 @@ export default async function LangLayout({
         <Header locale={lang} />
         <main className="flex-1">{children}</main>
         <Footer locale={lang} />
+        <CartDrawer locale={lang} />
       </body>
     </html>
   );

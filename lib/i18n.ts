@@ -100,6 +100,15 @@ type Dict = {
   shopAll: string;
   featuredProducts: string;
   ourProcess: string;
+  cartTitle: string;
+  cartEmpty: string;
+  cartSubtotal: string;
+  cartRemove: string;
+  cartCheckout: string;
+  cartCheckingOut: string;
+  cartError: string;
+  addToBag: string;
+  viewCart: string;
 };
 
 export const dictionary: Record<Locale, Dict> = {
@@ -137,6 +146,15 @@ export const dictionary: Record<Locale, Dict> = {
     shopAll: "Shop all",
     featuredProducts: "Featured products",
     ourProcess: "How we make it",
+    cartTitle: "Your bag",
+    cartEmpty: "Your bag is empty.",
+    cartSubtotal: "Subtotal",
+    cartRemove: "Remove",
+    cartCheckout: "Checkout",
+    cartCheckingOut: "Redirecting to checkout…",
+    cartError: "Something went wrong. Please try again.",
+    addToBag: "Add to bag",
+    viewCart: "View bag",
   },
   es: {
     tagline: "Puro. Natural. Sin químicos.",
@@ -172,6 +190,15 @@ export const dictionary: Record<Locale, Dict> = {
     shopAll: "Ver toda la tienda",
     featuredProducts: "Productos destacados",
     ourProcess: "Cómo lo hacemos",
+    cartTitle: "Tu bolsa",
+    cartEmpty: "Tu bolsa está vacía.",
+    cartSubtotal: "Subtotal",
+    cartRemove: "Quitar",
+    cartCheckout: "Pagar",
+    cartCheckingOut: "Redirigiendo al pago…",
+    cartError: "Algo salió mal. Inténtalo de nuevo.",
+    addToBag: "Añadir a la bolsa",
+    viewCart: "Ver bolsa",
   },
 };
 

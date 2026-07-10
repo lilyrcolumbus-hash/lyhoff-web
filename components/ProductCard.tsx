@@ -2,8 +2,10 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { amazonUrl, type Product } from "@/lib/products";
-import type { Locale } from "@/lib/i18n";
+import Link from "next/link";
+import { type Product } from "@/lib/products";
+import { useCartStore } from "@/lib/cart-store";
+import { t, type Locale } from "@/lib/i18n";
 
 interface Props {
   product: Product;
@@ -24,6 +26,19 @@ export function ProductCard({
   const tagline = product.tagline[locale];
   const description = product.description[locale];
   const badge = product.badge?.[locale];
+  const dict = t(locale);
+  const { addItem, openCart } = useCartStore();
+
+  function onAddToBag() {
+    addItem({
+      slug: product.slug,
+      name,
+      price: product.price,
+      size: product.size,
+      image: imageUrl,
+    });
+    openCart();
+  }
 
   return (
     <motion.div
@@ -34,7 +49,10 @@ export function ProductCard({
       className="group flex flex-col bg-white border border-stone-200 hover:border-stone-300 hover:shadow-lg transition-all duration-300"
     >
       {/* Image */}
-      <div className="relative overflow-hidden bg-stone-50 aspect-[4/5]">
+      <Link
+        href={`/${locale}/products/${product.slug}/`}
+        className="relative block overflow-hidden bg-stone-50 aspect-[4/5]"
+      >
         <Image
           src={imageUrl}
           alt={name}
@@ -52,7 +70,7 @@ export function ProductCard({
             {locale === "en" ? "Photo needed" : "Foto pendiente"}
           </span>
         )}
-      </div>
+      </Link>
 
       {/* Content */}
       <div className="flex flex-col flex-1 p-6">
@@ -60,7 +78,9 @@ export function ProductCard({
           {product.size}
         </p>
         <h3 className="font-display text-lg font-bold text-forest-950 leading-tight">
-          {name}
+          <Link href={`/${locale}/products/${product.slug}/`} className="hover:underline">
+            {name}
+          </Link>
         </h3>
         <p className="mt-1 text-sm font-medium text-stone-500 italic">
           {tagline}
@@ -84,17 +104,17 @@ export function ProductCard({
           <span className="font-display text-xl font-bold text-forest-950">
             ${product.price.toFixed(2)}
           </span>
-          <a
-            href={amazonUrl(product.asin)}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            type="button"
+            onClick={onAddToBag}
             className="inline-flex items-center gap-2 rounded-full bg-forest-950 px-5 py-2.5 text-xs font-semibold text-cream transition hover:bg-forest-800 active:scale-95"
           >
-            {locale === "en" ? "Buy on Amazon" : "Comprar en Amazon"}
+            {dict.addToBag}
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
-              <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M2 5h8l-.7 5.2a1 1 0 0 1-1 .8H3.7a1 1 0 0 1-1-.8L2 5z" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M4 5V3.5a2 2 0 0 1 4 0V5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-          </a>
+          </button>
         </div>
       </div>
     </motion.div>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   categories,
@@ -9,7 +10,10 @@ import {
   type Locale,
 } from "@/lib/i18n";
 import { getArticlesByCategory } from "@/lib/content";
+import { productsByCategory } from "@/lib/products";
+import { getProductImageUrl } from "@/lib/product-images";
 import { ArticleCard } from "@/components/ArticleCard";
+import { ProductCard } from "@/components/ProductCard";
 import { Newsletter } from "@/components/Newsletter";
 
 export const dynamicParams = false;
@@ -54,6 +58,12 @@ export default async function CategoryPage({
   if (!cat) notFound();
   const dict = t(locale);
   const articles = getArticlesByCategory(category, locale);
+  // Content categories (garden/food/bodycare/remedies) and product categories
+  // (bodycare/hair/home/hoff) only cleanly overlap on "bodycare" — only cross-sell there.
+  const shopProducts =
+    category === "bodycare"
+      ? [...productsByCategory("bodycare"), ...productsByCategory("hair")]
+      : [];
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">
@@ -69,12 +79,43 @@ export default async function CategoryPage({
 
       {articles.length > 0 ? (
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {articles.map((a) => (
-            <ArticleCard key={a.slug} article={a} locale={locale} />
+          {articles.map((a, i) => (
+            <ArticleCard key={a.slug} article={a} locale={locale} index={i} />
           ))}
         </div>
       ) : (
         <p className="mt-8 text-stone-500">{dict.noArticles}</p>
+      )}
+
+      {shopProducts.length > 0 && (
+        <section className="mt-14 border-t border-stone-200 pt-10">
+          <div className="flex items-end justify-between mb-6">
+            <h2 className="font-display text-xs font-semibold uppercase tracking-[0.25em] text-stone-400">
+              {locale === "en" ? "Shop skin & hair" : "Tienda de piel y cabello"}
+            </h2>
+            <Link
+              href={`/${locale}/products/`}
+              className="text-xs font-medium text-forest-700 hover:underline"
+            >
+              {dict.shopAll} →
+            </Link>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {shopProducts.map((p, i) => {
+              const image = getProductImageUrl(p.slug, p.image);
+              return (
+                <ProductCard
+                  key={p.asin}
+                  product={p}
+                  locale={locale}
+                  index={i}
+                  imageUrl={image.url}
+                  isPlaceholderImage={image.isPlaceholder}
+                />
+              );
+            })}
+          </div>
+        </section>
       )}
 
       <section className="mt-14">

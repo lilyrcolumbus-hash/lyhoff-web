@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale, t, type Locale } from "@/lib/i18n";
 import { activeProducts, productsByCategory } from "@/lib/products";
@@ -62,9 +63,15 @@ export default async function ProductsPage({
         </p>
         <p className="mt-4 text-sm text-stone-400">
           {locale === "en"
-            ? `${activeProducts.length} products available on Amazon`
-            : `${activeProducts.length} productos disponibles en Amazon`}
+            ? `${activeProducts.length} products, shipped by us`
+            : `${activeProducts.length} productos, enviados por nosotros`}
         </p>
+        <Link
+          href={`/${locale}/quiz/`}
+          className="mt-6 inline-flex items-center rounded-full border border-earth-400 px-6 py-2.5 text-xs font-semibold text-earth-700 transition hover:bg-earth-50"
+        >
+          {locale === "en" ? "Not sure where to start? Take the quiz →" : "¿No sabes por dónde empezar? Haz el quiz →"}
+        </Link>
       </div>
 
       <div className="border-t border-stone-200" />
@@ -99,35 +106,25 @@ export default async function ProductsPage({
         </section>
       ))}
 
-      {/* Amazon trust bar */}
+      {/* Trust bar */}
       <div className="bg-forest-950 py-14">
         <div className="mx-auto max-w-6xl px-6 text-center">
           <p className="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">
-            {locale === "en" ? "Available on" : "Disponible en"}
+            {locale === "en" ? "Secure checkout, packed by us" : "Pago seguro, empacado por nosotros"}
           </p>
-          <div className="flex justify-center gap-8 flex-wrap">
-            <a
-              href="https://www.amazon.com/s?k=lyhoff"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 rounded-full border border-stone-700 px-8 py-3.5 text-sm font-semibold text-cream hover:border-stone-500 hover:bg-forest-800 transition"
-            >
-              Amazon
-            </a>
-            <a
-              href="https://www.etsy.com/shop/lyhoff"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 rounded-full border border-stone-700 px-8 py-3.5 text-sm font-semibold text-cream hover:border-stone-500 hover:bg-forest-800 transition"
-            >
-              Etsy
-            </a>
-          </div>
-          <p className="mt-6 text-xs text-stone-600 max-w-sm mx-auto">
+          <p className="mx-auto max-w-sm text-sm text-stone-400">
             {locale === "en"
-              ? "Free shipping on eligible orders. Returns accepted within 30 days."
-              : "Envío gratis en pedidos elegibles. Devoluciones aceptadas en 30 días."}
+              ? "Every order ships from our own hands, no middleman."
+              : "Cada pedido sale de nuestras propias manos, sin intermediarios."}
           </p>
+          <a
+            href="https://www.etsy.com/shop/lyhoff"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 inline-flex items-center gap-3 rounded-full border border-stone-700 px-8 py-3.5 text-sm font-semibold text-cream hover:border-stone-500 hover:bg-forest-800 transition"
+          >
+            {locale === "en" ? "Also on Etsy" : "También en Etsy"}
+          </a>
         </div>
       </div>
     </div>

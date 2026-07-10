@@ -190,6 +190,3 @@ export const productsByCategory = (cat: ProductCategory) =>
 
 export const getProduct = (slug: string) =>
   products.find((p) => p.slug === slug);
-
-export const amazonUrl = (asin: string) =>
-  `https://www.amazon.com/dp/${asin}`;

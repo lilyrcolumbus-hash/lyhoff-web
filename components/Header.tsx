@@ -4,6 +4,42 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { otherLocale, t, type Locale } from "@/lib/i18n";
+import { useCartStore } from "@/lib/cart-store";
+
+function CartButton() {
+  const { count, openCart } = useCartStore();
+  const itemCount = count();
+  return (
+    <button
+      type="button"
+      onClick={openCart}
+      aria-label="Cart"
+      className="relative text-forest-950 hover:text-forest-700 transition-colors"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <path
+          d="M6 8h12l-1.2 10.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6 8z"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M9 8V6a3 3 0 0 1 6 0v2"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+      {itemCount > 0 && (
+        <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-earth-600 text-[9px] font-bold text-cream">
+          {itemCount}
+        </span>
+      )}
+    </button>
+  );
+}
 
 export function Header({ locale }: { locale: Locale }) {
   const dict = t(locale);
@@ -39,16 +75,20 @@ export function Header({ locale }: { locale: Locale }) {
           >
             {locale === "en" ? "ES" : "EN"}
           </Link>
+          <CartButton />
         </nav>
 
-        <button
-          type="button"
-          aria-label="Menu"
-          className="md:hidden text-forest-950 font-medium text-sm tracking-wide"
-          onClick={() => setOpen((v) => !v)}
-        >
-          {open ? "Close" : "Menu"}
-        </button>
+        <div className="flex items-center gap-5 md:hidden">
+          <CartButton />
+          <button
+            type="button"
+            aria-label="Menu"
+            className="text-forest-950 font-medium text-sm tracking-wide"
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? "Close" : "Menu"}
+          </button>
+        </div>
       </div>
 
       {open && (
