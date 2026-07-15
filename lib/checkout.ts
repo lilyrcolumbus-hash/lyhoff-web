@@ -4,13 +4,18 @@ import type { CartItem } from "@/lib/cart-store";
 import type { Locale } from "@/lib/i18n";
 
 /** POSTs the cart to the Worker's /api/checkout and redirects to Stripe Checkout. */
-export async function startCheckout(items: CartItem[], locale: Locale): Promise<void> {
+export async function startCheckout(
+  items: CartItem[],
+  locale: Locale,
+  shippingCents?: number | null,
+): Promise<void> {
   const res = await fetch("/api/checkout", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       items: items.map((i) => ({ slug: i.slug, quantity: i.quantity })),
       locale,
+      ...(typeof shippingCents === "number" ? { shippingCents } : {}),
     }),
   });
 

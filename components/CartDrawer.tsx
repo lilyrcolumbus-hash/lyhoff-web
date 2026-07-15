@@ -7,12 +7,14 @@ import { useCartStore } from "@/lib/cart-store";
 import { startCheckout } from "@/lib/checkout";
 import { t, type Locale } from "@/lib/i18n";
 import { FreeShippingProgress } from "@/components/FreeShippingProgress";
+import { ShippingCalculator } from "@/components/ShippingCalculator";
 
 export function CartDrawer({ locale }: { locale: Locale }) {
   const dict = t(locale);
   const { items, isOpen, closeCart, removeItem, updateQty, total } = useCartStore();
   const [checkingOut, setCheckingOut] = useState(false);
   const [error, setError] = useState(false);
+  const [shippingCents, setShippingCents] = useState<number | null>(null);
 
   // The cart store's persist middleware is skipHydration'd (see lib/cart-store.ts) —
   // rehydrate once, here, since this component is always mounted (in the root layout).
@@ -24,7 +26,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
     setError(false);
     setCheckingOut(true);
     try {
-      await startCheckout(items, locale);
+      await startCheckout(items, locale, shippingCents);
     } catch {
       setError(true);
       setCheckingOut(false);
@@ -119,8 +121,22 @@ export function CartDrawer({ locale }: { locale: Locale }) {
             <FreeShippingProgress subtotal={total()} locale={locale} />
             <div className="flex items-center justify-between text-sm font-medium text-stone-600">
               <span>{dict.cartSubtotal}</span>
-              <span className="font-display text-lg font-bold text-forest-950">
+              <span className="font-display text-base font-semibold text-forest-950">
                 ${total().toFixed(2)}
+              </span>
+            </div>
+            <div className="mt-3">
+              <ShippingCalculator
+                items={items}
+                locale={locale}
+                shippingCents={shippingCents}
+                onRateChange={setShippingCents}
+              />
+            </div>
+            <div className="mt-3 flex items-center justify-between border-t border-stone-200 pt-3 text-sm font-medium text-stone-600">
+              <span>{locale === "es" ? "Total" : "Total"}</span>
+              <span className="font-display text-lg font-bold text-forest-950">
+                ${(total() + (shippingCents ?? 0) / 100).toFixed(2)}
               </span>
             </div>
             <button

@@ -8,6 +8,8 @@ export function FreeShippingProgress({
   subtotal: number;
   locale: Locale;
 }) {
+  if (FREE_SHIPPING_THRESHOLD_CENTS === null) return null;
+
   const thresholdDollars = FREE_SHIPPING_THRESHOLD_CENTS / 100;
   const remaining = Math.max(0, thresholdDollars - subtotal);
   const pct = Math.min(100, (subtotal / thresholdDollars) * 100);

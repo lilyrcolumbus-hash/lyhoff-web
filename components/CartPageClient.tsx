@@ -7,18 +7,20 @@ import { useCartStore } from "@/lib/cart-store";
 import { startCheckout } from "@/lib/checkout";
 import { t, type Locale } from "@/lib/i18n";
 import { FreeShippingProgress } from "@/components/FreeShippingProgress";
+import { ShippingCalculator } from "@/components/ShippingCalculator";
 
 export function CartPageClient({ locale }: { locale: Locale }) {
   const dict = t(locale);
   const { items, removeItem, updateQty, total } = useCartStore();
   const [checkingOut, setCheckingOut] = useState(false);
   const [error, setError] = useState(false);
+  const [shippingCents, setShippingCents] = useState<number | null>(null);
 
   async function onCheckout() {
     setError(false);
     setCheckingOut(true);
     try {
-      await startCheckout(items, locale);
+      await startCheckout(items, locale, shippingCents);
     } catch {
       setError(true);
       setCheckingOut(false);
@@ -92,10 +94,28 @@ export function CartPageClient({ locale }: { locale: Locale }) {
             <FreeShippingProgress subtotal={total()} locale={locale} />
           </div>
 
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-stone-600">{dict.cartSubtotal}</span>
-            <span className="font-display text-2xl font-bold text-forest-950">
+          <div className="flex items-center justify-between text-sm text-stone-600">
+            <span className="font-medium">{dict.cartSubtotal}</span>
+            <span className="font-display text-base font-semibold text-forest-950">
               ${total().toFixed(2)}
+            </span>
+          </div>
+
+          <div className="mt-4">
+            <ShippingCalculator
+              items={items}
+              locale={locale}
+              shippingCents={shippingCents}
+              onRateChange={setShippingCents}
+            />
+          </div>
+
+          <div className="mt-4 flex items-center justify-between border-t border-stone-200 pt-4">
+            <span className="text-sm font-medium text-stone-600">
+              {locale === "es" ? "Total" : "Total"}
+            </span>
+            <span className="font-display text-2xl font-bold text-forest-950">
+              ${(total() + (shippingCents ?? 0) / 100).toFixed(2)}
             </span>
           </div>
 

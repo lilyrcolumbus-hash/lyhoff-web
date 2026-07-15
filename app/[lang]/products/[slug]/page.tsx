@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 import { isLocale, locales, SITE_NAME, SITE_URL, type Locale } from "@/lib/i18n";
 import { dedupeVariants, getProduct, getVariants, products, productsByCategory } from "@/lib/products";
 import { getProductImageUrl, getProductImageUrls } from "@/lib/product-images";
-import { FREE_SHIPPING_THRESHOLD_CENTS } from "@/lib/shipping";
 import { ProductCard } from "@/components/ProductCard";
 import { TrustBadges } from "@/components/TrustBadges";
 import { AddToBagButton } from "@/components/AddToBagButton";
@@ -195,8 +194,8 @@ export default async function ProductDetailPage({
 
           <p className="mt-4 text-xs text-stone-400">
             {locale === "en"
-              ? `Free shipping on orders over $${(FREE_SHIPPING_THRESHOLD_CENTS / 100).toFixed(0)} · Packed and shipped by us, not a warehouse · Questions? Email us directly.`
-              : `Envío gratis en pedidos mayores a $${(FREE_SHIPPING_THRESHOLD_CENTS / 100).toFixed(0)} · Empacado y enviado por nosotros, no por una bodega · ¿Dudas? Escríbenos directo.`}
+              ? "Shipping calculated in cart · Packed and shipped by us, not a warehouse · Questions? Email us directly."
+              : "Envío calculado en el carrito · Empacado y enviado por nosotros, no por una bodega · ¿Dudas? Escríbenos directo."}
           </p>
 
           <TrustBadges locale={locale} theme="light" className="mt-10 border-t border-stone-200 pt-8 sm:grid-cols-1 gap-6" />
