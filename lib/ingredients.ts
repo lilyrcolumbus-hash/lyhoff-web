@@ -9,7 +9,7 @@ export const ingredients: Ingredient[] = [
   {
     slug: "grass-fed-beef-tallow",
     name: { en: "Grass-fed beef tallow", es: "Sebo de res grass-fed" },
-    usedIn: ["tallow-cream-2oz", "tallow-cream-4oz", "comfrey-salve-2oz"],
+    usedIn: ["tallow-cream-2oz", "tallow-cream-1oz", "comfrey-salve-2oz"],
     blurb: {
       en: "A traditional skincare fat, used for generations before synthetic moisturizers existed. Its fatty-acid profile is close to what skin naturally produces, and it carries fat-soluble vitamins A, D, E and K.",
       es: "Una grasa tradicional para el cuidado de la piel, usada por generaciones antes de que existieran las cremas sintéticas. Su perfil de ácidos grasos es cercano al que la piel produce naturalmente, y lleva vitaminas liposolubles A, D, E y K.",
@@ -18,7 +18,7 @@ export const ingredients: Ingredient[] = [
   {
     slug: "jojoba-oil",
     name: { en: "Jojoba oil", es: "Aceite de jojoba" },
-    usedIn: ["tallow-cream-2oz", "tallow-cream-4oz", "comfrey-salve-2oz", "hair-growth-oil"],
+    usedIn: ["tallow-cream-2oz", "tallow-cream-1oz", "comfrey-salve-2oz", "hair-growth-oil"],
     blurb: {
       en: "Technically a liquid wax, not an oil — which is why it's structurally close to skin's own sebum and absorbs without feeling greasy.",
       es: "Técnicamente es una cera líquida, no un aceite — por eso es estructuralmente cercano al sebo natural de la piel y se absorbe sin sensación grasosa.",

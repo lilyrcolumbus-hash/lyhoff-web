@@ -12,16 +12,14 @@ export interface ParcelSpec {
 
 // Per-product shipping weight/dimensions for the Shippo rate calculator.
 // Dimensions are from owner-provided container spec photos (2026-07-15). Weights (jar/bottle +
-// product, real, owner-measured 2026-07-15) are real except tallow-cream-4oz, still estimated —
-// see CLAUDE.md "RESUME HERE" for the source data and what's still missing.
+// product, real, owner-measured 2026-07-15) — see CLAUDE.md "RESUME HERE" for the source data.
 export const PARCEL_SPECS: Record<string, ParcelSpec> = {
-  // 1oz jar: 1.93"H x 2.36"D, 2.3oz filled (real, owner-measured)
+  // 1oz jar: 1.93"H x 2.36"D, 2.3oz filled (real, owner-measured) — no 4oz jar exists (removed)
   "comfrey-salve-1oz": { weightOz: 2.3, lengthIn: 2.5, widthIn: 2.5, heightIn: 2 },
+  "tallow-cream-1oz": { weightOz: 2.3, lengthIn: 2.5, widthIn: 2.5, heightIn: 2 },
   // 2oz jar: 2.42"H x 2.86"D, 3.8oz filled (real) — Tallow Cream and Comfrey Salve share this jar mold
   "tallow-cream-2oz": { weightOz: 3.8, lengthIn: 3, widthIn: 3, heightIn: 2.5 },
   "comfrey-salve-2oz": { weightOz: 3.8, lengthIn: 3, widthIn: 3, heightIn: 2.5 },
-  // 4oz jar: no diagram or weight provided yet — estimated proportionally larger than the 2oz jar
-  "tallow-cream-4oz": { weightOz: 10, lengthIn: 3.5, widthIn: 3.5, heightIn: 3 },
   // Sea Salt Spray bottle: 6.15"H x 2"D, 8.5oz filled (real)
   "sea-salt-spray-her": { weightOz: 8.5, lengthIn: 2.5, widthIn: 2.5, heightIn: 6.5 },
   "sea-salt-spray-him": { weightOz: 8.5, lengthIn: 2.5, widthIn: 2.5, heightIn: 6.5 },

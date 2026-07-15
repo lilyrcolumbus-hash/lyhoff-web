@@ -50,10 +50,6 @@ export const quizNodes: QuizNode[] = [
         result: "tallow-cream-2oz",
       },
       {
-        label: { en: "The same, but a bigger jar", es: "Lo mismo, pero en frasco más grande" },
-        result: "tallow-cream-4oz",
-      },
-      {
         label: { en: "Joint, muscle, or targeted relief", es: "Alivio de articulaciones, músculos o zonas específicas" },
         result: "comfrey-salve-2oz",
       },

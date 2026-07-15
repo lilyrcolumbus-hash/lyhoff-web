@@ -62,33 +62,34 @@ export const products: Product[] = [
     },
   },
   {
-    asin: "B0FHTHNH56",
-    slug: "tallow-cream-4oz",
-    // Uses tallow-cream-2oz images as fallback until 4oz folder has photos
+    // Owner action: confirm real price, then flip active to true.
+    // 2026-07-15: owner confirmed there is no 4oz jar (removed) — Tallow Cream comes in
+    // 1oz/2oz only, same jar molds as Comfrey Salve.
+    asin: "PENDING-TALLOW-1OZ",
+    slug: "tallow-cream-1oz",
     category: "bodycare",
     name: {
       en: "Whipped Tallow Cream",
       es: "Crema de Sebo Batida",
     },
     tagline: {
-      en: "More of what your skin needs.",
-      es: "Más de lo que tu piel necesita.",
+      en: "Skin that actually heals.",
+      es: "Piel que realmente sana.",
     },
     description: {
-      en: "Same clean formula as our 2oz — grass-fed tallow and jojoba oil — in a larger jar. With jade roller included for daily ritual.",
-      es: "La misma fórmula limpia en un frasco más grande. Con jade roller incluido.",
+      en: "Grass-fed beef tallow and jojoba oil — two ingredients, nothing else. Rich in vitamins A, D, E & K. Absorbs fast, no greasy residue.",
+      es: "Sebo de res grass-fed y aceite de jojoba — dos ingredientes, nada más. Rico en vitaminas A, D, E y K. Absorción rápida, sin residuo graso.",
     },
     ingredients: ["Grass-fed beef tallow", "Jojoba oil"],
-    price: 29.99,
-    size: "4 oz",
-    image: UNSPLASH("1611080541599-8c6dbde7ad3e"),
-    badge: { en: "Best Value", es: "Mejor Valor" },
-    active: true,
+    price: 0, // PLACEHOLDER — owner has not confirmed the real 1oz price yet.
+    size: "1 oz",
+    image: UNSPLASH("1596755389378-c31d21fd1273"),
+    active: false, // hidden from the live site until a real price is set
     variantGroup: "tallow-cream",
     benefits: [
-      { en: "Same two-ingredient formula", es: "La misma fórmula de dos ingredientes" },
-      { en: "Bigger jar, better value per oz", es: "Frasco más grande, mejor valor por onza" },
-      { en: "Jade roller included", es: "Incluye jade roller" },
+      { en: "Two ingredients, nothing else", es: "Dos ingredientes, nada más" },
+      { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
+      { en: "Absorbs fast, no greasy residue", es: "Absorción rápida, sin residuo graso" },
     ],
     howToUse: {
       en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
