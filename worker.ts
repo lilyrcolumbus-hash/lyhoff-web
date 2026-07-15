@@ -242,12 +242,12 @@ async function handleShippingRate(request: Request, env: Env): Promise<Response>
 async function handleCheckout(request: Request, env: Env): Promise<Response> {
   if (!env.STRIPE_SECRET_KEY) return json({ error: "not_configured" }, 503);
 
-  let items: { slug?: string; quantity?: number }[] = [];
+  let items: { slug?: string; quantity?: number; scent?: string }[] = [];
   let locale = "en";
   let shippingCents = FLAT_SHIPPING_CENTS;
   try {
     const body = (await request.json()) as {
-      items?: { slug?: string; quantity?: number }[];
+      items?: { slug?: string; quantity?: number; scent?: string }[];
       locale?: string;
       shippingCents?: number;
     };
@@ -273,12 +273,16 @@ async function handleCheckout(request: Request, env: Env): Promise<Response> {
       const product = i.slug ? getProduct(i.slug) : undefined;
       const quantity = Math.floor(i.quantity ?? 0);
       if (!product || quantity <= 0) return null;
+      // Only trust a scent that's actually one of this product's real options — never pass
+      // arbitrary client text into the order name shown in the Stripe dashboard.
+      const scent = product.scents?.includes(i.scent ?? "") ? i.scent : undefined;
+      const name = product.name[locale as "en" | "es"];
       return {
         price_data: {
           currency: "usd",
           unit_amount: Math.round(product.price * 100),
           product_data: {
-            name: product.name[locale as "en" | "es"],
+            name: scent ? `${name} — ${scent}` : name,
             images: [product.image],
           },
         },

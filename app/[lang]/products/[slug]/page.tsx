@@ -178,7 +178,7 @@ export default async function ProductDetailPage({
             <p className="text-sm text-stone-600 leading-relaxed">{product.howToUse[locale]}</p>
           </div>
 
-          <div className="mt-8 flex items-center justify-between border-t border-stone-200 pt-8">
+          <div className="mt-8 flex flex-col gap-4 border-t border-stone-200 pt-8 sm:flex-row sm:items-center sm:justify-between">
             <span className="font-display text-2xl font-bold text-forest-950">
               ${product.price.toFixed(2)}
             </span>
@@ -189,6 +189,7 @@ export default async function ProductDetailPage({
               size={product.size}
               image={gallery[0]}
               locale={locale}
+              scents={product.scents}
             />
           </div>
 

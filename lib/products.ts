@@ -15,10 +15,14 @@ export interface Product {
   active: boolean;
   /** Products sharing this id are shown as one product with a size/variant selector. */
   variantGroup?: string;
+  /** Scent options, if this product comes in more than one — same price/jar, picked at add-to-bag. */
+  scents?: string[];
   /** Short scannable claims, pulled from the description — shown as bullets on the product page. */
   benefits: { en: string; es: string }[];
   howToUse: { en: string; es: string };
 }
+
+export const SCENT_OPTIONS = ["Vanilla", "Peppermint", "Unscented"];
 
 const UNSPLASH = (id: string, w = 800, h = 900) =>
   `https://images.unsplash.com/photo-${id}?w=${w}&h=${h}&q=90&auto=format&fit=crop`;
@@ -51,6 +55,7 @@ export const products: Product[] = [
     badge: { en: "Best Seller", es: "Más Vendido" },
     active: true,
     variantGroup: "tallow-cream",
+    scents: SCENT_OPTIONS,
     benefits: [
       { en: "Two ingredients, nothing else", es: "Dos ingredientes, nada más" },
       { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
@@ -86,6 +91,7 @@ export const products: Product[] = [
     image: UNSPLASH("1596755389378-c31d21fd1273"),
     active: false, // hidden from the live site until a real price is set
     variantGroup: "tallow-cream",
+    scents: SCENT_OPTIONS,
     benefits: [
       { en: "Two ingredients, nothing else", es: "Dos ingredientes, nada más" },
       { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
@@ -118,6 +124,7 @@ export const products: Product[] = [
     image: UNSPLASH("1617714651703-d4e8b66efb73"),
     active: true,
     variantGroup: "comfrey-salve",
+    scents: SCENT_OPTIONS,
     benefits: [
       { en: "Traditional \"knitbone\" herb, organic", es: "Hierba tradicional \"suelda huesos\", orgánica" },
       { en: "Whipped light, fast-absorbing texture", es: "Textura batida, ligera, absorción rápida" },
@@ -151,6 +158,7 @@ export const products: Product[] = [
     image: UNSPLASH("1617714651703-d4e8b66efb73"),
     active: false, // hidden from the live site until a real price is set
     variantGroup: "comfrey-salve",
+    scents: SCENT_OPTIONS,
     benefits: [
       { en: "Traditional \"knitbone\" herb, organic", es: "Hierba tradicional \"suelda huesos\", orgánica" },
       { en: "Whipped light, fast-absorbing texture", es: "Textura batida, ligera, absorción rápida" },

@@ -71,18 +71,21 @@ export function CartDrawer({ locale }: { locale: Locale }) {
           ) : (
             <ul className="flex flex-col gap-5">
               {items.map((item) => (
-                <li key={item.slug} className="flex gap-4">
+                <li key={`${item.slug}::${item.scent ?? ""}`} className="flex gap-4">
                   <div className="relative h-20 w-16 shrink-0 overflow-hidden bg-stone-50">
                     <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" />
                   </div>
                   <div className="flex flex-1 flex-col">
                     <p className="font-display text-sm font-semibold text-forest-950">{item.name}</p>
-                    <p className="text-xs text-stone-500">{item.size}</p>
+                    <p className="text-xs text-stone-500">
+                      {item.size}
+                      {item.scent && ` · ${item.scent}`}
+                    </p>
                     <div className="mt-2 flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
-                          onClick={() => updateQty(item.slug, item.quantity - 1)}
+                          onClick={() => updateQty(item.slug, item.quantity - 1, item.scent)}
                           className="h-6 w-6 rounded-full border border-stone-300 text-xs text-forest-950 hover:border-forest-500"
                           aria-label="-"
                         >
@@ -91,7 +94,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
                         <span className="w-4 text-center text-xs text-stone-600">{item.quantity}</span>
                         <button
                           type="button"
-                          onClick={() => updateQty(item.slug, item.quantity + 1)}
+                          onClick={() => updateQty(item.slug, item.quantity + 1, item.scent)}
                           className="h-6 w-6 rounded-full border border-stone-300 text-xs text-forest-950 hover:border-forest-500"
                           aria-label="+"
                         >
@@ -104,7 +107,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
                     </div>
                     <button
                       type="button"
-                      onClick={() => removeItem(item.slug)}
+                      onClick={() => removeItem(item.slug, item.scent)}
                       className="mt-1 self-start text-xs text-stone-400 underline hover:text-earth-600"
                     >
                       {dict.cartRemove}

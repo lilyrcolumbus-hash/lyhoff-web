@@ -10,14 +10,21 @@ export interface CartItem {
   size: string;
   image: string;
   quantity: number;
+  /** Scent, if this product has one (e.g. "Vanilla") — undefined for products with no scent options. */
+  scent?: string;
 }
+
+// Two cart lines are "the same item" only if slug AND scent match — a Vanilla and a
+// Peppermint jar of the same size must stay as separate lines, not merge quantities.
+const sameLine = (a: { slug: string; scent?: string }, b: { slug: string; scent?: string }) =>
+  a.slug === b.slug && a.scent === b.scent;
 
 interface CartStore {
   items: CartItem[];
   isOpen: boolean;
   addItem: (item: Omit<CartItem, "quantity">, quantity?: number) => void;
-  removeItem: (slug: string) => void;
-  updateQty: (slug: string, quantity: number) => void;
+  removeItem: (slug: string, scent?: string) => void;
+  updateQty: (slug: string, quantity: number, scent?: string) => void;
   clearCart: () => void;
   openCart: () => void;
   closeCart: () => void;
@@ -33,27 +40,29 @@ export const useCartStore = create<CartStore>()(
 
       addItem: (item, quantity = 1) =>
         set((state) => {
-          const existing = state.items.find((i) => i.slug === item.slug);
+          const existing = state.items.find((i) => sameLine(i, item));
           if (existing) {
             return {
               items: state.items.map((i) =>
-                i.slug === item.slug ? { ...i, quantity: i.quantity + quantity } : i,
+                sameLine(i, item) ? { ...i, quantity: i.quantity + quantity } : i,
               ),
             };
           }
           return { items: [...state.items, { ...item, quantity }] };
         }),
 
-      removeItem: (slug) =>
-        set((state) => ({ items: state.items.filter((i) => i.slug !== slug) })),
+      removeItem: (slug, scent) =>
+        set((state) => ({ items: state.items.filter((i) => !sameLine(i, { slug, scent })) })),
 
-      updateQty: (slug, quantity) => {
+      updateQty: (slug, quantity, scent) => {
         if (quantity <= 0) {
-          get().removeItem(slug);
+          get().removeItem(slug, scent);
           return;
         }
         set((state) => ({
-          items: state.items.map((i) => (i.slug === slug ? { ...i, quantity } : i)),
+          items: state.items.map((i) =>
+            sameLine(i, { slug, scent }) ? { ...i, quantity } : i,
+          ),
         }));
       },
 

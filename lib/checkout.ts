@@ -13,7 +13,7 @@ export async function startCheckout(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      items: items.map((i) => ({ slug: i.slug, quantity: i.quantity })),
+      items: items.map((i) => ({ slug: i.slug, quantity: i.quantity, scent: i.scent })),
       locale,
       ...(typeof shippingCents === "number" ? { shippingCents } : {}),
     }),
