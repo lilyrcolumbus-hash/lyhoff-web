@@ -9,7 +9,7 @@ export const ingredients: Ingredient[] = [
   {
     slug: "grass-fed-beef-tallow",
     name: { en: "Grass-fed beef tallow", es: "Sebo de res grass-fed" },
-    usedIn: ["tallow-cream-2oz", "tallow-cream-4oz", "comfrey-salve"],
+    usedIn: ["tallow-cream-2oz", "tallow-cream-4oz", "comfrey-salve-2oz"],
     blurb: {
       en: "A traditional skincare fat, used for generations before synthetic moisturizers existed. Its fatty-acid profile is close to what skin naturally produces, and it carries fat-soluble vitamins A, D, E and K.",
       es: "Una grasa tradicional para el cuidado de la piel, usada por generaciones antes de que existieran las cremas sintéticas. Su perfil de ácidos grasos es cercano al que la piel produce naturalmente, y lleva vitaminas liposolubles A, D, E y K.",
@@ -18,7 +18,7 @@ export const ingredients: Ingredient[] = [
   {
     slug: "jojoba-oil",
     name: { en: "Jojoba oil", es: "Aceite de jojoba" },
-    usedIn: ["tallow-cream-2oz", "tallow-cream-4oz", "comfrey-salve", "hair-growth-oil"],
+    usedIn: ["tallow-cream-2oz", "tallow-cream-4oz", "comfrey-salve-2oz", "hair-growth-oil"],
     blurb: {
       en: "Technically a liquid wax, not an oil — which is why it's structurally close to skin's own sebum and absorbs without feeling greasy.",
       es: "Técnicamente es una cera líquida, no un aceite — por eso es estructuralmente cercano al sebo natural de la piel y se absorbe sin sensación grasosa.",
@@ -27,7 +27,7 @@ export const ingredients: Ingredient[] = [
   {
     slug: "organic-comfrey-extract",
     name: { en: "Organic comfrey extract", es: "Extracto orgánico de consuelda" },
-    usedIn: ["comfrey-salve"],
+    usedIn: ["comfrey-salve-2oz"],
     blurb: {
       en: "Comfrey has been used in folk skincare for centuries — old herbalists called it \"knitbone.\" We use an organic extract, blended light so it stays gentle on sensitive skin.",
       es: "La consuelda se ha usado en el cuidado tradicional de la piel por siglos — los herbolarios antiguos la llamaban \"suelda huesos\". Usamos un extracto orgánico, en una mezcla ligera para que sea suave con la piel sensible.",
@@ -54,7 +54,7 @@ export const ingredients: Ingredient[] = [
   {
     slug: "ancient-utah-sea-salt",
     name: { en: "Ancient Utah sea salt", es: "Sal marina antigua de Utah" },
-    usedIn: ["sea-salt-spray"],
+    usedIn: ["sea-salt-spray-her"],
     blurb: {
       en: "Mined from an ancient inland sea bed rather than harvested from today's oceans — no microplastics, because it predates plastic entirely.",
       es: "Extraída de un antiguo lecho marino interior, no de los océanos actuales — sin microplásticos, porque es anterior a que existiera el plástico.",

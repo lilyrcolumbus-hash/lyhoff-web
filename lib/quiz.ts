@@ -55,7 +55,7 @@ export const quizNodes: QuizNode[] = [
       },
       {
         label: { en: "Joint, muscle, or targeted relief", es: "Alivio de articulaciones, músculos o zonas específicas" },
-        result: "comfrey-salve",
+        result: "comfrey-salve-2oz",
       },
     ],
   },
@@ -72,7 +72,7 @@ export const quizNodes: QuizNode[] = [
       },
       {
         label: { en: "Texture & volume", es: "Textura y volumen" },
-        result: "sea-salt-spray",
+        result: "sea-salt-spray-her",
       },
     ],
   },
