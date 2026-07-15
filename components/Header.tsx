@@ -6,6 +6,15 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { otherLocale, t, type Locale } from "@/lib/i18n";
 import { useCartStore } from "@/lib/cart-store";
+import { productsByCategory, type ProductCategory } from "@/lib/products";
+
+const ALL_SHOP_CATEGORIES: { key: ProductCategory; label: { en: string; es: string } }[] = [
+  { key: "bodycare", label: { en: "Skin & Body", es: "Piel y Cuerpo" } },
+  { key: "hair", label: { en: "Hair Care", es: "Cuidado Capilar" } },
+  { key: "home", label: { en: "Home & Garden", es: "Hogar y Jardín" } },
+  { key: "hoff", label: { en: "HOFF — Health", es: "HOFF — Salud" } },
+];
+const SHOP_CATEGORIES = ALL_SHOP_CATEGORIES.filter((c) => productsByCategory(c.key).length > 0);
 
 function CartButton() {
   const { count, openCart } = useCartStore();
@@ -87,8 +96,21 @@ function CartButton() {
 export function Header({ locale }: { locale: Locale }) {
   const dict = t(locale);
   const [open, setOpen] = useState(false);
+  const [shopOpen, setShopOpen] = useState(false);
+  const shopRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname() || `/${locale}`;
   const swapped = pathname.replace(/^\/(en|es)/, `/${otherLocale(locale)}`);
+
+  useEffect(() => {
+    if (!shopOpen) return;
+    function onClickOutside(e: MouseEvent) {
+      if (shopRef.current && !shopRef.current.contains(e.target as Node)) {
+        setShopOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, [shopOpen]);
 
   return (
     <header className="sticky top-0 z-40 border-b border-stone-200 bg-cream/90 backdrop-blur">
@@ -103,9 +125,63 @@ export function Header({ locale }: { locale: Locale }) {
         </Link>
 
         <nav className="hidden items-center gap-8 text-sm font-medium text-stone-600 md:flex">
-          <Link href={`/${locale}/products/`} className="hover:text-forest-900 transition-colors font-semibold text-forest-950">
-            {locale === "en" ? "Shop" : "Tienda"}
-          </Link>
+          <div
+            ref={shopRef}
+            className="relative"
+            onMouseEnter={() => setShopOpen(true)}
+            onMouseLeave={() => setShopOpen(false)}
+          >
+            <button
+              type="button"
+              onClick={() => setShopOpen((v) => !v)}
+              aria-expanded={shopOpen}
+              className="flex items-center gap-1 font-semibold text-forest-950 transition-colors hover:text-forest-900"
+            >
+              {locale === "en" ? "Shop" : "Tienda"}
+              <svg
+                width="10"
+                height="10"
+                viewBox="0 0 12 12"
+                fill="none"
+                aria-hidden
+                className={`transition-transform ${shopOpen ? "rotate-180" : ""}`}
+              >
+                <path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            <AnimatePresence>
+              {shopOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute left-0 top-full pt-3"
+                >
+                  <div className="w-56 rounded-xl border border-stone-200 bg-white p-2 shadow-lg">
+                    <Link
+                      href={`/${locale}/products/`}
+                      onClick={() => setShopOpen(false)}
+                      className="block rounded-lg px-3 py-2 text-sm font-semibold text-forest-950 hover:bg-stone-50"
+                    >
+                      {locale === "en" ? "All products" : "Todos los productos"}
+                    </Link>
+                    <div className="my-1 border-t border-stone-100" />
+                    {SHOP_CATEGORIES.map((cat) => (
+                      <Link
+                        key={cat.key}
+                        href={`/${locale}/products/#${cat.key}`}
+                        onClick={() => setShopOpen(false)}
+                        className="block rounded-lg px-3 py-2 text-sm text-stone-600 hover:bg-stone-50 hover:text-forest-900"
+                      >
+                        {cat.label[locale]}
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
           <Link href={`/${locale}/topics/`} className="hover:text-forest-900 transition-colors">
             {dict.navTopics}
           </Link>
@@ -145,19 +221,20 @@ export function Header({ locale }: { locale: Locale }) {
               onClick={() => setOpen(false)}
               className="font-semibold text-forest-950"
             >
-              {locale === "en" ? "Shop" : "Tienda"}
+              {locale === "en" ? "Shop — all products" : "Tienda — todos los productos"}
             </Link>
-            <Link href={`/${locale}/category/garden/`} onClick={() => setOpen(false)}>
-              {locale === "en" ? "The Garden" : "El Huerto"}
-            </Link>
-            <Link href={`/${locale}/category/food/`} onClick={() => setOpen(false)}>
-              {locale === "en" ? "From the Harvest" : "De la Cosecha"}
-            </Link>
-            <Link href={`/${locale}/category/bodycare/`} onClick={() => setOpen(false)}>
-              {locale === "en" ? "Skin & Hair" : "Piel y Cabello"}
-            </Link>
-            <Link href={`/${locale}/category/remedies/`} onClick={() => setOpen(false)}>
-              {locale === "en" ? "Herbal Remedies" : "Remedios Herbales"}
+            {SHOP_CATEGORIES.map((cat) => (
+              <Link
+                key={cat.key}
+                href={`/${locale}/products/#${cat.key}`}
+                onClick={() => setOpen(false)}
+                className="pl-3 text-stone-600"
+              >
+                {cat.label[locale]}
+              </Link>
+            ))}
+            <Link href={`/${locale}/topics/`} onClick={() => setOpen(false)}>
+              {dict.navTopics}
             </Link>
             <Link href={`/${locale}/ingredients/`} onClick={() => setOpen(false)}>
               {locale === "en" ? "Ingredients" : "Ingredientes"}

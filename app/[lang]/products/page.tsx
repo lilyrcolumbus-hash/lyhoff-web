@@ -95,7 +95,7 @@ export default async function ProductsPage({
 
       {/* Sections */}
       {sections.map((section) => (
-        <section key={section.key} className="mx-auto max-w-6xl px-6 py-16">
+        <section key={section.key} id={section.key} className="mx-auto max-w-6xl px-6 py-16 scroll-mt-24">
           <div className="mb-10">
             <h2 className="font-display text-2xl font-bold text-forest-950">
               {section.title[locale]}
