@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useCartStore } from "@/lib/cart-store";
 import { type Locale } from "@/lib/i18n";
+import { Leaf } from "@/components/illustrations";
 
 export function CheckoutSuccessClient({ locale }: { locale: Locale }) {
   const clearCart = useCartStore((s) => s.clearCart);
@@ -14,7 +15,7 @@ export function CheckoutSuccessClient({ locale }: { locale: Locale }) {
 
   return (
     <div className="mx-auto max-w-lg px-6 py-24 text-center">
-      <p className="text-4xl">🌿</p>
+      <Leaf className="mx-auto h-10 w-10 text-forest-500" />
       <h1 className="mt-4 font-display text-3xl font-bold text-forest-950">
         {locale === "en" ? "Thank you!" : "¡Gracias!"}
       </h1>

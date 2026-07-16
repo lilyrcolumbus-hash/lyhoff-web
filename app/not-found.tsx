@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Leaf } from "@/components/illustrations";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -12,7 +13,7 @@ export default function NotFound() {
   return (
     <html lang="en">
       <body className="flex min-h-screen flex-col items-center justify-center bg-cream px-4 text-center text-ink">
-        <span className="text-5xl">🌿</span>
+        <Leaf className="h-12 w-12 text-forest-500" />
         <h1 className="mt-4 font-display text-3xl font-bold text-forest-900">
           Page not found
         </h1>

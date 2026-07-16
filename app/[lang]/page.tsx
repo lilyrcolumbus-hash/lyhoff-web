@@ -11,7 +11,7 @@ import { FullBleedVideo } from "@/components/FullBleedVideo";
 import { TrustBadges } from "@/components/TrustBadges";
 import { CategoryTiles } from "@/components/CategoryTiles";
 import { Newsletter } from "@/components/Newsletter";
-import { WaveDivider } from "@/components/illustrations";
+import { WaveDivider, Leaf } from "@/components/illustrations";
 import { HeroText } from "@/components/HeroText";
 
 const processVideos: { note: Record<Locale, string>; videoSrc: string }[] = [
@@ -76,7 +76,7 @@ export default async function HomePage({
             cta={dict.heroCta}
           />
           <div className="mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-cream/95 px-4 py-2.5 shadow-lg backdrop-blur-sm">
-            <span className="text-base" aria-hidden>🌿</span>
+            <Leaf className="h-4 w-4 text-forest-600" />
             <span className="font-display text-xs font-semibold text-forest-950">
               {locale === "en" ? "Zero synthetic chemicals" : "Sin químicos sintéticos"}
             </span>

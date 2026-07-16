@@ -1,36 +1,40 @@
 @import "tailwindcss";
 
 /*
-  LYHOFF brand palette:
-  - Forest/olive green  → custom `forest`
-  - Earth/amber         → custom `earth`
-  - Cream / warm white  → `cream`
+  LYHOFF brand palette — "Sage Silenciosa" (2026-07-16): a Japanese-minimalist /
+  MUJI-inspired direction. Muted, low-saturation sage replaces the old vivid
+  olive-green; kraft/terracotta replaces the old bright amber. Kept as the same
+  `forest`/`earth`/`cream` token names on purpose — every component already
+  reads these, so this single file is the whole re-skin, no component edits.
+  - Forest → muted sage-charcoal (was vivid olive-green)
+  - Earth  → muted kraft/terracotta (was bright amber)
+  - Cream  → warm paper white (barely changed)
 */
 @theme {
   --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
-  /* Deep natural green used for primary surfaces, headings, buttons */
-  --color-forest-50: #f4f7ec;
-  --color-forest-100: #e5ecd2;
-  --color-forest-200: #cbdaa8;
-  --color-forest-300: #a8c075;
-  --color-forest-400: #87a44e;
-  --color-forest-500: #6a8638;
-  --color-forest-600: #526a2a;
-  --color-forest-700: #405224;
-  --color-forest-800: #354321;
-  --color-forest-900: #2e3a20;
-  --color-forest-950: #171f0e;
+  /* Muted sage — primary surfaces, headings, buttons */
+  --color-forest-50: #f7f5f0;
+  --color-forest-100: #eae8de;
+  --color-forest-200: #d4d1c0;
+  --color-forest-300: #b6b195;
+  --color-forest-400: #93906d;
+  --color-forest-500: #6b6f5e;
+  --color-forest-600: #585c4c;
+  --color-forest-700: #46493d;
+  --color-forest-800: #363830;
+  --color-forest-900: #2b2a25;
+  --color-forest-950: #1c1b17;
 
-  /* Warm earth accent */
-  --color-earth-400: #d9a35b;
-  --color-earth-500: #c8843a;
-  --color-earth-600: #a96a2c;
-  --color-earth-700: #884f25;
+  /* Muted kraft/terracotta accent */
+  --color-earth-400: #cbaa86;
+  --color-earth-500: #b08968;
+  --color-earth-600: #96714f;
+  --color-earth-700: #785840;
 
-  --color-cream: #faf8f3;
-  --color-ink: #1c1917;
+  --color-cream: #f6f4ee;
+  --color-ink: #2b2a25;
 }
 
 :root {

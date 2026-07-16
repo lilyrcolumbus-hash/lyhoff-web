@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Locale } from "@/lib/i18n";
+import { Leaf } from "@/components/illustrations";
 
 const STORAGE_KEY = "lyhoff-welcome-seen";
 // Owner action: create a matching promotion code named WELCOME10 in the Stripe
@@ -62,7 +63,7 @@ export function WelcomePopup({ locale }: { locale: Locale }) {
 
         {status === "success" ? (
           <>
-            <p className="text-3xl">🌿</p>
+            <Leaf className="h-8 w-8 text-forest-500" />
             <h2 className="mt-3 font-display text-xl font-bold text-forest-950">
               {locale === "en" ? "You're in!" : "¡Listo!"}
             </h2>
