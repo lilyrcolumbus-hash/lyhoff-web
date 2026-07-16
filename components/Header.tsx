@@ -170,7 +170,7 @@ export function Header({ locale }: { locale: Locale }) {
                     {SHOP_CATEGORIES.map((cat) => (
                       <Link
                         key={cat.key}
-                        href={`/${locale}/products/#${cat.key}`}
+                        href={`/${locale}/products/category/${cat.key}/`}
                         onClick={() => setShopOpen(false)}
                         className="block rounded-lg px-3 py-2 text-sm text-stone-600 hover:bg-stone-50 hover:text-forest-900"
                       >
@@ -226,7 +226,7 @@ export function Header({ locale }: { locale: Locale }) {
             {SHOP_CATEGORIES.map((cat) => (
               <Link
                 key={cat.key}
-                href={`/${locale}/products/#${cat.key}`}
+                href={`/${locale}/products/category/${cat.key}/`}
                 onClick={() => setOpen(false)}
                 className="pl-3 text-stone-600"
               >
