@@ -4,6 +4,7 @@ import { isLocale, t, type Locale } from "@/lib/i18n";
 import { Newsletter } from "@/components/Newsletter";
 import { StockPhoto } from "@/components/StockPhoto";
 import { StockVideo } from "@/components/StockVideo";
+import { FullBleedVideo } from "@/components/FullBleedVideo";
 import { Blob } from "@/components/illustrations";
 
 export async function generateMetadata({
@@ -52,36 +53,56 @@ export default async function AboutPage({
   const c = copy[locale];
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12">
-      <h1 className="font-display text-3xl font-bold text-forest-950 sm:text-4xl">
-        {c.title}
-      </h1>
-      <div className="relative mt-8 max-w-sm">
-        <Blob className="pointer-events-none absolute -bottom-8 -left-8 h-48 w-48 text-forest-100 -z-10" />
-        <StockPhoto
-          ratio="portrait"
-          rounded
-          src="https://images.unsplash.com/photo-1651592280676-a01949b60cd7?w=700&h=875&q=80&auto=format&fit=crop"
-          alt={locale === "en" ? "Hands in the garden" : "Manos en el huerto"}
-        />
+    <div>
+      <div className="mx-auto max-w-3xl px-4 py-12">
+        <h1 className="font-display text-3xl font-bold text-forest-950 sm:text-4xl">
+          {c.title}
+        </h1>
+        <div className="relative mt-8 max-w-sm">
+          <Blob className="pointer-events-none absolute -bottom-8 -left-8 h-48 w-48 text-forest-100 -z-10" />
+          <StockPhoto
+            ratio="portrait"
+            rounded
+            src="https://images.unsplash.com/photo-1651592280676-a01949b60cd7?w=700&h=875&q=80&auto=format&fit=crop"
+            alt={locale === "en" ? "Hands in the garden" : "Manos en el huerto"}
+          />
+        </div>
+        <div className="prose-sg mt-8">
+          {c.body.map((p, i) => (
+            <p key={i}>{p}</p>
+          ))}
+        </div>
       </div>
-      <div className="prose-sg mt-8">
-        {c.body.map((p, i) => (
-          <p key={i}>{p}</p>
-        ))}
+
+      <FullBleedVideo
+        src="/videos/mixing.mp4"
+        height="h-[45vh] md:h-[60vh]"
+        heading={
+          locale === "en"
+            ? "Mixed by hand, small batch."
+            : "Mezclado a mano, en pequeños lotes."
+        }
+        sub={
+          locale === "en"
+            ? "Every jar we sell, we made ourselves — and use ourselves."
+            : "Cada frasco que vendemos, lo hicimos nosotros — y lo usamos nosotros."
+        }
+      />
+
+      <div className="mx-auto max-w-3xl px-4 py-12">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <StockPhoto
+            ratio="square"
+            rounded
+            src="https://images.unsplash.com/photo-1709666414115-47ecd5143293?w=600&h=600&q=80&auto=format&fit=crop"
+            alt={locale === "en" ? "Hand-bottled, small batch" : "Envasado a mano, en pequeños lotes"}
+          />
+          <StockVideo ratio="square" rounded src="/videos/soil.mp4" />
+        </div>
+        <section className="mt-12">
+          <Newsletter locale={locale} variant="panel" />
+        </section>
       </div>
-      <div className="mt-10 grid gap-4 sm:grid-cols-2">
-        <StockPhoto
-          ratio="square"
-          rounded
-          src="https://images.unsplash.com/photo-1709666414115-47ecd5143293?w=600&h=600&q=80&auto=format&fit=crop"
-          alt={locale === "en" ? "Hand-bottled, small batch" : "Envasado a mano, en pequeños lotes"}
-        />
-        <StockVideo ratio="square" rounded src="/videos/soil.mp4" />
-      </div>
-      <section className="mt-12">
-        <Newsletter locale={locale} variant="panel" />
-      </section>
     </div>
   );
 }

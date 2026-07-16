@@ -8,6 +8,7 @@ import { ArticleCard } from "@/components/ArticleCard";
 import { ProductCard } from "@/components/ProductCard";
 import { StockPhoto } from "@/components/StockPhoto";
 import { StockVideo } from "@/components/StockVideo";
+import { FullBleedVideo } from "@/components/FullBleedVideo";
 import { TrustBadges } from "@/components/TrustBadges";
 import { CategoryTiles } from "@/components/CategoryTiles";
 import { Newsletter } from "@/components/Newsletter";
@@ -178,6 +179,21 @@ export default async function HomePage({
       </section>
 
       <WaveDivider className="bg-forest-950 py-6" tone="dark" />
+
+      {/* Full-bleed cinematic moment */}
+      <FullBleedVideo
+        src="/videos/nature.mp4"
+        heading={
+          locale === "en"
+            ? "Grown, harvested, and made — all by us."
+            : "Cultivado, cosechado y hecho — todo por nosotros."
+        }
+        sub={
+          locale === "en"
+            ? "No warehouse, no middleman. Just a couple in Ohio and a garden."
+            : "Sin bodega, sin intermediarios. Solo una pareja en Ohio y un huerto."
+        }
+      />
 
       {/* Process strip */}
       <section className="bg-white">

@@ -5,6 +5,7 @@ import { isLocale, t, type Locale } from "@/lib/i18n";
 import { activeProducts, dedupeVariants, productsByCategory } from "@/lib/products";
 import { getProductImageUrl } from "@/lib/product-images";
 import { ProductCard } from "@/components/ProductCard";
+import { FullBleedVideo } from "@/components/FullBleedVideo";
 
 export async function generateMetadata({
   params,
@@ -92,6 +93,21 @@ export default async function ProductsPage({
       </div>
 
       <div className="border-t border-stone-200" />
+
+      <FullBleedVideo
+        src="/videos/bottling.mp4"
+        height="h-[45vh] md:h-[60vh]"
+        heading={
+          locale === "en"
+            ? "Packed and shipped by us, not a warehouse."
+            : "Empacado y enviado por nosotros, no por una bodega."
+        }
+        sub={
+          locale === "en"
+            ? "Every order goes out from our own hands, checked before it leaves."
+            : "Cada pedido sale de nuestras propias manos, revisado antes de salir."
+        }
+      />
 
       {/* Sections */}
       {sections.map((section) => (
