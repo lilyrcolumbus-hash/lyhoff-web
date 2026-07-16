@@ -26,43 +26,55 @@ export function HeroText({
   title,
   subtitle,
   cta,
+  theme = "dark",
 }: {
   locale: Locale;
   tagline: string;
   title: string;
   subtitle: string;
   cta: string;
+  /** "light" = light text for a dark/video background; "dark" = default text on cream. */
+  theme?: "dark" | "light";
 }) {
+  const light = theme === "light";
   return (
     <motion.div variants={container} initial="hidden" animate="show">
       <motion.p
         variants={item}
-        className="text-xs font-semibold uppercase tracking-[0.25em] text-earth-600 mb-6"
+        className={`text-xs font-semibold uppercase tracking-[0.25em] mb-6 ${light ? "text-earth-300" : "text-earth-600"}`}
       >
         {tagline}
       </motion.p>
       <motion.h1
         variants={item}
-        className="font-display text-5xl font-bold leading-[1.08] text-forest-950 max-w-2xl md:text-6xl lg:text-7xl"
+        className={`font-display text-5xl font-bold leading-[1.08] max-w-2xl md:text-6xl lg:text-7xl ${light ? "text-cream" : "text-forest-950"}`}
       >
         {title}
       </motion.h1>
       <motion.p
         variants={item}
-        className="mt-6 max-w-xl text-base text-stone-500 leading-relaxed md:text-lg"
+        className={`mt-6 max-w-xl text-base leading-relaxed md:text-lg ${light ? "text-cream/85" : "text-stone-500"}`}
       >
         {subtitle}
       </motion.p>
       <motion.div variants={item} className="mt-10 flex flex-wrap gap-4">
         <a
           href="#newsletter"
-          className="inline-flex items-center rounded-full bg-forest-950 px-7 py-3.5 text-sm font-semibold text-cream transition hover:bg-forest-800 hover:scale-105 active:scale-95"
+          className={
+            light
+              ? "inline-flex items-center rounded-full bg-cream px-7 py-3.5 text-sm font-semibold text-forest-950 transition hover:bg-white hover:scale-105 active:scale-95"
+              : "inline-flex items-center rounded-full bg-forest-950 px-7 py-3.5 text-sm font-semibold text-cream transition hover:bg-forest-800 hover:scale-105 active:scale-95"
+          }
         >
           {cta}
         </a>
         <Link
           href={`/${locale}/about/`}
-          className="inline-flex items-center rounded-full border border-stone-300 px-7 py-3.5 text-sm font-semibold text-forest-950 transition hover:border-forest-400 hover:bg-forest-50 hover:scale-105 active:scale-95"
+          className={
+            light
+              ? "inline-flex items-center rounded-full border border-cream/50 px-7 py-3.5 text-sm font-semibold text-cream transition hover:border-cream hover:bg-cream/10 hover:scale-105 active:scale-95"
+              : "inline-flex items-center rounded-full border border-stone-300 px-7 py-3.5 text-sm font-semibold text-forest-950 transition hover:border-forest-400 hover:bg-forest-50 hover:scale-105 active:scale-95"
+          }
         >
           {locale === "en" ? "Our story" : "Nuestra historia"}
         </Link>

@@ -6,15 +6,13 @@ import { activeProducts, dedupeVariants } from "@/lib/products";
 import { getProductImageUrl } from "@/lib/product-images";
 import { ArticleCard } from "@/components/ArticleCard";
 import { ProductCard } from "@/components/ProductCard";
-import { StockPhoto } from "@/components/StockPhoto";
 import { StockVideo } from "@/components/StockVideo";
 import { FullBleedVideo } from "@/components/FullBleedVideo";
 import { TrustBadges } from "@/components/TrustBadges";
 import { CategoryTiles } from "@/components/CategoryTiles";
 import { Newsletter } from "@/components/Newsletter";
-import { Blob, WaveDivider } from "@/components/illustrations";
+import { WaveDivider } from "@/components/illustrations";
 import { HeroText } from "@/components/HeroText";
-import { FloatingLeaves } from "@/components/FloatingLeaves";
 
 const processVideos: { note: Record<Locale, string>; videoSrc: string }[] = [
   {
@@ -56,36 +54,37 @@ export default async function HomePage({
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative bg-cream overflow-hidden">
-        <FloatingLeaves />
-        <div className="relative mx-auto grid max-w-6xl gap-12 px-6 pt-20 pb-24 md:pt-28 md:pb-32 lg:grid-cols-2 lg:items-center lg:gap-16">
+      {/* Hero — full-bleed video, first thing every visitor sees */}
+      <section className="relative min-h-[85vh] w-full overflow-hidden bg-forest-950">
+        <video
+          src="/videos/nature.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-forest-950/85 via-forest-950/45 to-forest-950/20" />
+        <div className="relative mx-auto flex min-h-[85vh] max-w-6xl flex-col justify-center px-6 py-24">
           <HeroText
             locale={locale}
+            theme="light"
             tagline={dict.tagline}
             title={dict.heroTitle}
             subtitle={dict.heroSubtitle}
             cta={dict.heroCta}
           />
-          <div className="relative">
-            <Blob className="pointer-events-none absolute -top-10 -right-10 h-64 w-64 text-earth-200/70 -z-10" />
-            <Blob className="pointer-events-none absolute -bottom-12 -left-8 h-40 w-40 text-forest-100 -z-10" />
-            <StockPhoto
-              ratio="portrait"
-              rounded
-              className="shadow-2xl shadow-forest-950/10"
-              src="https://images.unsplash.com/photo-1582745741856-1a5d68158ba3?w=700&h=875&q=80&auto=format&fit=crop"
-              alt={locale === "en" ? "Naturally grown rosemary" : "Romero cultivado al natural"}
-            >
-              <div className="absolute bottom-5 left-5 flex items-center gap-2 rounded-full bg-cream/95 px-4 py-2.5 shadow-lg backdrop-blur-sm">
-                <span className="text-base" aria-hidden>🌿</span>
-                <span className="font-display text-xs font-semibold text-forest-950">
-                  {locale === "en" ? "Zero synthetic chemicals" : "Sin químicos sintéticos"}
-                </span>
-              </div>
-            </StockPhoto>
+          <div className="mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-cream/95 px-4 py-2.5 shadow-lg backdrop-blur-sm">
+            <span className="text-base" aria-hidden>🌿</span>
+            <span className="font-display text-xs font-semibold text-forest-950">
+              {locale === "en" ? "Zero synthetic chemicals" : "Sin químicos sintéticos"}
+            </span>
           </div>
         </div>
+        <span className="absolute bottom-4 right-5 rounded-full bg-black/40 px-2 py-0.5 text-[9px] font-medium text-white/90 backdrop-blur-sm">
+          Stock footage
+        </span>
       </section>
 
       {/* Divider */}
@@ -182,7 +181,7 @@ export default async function HomePage({
 
       {/* Full-bleed cinematic moment */}
       <FullBleedVideo
-        src="/videos/nature.mp4"
+        src="/videos/herbs.mp4"
         heading={
           locale === "en"
             ? "Grown, harvested, and made — all by us."
