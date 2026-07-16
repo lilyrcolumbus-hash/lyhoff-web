@@ -7,6 +7,7 @@ import { getProductImageUrl } from "@/lib/product-images";
 import { ArticleCard } from "@/components/ArticleCard";
 import { ProductCard } from "@/components/ProductCard";
 import { StockPhoto } from "@/components/StockPhoto";
+import { StockVideo } from "@/components/StockVideo";
 import { TrustBadges } from "@/components/TrustBadges";
 import { CategoryTiles } from "@/components/CategoryTiles";
 import { Newsletter } from "@/components/Newsletter";
@@ -14,30 +15,27 @@ import { Blob, WaveDivider } from "@/components/illustrations";
 import { HeroText } from "@/components/HeroText";
 import { FloatingLeaves } from "@/components/FloatingLeaves";
 
-const processPhotos: { note: Record<Locale, string>; stockSrc: string }[] = [
+const processVideos: { note: Record<Locale, string>; videoSrc: string }[] = [
   {
     note: {
-      en: "Hands mixing the tallow cream",
-      es: "Manos mezclando la crema de sebo",
+      en: "Mixing by hand, small batch",
+      es: "Mezclado a mano, en pequeños lotes",
     },
-    stockSrc:
-      "https://images.unsplash.com/photo-1651592280676-a01949b60cd7?w=600&h=600&q=80&auto=format&fit=crop",
+    videoSrc: "/videos/mixing.mp4",
   },
   {
     note: {
       en: "Fresh herbs from the garden",
       es: "Hierbas frescas del huerto",
     },
-    stockSrc:
-      "https://images.unsplash.com/photo-1749655248287-d1e0acb5f8d1?w=600&h=600&q=80&auto=format&fit=crop",
+    videoSrc: "/videos/herbs.mp4",
   },
   {
     note: {
       en: "Bottling & labeling by hand",
       es: "Envasado y etiquetado a mano",
     },
-    stockSrc:
-      "https://images.unsplash.com/photo-1709666414115-47ecd5143293?w=600&h=600&q=80&auto=format&fit=crop",
+    videoSrc: "/videos/bottling.mp4",
   },
 ];
 
@@ -188,8 +186,11 @@ export default async function HomePage({
             {dict.ourProcess}
           </h2>
           <div className="grid gap-6 sm:grid-cols-3">
-            {processPhotos.map((photo, i) => (
-              <StockPhoto key={i} ratio="square" rounded src={photo.stockSrc} alt={photo.note[locale]} />
+            {processVideos.map((video, i) => (
+              <div key={i}>
+                <StockVideo ratio="square" rounded src={video.videoSrc} />
+                <p className="mt-3 text-center text-xs font-medium text-stone-500">{video.note[locale]}</p>
+              </div>
             ))}
           </div>
         </div>

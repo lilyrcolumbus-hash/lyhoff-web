@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { isLocale, t, type Locale } from "@/lib/i18n";
 import { Newsletter } from "@/components/Newsletter";
 import { StockPhoto } from "@/components/StockPhoto";
+import { StockVideo } from "@/components/StockVideo";
 import { Blob } from "@/components/illustrations";
 
 export async function generateMetadata({
@@ -76,12 +77,7 @@ export default async function AboutPage({
           src="https://images.unsplash.com/photo-1709666414115-47ecd5143293?w=600&h=600&q=80&auto=format&fit=crop"
           alt={locale === "en" ? "Hand-bottled, small batch" : "Envasado a mano, en pequeños lotes"}
         />
-        <StockPhoto
-          ratio="square"
-          rounded
-          src="https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?w=600&h=600&q=80&auto=format&fit=crop"
-          alt={locale === "en" ? "Garden or harvest shot" : "Foto del huerto o la cosecha"}
-        />
+        <StockVideo ratio="square" rounded src="/videos/soil.mp4" />
       </div>
       <section className="mt-12">
         <Newsletter locale={locale} variant="panel" />

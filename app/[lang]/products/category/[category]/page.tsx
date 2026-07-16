@@ -11,7 +11,7 @@ import {
 import { getProductImageUrl } from "@/lib/product-images";
 import { ProductCard } from "@/components/ProductCard";
 import { TrustBadges } from "@/components/TrustBadges";
-import { StockPhoto } from "@/components/StockPhoto";
+import { StockVideo } from "@/components/StockVideo";
 import { Newsletter } from "@/components/Newsletter";
 
 const CATEGORIES: ProductCategory[] = ["bodycare", "hair", "home", "hoff"];
@@ -23,7 +23,7 @@ const CONTENT: Record<
     headline: { en: string; es: string };
     sub: { en: string; es: string };
     why: { en: string; es: string };
-    image: { src: string; alt: { en: string; es: string } };
+    video: string;
   }
 > = {
   bodycare: {
@@ -37,10 +37,7 @@ const CONTENT: Record<
       en: "Grass-fed tallow is remarkably close to your skin's own lipids — it absorbs instead of sitting on top, with none of the synthetic emulsifiers most store creams rely on to fake that feeling.",
       es: "El sebo grass-fed es notablemente similar a los lípidos naturales de tu piel — se absorbe en vez de quedarse encima, sin los emulsificantes sintéticos que usan la mayoría de las cremas para simular esa sensación.",
     },
-    image: {
-      src: "https://images.unsplash.com/photo-1709666414115-47ecd5143293?w=900&h=700&q=85&auto=format&fit=crop",
-      alt: { en: "Hand-bottled, small batch", es: "Envasado a mano, en pequeños lotes" },
-    },
+    video: "/videos/mixing.mp4",
   },
   hair: {
     title: { en: "Hair Care", es: "Cuidado Capilar" },
@@ -53,10 +50,7 @@ const CONTENT: Record<
       en: "Most drugstore hair products are built around sulfates and silicones that coat the problem instead of solving it. Ours are built around what actually feeds a healthy scalp.",
       es: "La mayoría de los productos capilares de tienda están hechos con sulfatos y siliconas que cubren el problema en vez de resolverlo. Los nuestros están hechos con lo que realmente nutre un cuero cabelludo sano.",
     },
-    image: {
-      src: "https://images.unsplash.com/photo-1749655248287-d1e0acb5f8d1?w=900&h=700&q=85&auto=format&fit=crop",
-      alt: { en: "Fresh herbs from the garden", es: "Hierbas frescas del huerto" },
-    },
+    video: "/videos/herbs.mp4",
   },
   home: {
     title: { en: "Home & Garden", es: "Hogar y Jardín" },
@@ -69,10 +63,7 @@ const CONTENT: Record<
       en: "Anything we put in the garden ends up near the people, pets, and pollinators we care about — so it starts the same way everything else here does: no synthetic chemicals, full stop.",
       es: "Todo lo que ponemos en el jardín termina cerca de las personas, mascotas y polinizadores que nos importan — así que empieza igual que todo lo demás acá: sin químicos sintéticos, punto.",
     },
-    image: {
-      src: "https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?w=900&h=700&q=85&auto=format&fit=crop",
-      alt: { en: "Garden and harvest", es: "Huerto y cosecha" },
-    },
+    video: "/videos/soil.mp4",
   },
   hoff: {
     title: { en: "HOFF — Health", es: "HOFF — Salud" },
@@ -85,10 +76,7 @@ const CONTENT: Record<
       en: "HOFF is our separate line for people who want to know exactly what's in what they take — sourced carefully, dosed precisely, nothing hidden behind a proprietary blend.",
       es: "HOFF es nuestra línea aparte para quienes quieren saber exactamente qué contiene lo que toman — con abastecimiento cuidadoso, dosis precisas, nada oculto detrás de una mezcla \"propietaria\".",
     },
-    image: {
-      src: "https://images.unsplash.com/photo-1651592280676-a01949b60cd7?w=900&h=700&q=85&auto=format&fit=crop",
-      alt: { en: "Careful, hands-on formulation", es: "Formulación cuidadosa, hecha a mano" },
-    },
+    video: "/videos/bottling.mp4",
   },
 };
 
@@ -194,12 +182,7 @@ export default async function ProductCategoryPage({
       {/* Why this category — editorial trust content */}
       <div className="border-t border-stone-200 bg-white">
         <div className="mx-auto grid max-w-6xl gap-10 px-6 py-16 lg:grid-cols-2 lg:items-center lg:gap-16">
-          <StockPhoto
-            ratio="wide"
-            rounded
-            src={c.image.src}
-            alt={c.image.alt[locale]}
-          />
+          <StockVideo ratio="wide" rounded src={c.video} />
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-earth-600 mb-4">
               {locale === "en" ? "Why it's different" : "Por qué es diferente"}
