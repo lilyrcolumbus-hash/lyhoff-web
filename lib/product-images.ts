@@ -41,3 +41,11 @@ export function getProductImageUrls(slug: string): string[] {
     return [];
   }
 }
+
+// Scent-specific photos, if they exist — folder naming convention
+// `public/images/products/{slug}-{scent}/` (e.g. `tallow-cream-2oz-vanilla`).
+// Returns [] when no such folder exists so callers fall back to the
+// size-based default gallery instead of showing nothing — never fakes a photo.
+export function getScentImageUrls(slug: string, scent: string): string[] {
+  return getProductImageUrls(`${slug}-${scent.toLowerCase()}`);
+}
