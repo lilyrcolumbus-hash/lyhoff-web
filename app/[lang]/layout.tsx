@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Newsreader, Inter } from "next/font/google";
+import { Zen_Kaku_Gothic_New, Inter } from "next/font/google";
 import { notFound } from "next/navigation";
 import "../globals.css";
 import { Header } from "@/components/Header";
@@ -18,11 +18,10 @@ import {
   type Locale,
 } from "@/lib/i18n";
 
-const newsreader = Newsreader({
-  variable: "--font-newsreader",
+const zenKaku = Zen_Kaku_Gothic_New({
+  variable: "--font-zen-kaku",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
+  weight: ["400", "500", "700"],
 });
 
 const inter = Inter({
@@ -79,7 +78,7 @@ export default async function LangLayout({
   return (
     <html
       lang={lang}
-      className={`${newsreader.variable} ${inter.variable} h-full`}
+      className={`${zenKaku.variable} ${inter.variable} h-full`}
     >
       <body className="min-h-full flex flex-col bg-cream text-ink">
         <ShippingBanner locale={lang} />
