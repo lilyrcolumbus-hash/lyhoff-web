@@ -71,7 +71,7 @@ export function ShippingCalculator({
   }
 
   const inputClass =
-    "w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-forest-950 placeholder:text-stone-400 focus:border-forest-500 focus:outline-none";
+    "w-full rounded-sm border border-stone-300 bg-white px-3 py-2 text-sm text-forest-950 placeholder:text-stone-400 focus:border-forest-500 focus:outline-none";
 
   return (
     <div className="border-t border-stone-200 pt-4">

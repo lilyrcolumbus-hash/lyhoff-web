@@ -53,7 +53,7 @@ export function Newsletter({
 
       {status === "success" ? (
         <p
-          className={`mt-5 rounded-xl px-4 py-3 text-sm font-medium ${
+          className={`mt-5 rounded-sm px-4 py-3 text-sm font-medium ${
             dark ? "bg-forest-800 text-cream" : "bg-forest-100 text-forest-800"
           }`}
         >

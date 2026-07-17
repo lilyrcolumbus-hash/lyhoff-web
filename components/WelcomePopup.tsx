@@ -72,7 +72,7 @@ export function WelcomePopup({ locale }: { locale: Locale }) {
                 ? "Use this code at checkout for 10% off your first order:"
                 : "Usa este código al pagar para 10% de descuento en tu primer pedido:"}
             </p>
-            <p className="mt-3 rounded-lg border border-dashed border-earth-400 bg-earth-50 py-2.5 font-display text-lg font-bold tracking-widest text-earth-700">
+            <p className="mt-3 rounded-sm border border-dashed border-earth-400 bg-earth-50 py-2.5 font-display text-lg font-bold tracking-widest text-earth-700">
               {CODE}
             </p>
           </>

@@ -125,7 +125,7 @@ export default async function ArticlePage({
       </nav>
 
       {article.draft && (
-        <p className="mt-4 rounded-lg border border-earth-400/40 bg-earth-500/10 px-3 py-2 text-xs font-semibold text-earth-700">
+        <p className="mt-4 rounded-sm border border-earth-400/40 bg-earth-500/10 px-3 py-2 text-xs font-semibold text-earth-700">
           ⚠️ {dict.draftBadge}
         </p>
       )}
