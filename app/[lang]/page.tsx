@@ -17,8 +17,8 @@ import { HeroText } from "@/components/HeroText";
 const processVideos: { note: Record<Locale, string>; videoSrc: string }[] = [
   {
     note: {
-      en: "Mixing by hand, small batch",
-      es: "Mezclado a mano, en pequeños lotes",
+      en: "Processed in our own lab, small batch",
+      es: "Procesado en nuestro laboratorio, en pequeños lotes",
     },
     videoSrc: "/videos/mixing.mp4",
   },

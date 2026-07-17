@@ -14,10 +14,10 @@ const items: {
 }[] = [
   {
     icon: Jar,
-    label: { en: "Small-batch crafted", es: "Elaborado en pequeños lotes" },
+    label: { en: "Our own certified lab", es: "Laboratorio propio certificado" },
     desc: {
-      en: "Every product made by hand, in limited quantities.",
-      es: "Cada producto hecho a mano, en cantidades limitadas.",
+      en: "Real equipment, real standards — not a kitchen recipe.",
+      es: "Equipo real, estándares reales — no una receta de cocina.",
     },
   },
   {

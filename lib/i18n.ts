@@ -118,7 +118,7 @@ export const dictionary: Record<Locale, Dict> = {
     tagline: "Pure. Natural. Chemical-free.",
     heroTitle: "Naturally grown, thoughtfully made",
     heroSubtitle:
-      "Organic, plant-based, and free of synthetic chemicals — grown with care and crafted in small batches. Real ingredients, nothing artificial.",
+      "Organic, plant-based ingredients — grown with care, processed in our own certified lab. Real ingredients, real quality control, nothing artificial.",
     heroCta: "Join the list",
     featured: "Start here",
     browseByTopic: "Browse by topic",
@@ -164,7 +164,7 @@ export const dictionary: Record<Locale, Dict> = {
     tagline: "Puro. Natural. Sin químicos.",
     heroTitle: "Cultivado al natural, hecho con cuidado",
     heroSubtitle:
-      "Orgánico, a base de plantas y libre de químicos sintéticos — cultivado con cuidado y elaborado en pequeños lotes. Ingredientes reales, nada artificial.",
+      "Ingredientes orgánicos, a base de plantas — cultivados con cuidado, procesados en nuestro propio laboratorio certificado. Ingredientes reales, control de calidad real, nada artificial.",
     heroCta: "Únete a la lista",
     featured: "Empieza aquí",
     browseByTopic: "Explorar por tema",
