@@ -13,50 +13,18 @@ export interface Product {
   image: string;
   badge?: { en: string; es: string };
   active: boolean;
-  /** Products sharing this id are shown as one product with a size/variant selector. */
+  /** Products sharing this id are shown as one product with a size selector. */
   variantGroup?: string;
-  /** Scent options, if this product comes in more than one — same price/jar, picked at add-to-bag. */
-  scents?: string[];
-  /** Per-scent description, specific to THIS product (never shared/repeated across products). */
-  scentNotes?: Record<string, { en: string; es: string }>;
+  /** Which scent this exact product is, if it comes in more than one — "Unscented" | "Vanilla" | "Peppermint". */
+  scent?: string;
+  /** Products sharing this id (same size, different scent) are shown as a scent selector. */
+  scentGroup?: string;
   /** Short scannable claims, pulled from the description — shown as bullets on the product page. */
   benefits: { en: string; es: string }[];
   howToUse: { en: string; es: string };
 }
 
-export const SCENT_OPTIONS = ["Unscented", "Vanilla", "Peppermint"];
-
-// Per-product scent descriptions — written separately for Tallow Cream and Comfrey
-// Salve so no two products (or scents within one product) share the same copy.
-const TALLOW_CREAM_SCENT_NOTES: Record<string, { en: string; es: string }> = {
-  Unscented: {
-    en: "Pure tallow and jojoba, nothing else — no fragrance to mask, nothing to react to. The most honest way to try it.",
-    es: "Sebo y jojoba puros, nada más — sin fragancia que enmascare, nada a lo que reaccionar. La forma más honesta de probarlo.",
-  },
-  Vanilla: {
-    en: "Warm, comforting vanilla folded into the same two-ingredient base — our best-seller for a reason.",
-    es: "Vainilla cálida y reconfortante en la misma base de dos ingredientes — nuestro más vendido, con razón.",
-  },
-  Peppermint: {
-    en: "A cool, awakening peppermint finish — feels incredible after a shower or on tired skin.",
-    es: "Un toque final de menta fresca y despertador — se siente increíble después de la ducha o en piel cansada.",
-  },
-};
-
-const COMFREY_SALVE_SCENT_NOTES: Record<string, { en: string; es: string }> = {
-  Unscented: {
-    en: "No fragrance, no distractions — just comfrey doing its job. The safest choice for sensitive or broken skin.",
-    es: "Sin fragancia, sin distracciones — solo consuelda haciendo su trabajo. La opción más segura para piel sensible o irritada.",
-  },
-  Vanilla: {
-    en: "The same joint-and-muscle relief, softened with warm vanilla for an easier daily ritual.",
-    es: "El mismo alivio para articulaciones y músculos, suavizado con vainilla cálida para un ritual diario más agradable.",
-  },
-  Peppermint: {
-    en: "Peppermint adds a cooling kick that works especially well on sore muscles after a long day.",
-    es: "La menta suma un efecto frío que funciona muy bien en músculos adoloridos después de un día largo.",
-  },
-};
+export const SCENT_OPTIONS = ["Unscented", "Peppermint", "Vanilla"];
 
 const UNSPLASH = (id: string, w = 800, h = 900) =>
   `https://images.unsplash.com/photo-${id}?w=${w}&h=${h}&q=90&auto=format&fit=crop`;
@@ -71,16 +39,16 @@ export const products: Product[] = [
     slug: "tallow-cream-2oz",
     category: "bodycare",
     name: {
-      en: "Whipped Tallow Cream",
-      es: "Crema de Sebo Batida",
+      en: "Whipped Tallow Cream — Unscented",
+      es: "Crema de Sebo Batida — Sin Fragancia",
     },
     tagline: {
       en: "Skin that actually heals.",
       es: "Piel que realmente sana.",
     },
     description: {
-      en: "Grass-fed beef tallow and jojoba oil — two ingredients, nothing else. Rich in vitamins A, D, E & K. Absorbs fast, no greasy residue. Includes a jade roller.",
-      es: "Sebo de res grass-fed y aceite de jojoba — dos ingredientes, nada más. Rico en vitaminas A, D, E y K. Absorción rápida, sin residuo graso. Incluye jade roller.",
+      en: "Grass-fed beef tallow and jojoba oil — two ingredients, nothing else, no fragrance. Rich in vitamins A, D, E & K. Absorbs fast, no greasy residue. Includes a jade roller.",
+      es: "Sebo de res grass-fed y aceite de jojoba — dos ingredientes, nada más, sin fragancia. Rico en vitaminas A, D, E y K. Absorción rápida, sin residuo graso. Incluye jade roller.",
     },
     ingredients: ["Grass-fed beef tallow", "Jojoba oil"],
     price: 29.99,
@@ -89,10 +57,78 @@ export const products: Product[] = [
     badge: { en: "Best Seller", es: "Más Vendido" },
     active: true,
     variantGroup: "tallow-cream",
-    scents: SCENT_OPTIONS,
-    scentNotes: TALLOW_CREAM_SCENT_NOTES,
+    scent: "Unscented",
+    scentGroup: "tallow-cream-2oz",
     benefits: [
       { en: "Two ingredients, nothing else", es: "Dos ingredientes, nada más" },
+      { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
+      { en: "Absorbs fast, no greasy residue", es: "Absorción rápida, sin residuo graso" },
+    ],
+    howToUse: {
+      en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
+      es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
+    },
+  },
+  {
+    asin: "B0FHJ5YC63",
+    slug: "tallow-cream-2oz-peppermint",
+    category: "bodycare",
+    name: {
+      en: "Whipped Tallow Cream — Peppermint",
+      es: "Crema de Sebo Batida — Menta",
+    },
+    tagline: {
+      en: "Skin that actually heals.",
+      es: "Piel que realmente sana.",
+    },
+    description: {
+      en: "Grass-fed beef tallow and jojoba oil with a cool, awakening peppermint finish — feels incredible after a shower or on tired skin. Rich in vitamins A, D, E & K.",
+      es: "Sebo de res grass-fed y aceite de jojoba con un toque final de menta fresca y despertador — se siente increíble después de la ducha o en piel cansada. Rico en vitaminas A, D, E y K.",
+    },
+    ingredients: ["Grass-fed beef tallow", "Jojoba oil", "Peppermint oil"],
+    price: 29.99,
+    size: "2 oz",
+    image: UNSPLASH("1596755389378-c31d21fd1273"),
+    active: true,
+    variantGroup: "tallow-cream",
+    scent: "Peppermint",
+    scentGroup: "tallow-cream-2oz",
+    benefits: [
+      { en: "Cool, awakening peppermint finish", es: "Toque final de menta fresca y despertador" },
+      { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
+      { en: "Absorbs fast, no greasy residue", es: "Absorción rápida, sin residuo graso" },
+    ],
+    howToUse: {
+      en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
+      es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
+    },
+  },
+  {
+    asin: "B0FHJ5YC63",
+    slug: "tallow-cream-2oz-vanilla",
+    category: "bodycare",
+    name: {
+      en: "Whipped Tallow Cream — Vanilla",
+      es: "Crema de Sebo Batida — Vainilla",
+    },
+    tagline: {
+      en: "Skin that actually heals.",
+      es: "Piel que realmente sana.",
+    },
+    description: {
+      en: "Grass-fed beef tallow and jojoba oil with warm, comforting vanilla folded in — our customers' favorite. Rich in vitamins A, D, E & K.",
+      es: "Sebo de res grass-fed y aceite de jojoba con vainilla cálida y reconfortante — el favorito de nuestros clientes. Rico en vitaminas A, D, E y K.",
+    },
+    ingredients: ["Grass-fed beef tallow", "Jojoba oil", "Vanilla extract"],
+    price: 29.99,
+    size: "2 oz",
+    image: UNSPLASH("1596755389378-c31d21fd1273"),
+    active: true,
+    variantGroup: "tallow-cream",
+    scent: "Vanilla",
+    scentGroup: "tallow-cream-2oz",
+    benefits: [
+      { en: "Warm, comforting vanilla scent", es: "Aroma cálido y reconfortante a vainilla" },
       { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
       { en: "Absorbs fast, no greasy residue", es: "Absorción rápida, sin residuo graso" },
     ],
@@ -109,16 +145,16 @@ export const products: Product[] = [
     slug: "tallow-cream-1oz",
     category: "bodycare",
     name: {
-      en: "Whipped Tallow Cream",
-      es: "Crema de Sebo Batida",
+      en: "Whipped Tallow Cream — Unscented",
+      es: "Crema de Sebo Batida — Sin Fragancia",
     },
     tagline: {
       en: "Skin that actually heals.",
       es: "Piel que realmente sana.",
     },
     description: {
-      en: "Grass-fed beef tallow and jojoba oil — two ingredients, nothing else. Rich in vitamins A, D, E & K. Absorbs fast, no greasy residue.",
-      es: "Sebo de res grass-fed y aceite de jojoba — dos ingredientes, nada más. Rico en vitaminas A, D, E y K. Absorción rápida, sin residuo graso.",
+      en: "Grass-fed beef tallow and jojoba oil — two ingredients, nothing else, no fragrance. Rich in vitamins A, D, E & K. Absorbs fast, no greasy residue.",
+      es: "Sebo de res grass-fed y aceite de jojoba — dos ingredientes, nada más, sin fragancia. Rico en vitaminas A, D, E y K. Absorción rápida, sin residuo graso.",
     },
     ingredients: ["Grass-fed beef tallow", "Jojoba oil"],
     price: 0, // PLACEHOLDER — owner has not confirmed the real 1oz price yet.
@@ -126,10 +162,78 @@ export const products: Product[] = [
     image: UNSPLASH("1596755389378-c31d21fd1273"),
     active: false, // hidden from the live site until a real price is set
     variantGroup: "tallow-cream",
-    scents: SCENT_OPTIONS,
-    scentNotes: TALLOW_CREAM_SCENT_NOTES,
+    scent: "Unscented",
+    scentGroup: "tallow-cream-1oz",
     benefits: [
       { en: "Two ingredients, nothing else", es: "Dos ingredientes, nada más" },
+      { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
+      { en: "Absorbs fast, no greasy residue", es: "Absorción rápida, sin residuo graso" },
+    ],
+    howToUse: {
+      en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
+      es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
+    },
+  },
+  {
+    asin: "PENDING-TALLOW-1OZ",
+    slug: "tallow-cream-1oz-peppermint",
+    category: "bodycare",
+    name: {
+      en: "Whipped Tallow Cream — Peppermint",
+      es: "Crema de Sebo Batida — Menta",
+    },
+    tagline: {
+      en: "Skin that actually heals.",
+      es: "Piel que realmente sana.",
+    },
+    description: {
+      en: "Grass-fed beef tallow and jojoba oil with a cool, awakening peppermint finish. Rich in vitamins A, D, E & K.",
+      es: "Sebo de res grass-fed y aceite de jojoba con un toque final de menta fresca y despertador. Rico en vitaminas A, D, E y K.",
+    },
+    ingredients: ["Grass-fed beef tallow", "Jojoba oil", "Peppermint oil"],
+    price: 0, // PLACEHOLDER — owner has not confirmed the real 1oz price yet.
+    size: "1 oz",
+    image: UNSPLASH("1596755389378-c31d21fd1273"),
+    active: false, // hidden from the live site until a real price is set
+    variantGroup: "tallow-cream",
+    scent: "Peppermint",
+    scentGroup: "tallow-cream-1oz",
+    benefits: [
+      { en: "Cool, awakening peppermint finish", es: "Toque final de menta fresca y despertador" },
+      { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
+      { en: "Absorbs fast, no greasy residue", es: "Absorción rápida, sin residuo graso" },
+    ],
+    howToUse: {
+      en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
+      es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
+    },
+  },
+  {
+    asin: "PENDING-TALLOW-1OZ",
+    slug: "tallow-cream-1oz-vanilla",
+    category: "bodycare",
+    name: {
+      en: "Whipped Tallow Cream — Vanilla",
+      es: "Crema de Sebo Batida — Vainilla",
+    },
+    tagline: {
+      en: "Skin that actually heals.",
+      es: "Piel que realmente sana.",
+    },
+    description: {
+      en: "Grass-fed beef tallow and jojoba oil with warm, comforting vanilla folded in. Rich in vitamins A, D, E & K.",
+      es: "Sebo de res grass-fed y aceite de jojoba con vainilla cálida y reconfortante. Rico en vitaminas A, D, E y K.",
+    },
+    ingredients: ["Grass-fed beef tallow", "Jojoba oil", "Vanilla extract"],
+    price: 0, // PLACEHOLDER — owner has not confirmed the real 1oz price yet.
+    size: "1 oz",
+    image: UNSPLASH("1596755389378-c31d21fd1273"),
+    active: false, // hidden from the live site until a real price is set
+    variantGroup: "tallow-cream",
+    scent: "Vanilla",
+    scentGroup: "tallow-cream-1oz",
+    benefits: [
+      { en: "Warm, comforting vanilla scent", es: "Aroma cálido y reconfortante a vainilla" },
       { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
       { en: "Absorbs fast, no greasy residue", es: "Absorción rápida, sin residuo graso" },
     ],
@@ -143,16 +247,16 @@ export const products: Product[] = [
     slug: "comfrey-salve-2oz",
     category: "bodycare",
     name: {
-      en: "Organic Comfrey Salve",
-      es: "Bálsamo de Consuelda Orgánica",
+      en: "Organic Comfrey Salve — Unscented",
+      es: "Bálsamo de Consuelda Orgánica — Sin Fragancia",
     },
     tagline: {
       en: "For joints, muscles, and dry skin.",
       es: "Para articulaciones, músculos y piel seca.",
     },
     description: {
-      en: "Organic comfrey extract blended with grass-fed beef tallow and jojoba oil. Whipped light texture, fast-absorbing, unscented. For sensitive skin and targeted relief.",
-      es: "Extracto orgánico de consuelda con sebo grass-fed y aceite de jojoba. Textura batida y ligera, absorción rápida, sin fragancia.",
+      en: "Organic comfrey extract blended with grass-fed beef tallow and jojoba oil, no fragrance added. Whipped light texture, fast-absorbing. The safest choice for sensitive or broken skin.",
+      es: "Extracto orgánico de consuelda con sebo grass-fed y aceite de jojoba, sin fragancia agregada. Textura batida y ligera, absorción rápida. La opción más segura para piel sensible o irritada.",
     },
     ingredients: ["Grass-fed beef tallow", "Jojoba oil", "Organic comfrey extract"],
     price: 35.99,
@@ -160,12 +264,80 @@ export const products: Product[] = [
     image: UNSPLASH("1617714651703-d4e8b66efb73"),
     active: true,
     variantGroup: "comfrey-salve",
-    scents: SCENT_OPTIONS,
-    scentNotes: COMFREY_SALVE_SCENT_NOTES,
+    scent: "Unscented",
+    scentGroup: "comfrey-salve-2oz",
     benefits: [
       { en: "Traditional \"knitbone\" herb, organic", es: "Hierba tradicional \"suelda huesos\", orgánica" },
       { en: "Whipped light, fast-absorbing texture", es: "Textura batida, ligera, absorción rápida" },
       { en: "Unscented — safe for sensitive skin", es: "Sin fragancia — segura para piel sensible" },
+    ],
+    howToUse: {
+      en: "Massage a small amount into the area of concern 1–2 times daily. For external use only.",
+      es: "Masajea una pequeña cantidad en la zona de interés 1–2 veces al día. Solo para uso externo.",
+    },
+  },
+  {
+    asin: "B0FPMDLPQL",
+    slug: "comfrey-salve-2oz-peppermint",
+    category: "bodycare",
+    name: {
+      en: "Organic Comfrey Salve — Peppermint",
+      es: "Bálsamo de Consuelda Orgánica — Menta",
+    },
+    tagline: {
+      en: "For joints, muscles, and dry skin.",
+      es: "Para articulaciones, músculos y piel seca.",
+    },
+    description: {
+      en: "Organic comfrey extract blended with grass-fed beef tallow and jojoba oil. Peppermint adds a cooling kick that works especially well on sore muscles after a long day.",
+      es: "Extracto orgánico de consuelda con sebo grass-fed y aceite de jojoba. La menta suma un efecto frío que funciona muy bien en músculos adoloridos después de un día largo.",
+    },
+    ingredients: ["Grass-fed beef tallow", "Jojoba oil", "Organic comfrey extract", "Peppermint oil"],
+    price: 35.99,
+    size: "2 oz",
+    image: UNSPLASH("1617714651703-d4e8b66efb73"),
+    active: true,
+    variantGroup: "comfrey-salve",
+    scent: "Peppermint",
+    scentGroup: "comfrey-salve-2oz",
+    benefits: [
+      { en: "Traditional \"knitbone\" herb, organic", es: "Hierba tradicional \"suelda huesos\", orgánica" },
+      { en: "Whipped light, fast-absorbing texture", es: "Textura batida, ligera, absorción rápida" },
+      { en: "Cooling peppermint, great on sore muscles", es: "Menta refrescante, ideal en músculos adoloridos" },
+    ],
+    howToUse: {
+      en: "Massage a small amount into the area of concern 1–2 times daily. For external use only.",
+      es: "Masajea una pequeña cantidad en la zona de interés 1–2 veces al día. Solo para uso externo.",
+    },
+  },
+  {
+    asin: "B0FPMDLPQL",
+    slug: "comfrey-salve-2oz-vanilla",
+    category: "bodycare",
+    name: {
+      en: "Organic Comfrey Salve — Vanilla",
+      es: "Bálsamo de Consuelda Orgánica — Vainilla",
+    },
+    tagline: {
+      en: "For joints, muscles, and dry skin.",
+      es: "Para articulaciones, músculos y piel seca.",
+    },
+    description: {
+      en: "Organic comfrey extract blended with grass-fed beef tallow and jojoba oil, softened with warm vanilla for an easier daily ritual.",
+      es: "Extracto orgánico de consuelda con sebo grass-fed y aceite de jojoba, suavizado con vainilla cálida para un ritual diario más agradable.",
+    },
+    ingredients: ["Grass-fed beef tallow", "Jojoba oil", "Organic comfrey extract", "Vanilla extract"],
+    price: 35.99,
+    size: "2 oz",
+    image: UNSPLASH("1617714651703-d4e8b66efb73"),
+    active: true,
+    variantGroup: "comfrey-salve",
+    scent: "Vanilla",
+    scentGroup: "comfrey-salve-2oz",
+    benefits: [
+      { en: "Traditional \"knitbone\" herb, organic", es: "Hierba tradicional \"suelda huesos\", orgánica" },
+      { en: "Whipped light, fast-absorbing texture", es: "Textura batida, ligera, absorción rápida" },
+      { en: "Warm vanilla scent", es: "Aroma cálido a vainilla" },
     ],
     howToUse: {
       en: "Massage a small amount into the area of concern 1–2 times daily. For external use only.",
@@ -178,16 +350,16 @@ export const products: Product[] = [
     slug: "comfrey-salve-1oz",
     category: "bodycare",
     name: {
-      en: "Organic Comfrey Salve",
-      es: "Bálsamo de Consuelda Orgánica",
+      en: "Organic Comfrey Salve — Unscented",
+      es: "Bálsamo de Consuelda Orgánica — Sin Fragancia",
     },
     tagline: {
       en: "For joints, muscles, and dry skin.",
       es: "Para articulaciones, músculos y piel seca.",
     },
     description: {
-      en: "Organic comfrey extract blended with grass-fed beef tallow and jojoba oil. Whipped light texture, fast-absorbing, unscented. For sensitive skin and targeted relief.",
-      es: "Extracto orgánico de consuelda con sebo grass-fed y aceite de jojoba. Textura batida y ligera, absorción rápida, sin fragancia.",
+      en: "Organic comfrey extract blended with grass-fed beef tallow and jojoba oil, no fragrance added. Whipped light texture, fast-absorbing. The safest choice for sensitive or broken skin.",
+      es: "Extracto orgánico de consuelda con sebo grass-fed y aceite de jojoba, sin fragancia agregada. Textura batida y ligera, absorción rápida. La opción más segura para piel sensible o irritada.",
     },
     ingredients: ["Grass-fed beef tallow", "Jojoba oil", "Organic comfrey extract"],
     price: 0, // PLACEHOLDER — owner has not confirmed the real 1oz price yet.
@@ -195,12 +367,80 @@ export const products: Product[] = [
     image: UNSPLASH("1617714651703-d4e8b66efb73"),
     active: false, // hidden from the live site until a real price is set
     variantGroup: "comfrey-salve",
-    scents: SCENT_OPTIONS,
-    scentNotes: COMFREY_SALVE_SCENT_NOTES,
+    scent: "Unscented",
+    scentGroup: "comfrey-salve-1oz",
     benefits: [
       { en: "Traditional \"knitbone\" herb, organic", es: "Hierba tradicional \"suelda huesos\", orgánica" },
       { en: "Whipped light, fast-absorbing texture", es: "Textura batida, ligera, absorción rápida" },
       { en: "Unscented — safe for sensitive skin", es: "Sin fragancia — segura para piel sensible" },
+    ],
+    howToUse: {
+      en: "Massage a small amount into the area of concern 1–2 times daily. For external use only.",
+      es: "Masajea una pequeña cantidad en la zona de interés 1–2 veces al día. Solo para uso externo.",
+    },
+  },
+  {
+    asin: "PENDING-COMFREY-1OZ",
+    slug: "comfrey-salve-1oz-peppermint",
+    category: "bodycare",
+    name: {
+      en: "Organic Comfrey Salve — Peppermint",
+      es: "Bálsamo de Consuelda Orgánica — Menta",
+    },
+    tagline: {
+      en: "For joints, muscles, and dry skin.",
+      es: "Para articulaciones, músculos y piel seca.",
+    },
+    description: {
+      en: "Organic comfrey extract blended with grass-fed beef tallow and jojoba oil. Peppermint adds a cooling kick that works especially well on sore muscles after a long day.",
+      es: "Extracto orgánico de consuelda con sebo grass-fed y aceite de jojoba. La menta suma un efecto frío que funciona muy bien en músculos adoloridos después de un día largo.",
+    },
+    ingredients: ["Grass-fed beef tallow", "Jojoba oil", "Organic comfrey extract", "Peppermint oil"],
+    price: 0, // PLACEHOLDER — owner has not confirmed the real 1oz price yet.
+    size: "1 oz",
+    image: UNSPLASH("1617714651703-d4e8b66efb73"),
+    active: false, // hidden from the live site until a real price is set
+    variantGroup: "comfrey-salve",
+    scent: "Peppermint",
+    scentGroup: "comfrey-salve-1oz",
+    benefits: [
+      { en: "Traditional \"knitbone\" herb, organic", es: "Hierba tradicional \"suelda huesos\", orgánica" },
+      { en: "Whipped light, fast-absorbing texture", es: "Textura batida, ligera, absorción rápida" },
+      { en: "Cooling peppermint, great on sore muscles", es: "Menta refrescante, ideal en músculos adoloridos" },
+    ],
+    howToUse: {
+      en: "Massage a small amount into the area of concern 1–2 times daily. For external use only.",
+      es: "Masajea una pequeña cantidad en la zona de interés 1–2 veces al día. Solo para uso externo.",
+    },
+  },
+  {
+    asin: "PENDING-COMFREY-1OZ",
+    slug: "comfrey-salve-1oz-vanilla",
+    category: "bodycare",
+    name: {
+      en: "Organic Comfrey Salve — Vanilla",
+      es: "Bálsamo de Consuelda Orgánica — Vainilla",
+    },
+    tagline: {
+      en: "For joints, muscles, and dry skin.",
+      es: "Para articulaciones, músculos y piel seca.",
+    },
+    description: {
+      en: "Organic comfrey extract blended with grass-fed beef tallow and jojoba oil, softened with warm vanilla for an easier daily ritual.",
+      es: "Extracto orgánico de consuelda con sebo grass-fed y aceite de jojoba, suavizado con vainilla cálida para un ritual diario más agradable.",
+    },
+    ingredients: ["Grass-fed beef tallow", "Jojoba oil", "Organic comfrey extract", "Vanilla extract"],
+    price: 0, // PLACEHOLDER — owner has not confirmed the real 1oz price yet.
+    size: "1 oz",
+    image: UNSPLASH("1617714651703-d4e8b66efb73"),
+    active: false, // hidden from the live site until a real price is set
+    variantGroup: "comfrey-salve",
+    scent: "Vanilla",
+    scentGroup: "comfrey-salve-1oz",
+    benefits: [
+      { en: "Traditional \"knitbone\" herb, organic", es: "Hierba tradicional \"suelda huesos\", orgánica" },
+      { en: "Whipped light, fast-absorbing texture", es: "Textura batida, ligera, absorción rápida" },
+      { en: "Warm vanilla scent", es: "Aroma cálido a vainilla" },
     ],
     howToUse: {
       en: "Massage a small amount into the area of concern 1–2 times daily. For external use only.",
@@ -383,7 +623,29 @@ export const getVariants = (variantGroup: string) =>
     .filter((p) => p.variantGroup === variantGroup)
     .sort((a, b) => a.price - b.price);
 
-/** Listing-grid dedupe: keep only the first (cheapest) product per variantGroup. */
+/**
+ * Size picker only: one product per unique size within a variantGroup — a
+ * variantGroup may hold several scent siblings per size (e.g. tallow-cream has
+ * 2oz-unscented/peppermint/vanilla + 1oz-*), and the size picker should show
+ * exactly one pill per size. Prefers the "Unscented" sibling as that size's
+ * representative when there's a choice.
+ */
+export const getSizeVariants = (variantGroup: string) => {
+  const bySize = new Map<string, Product>();
+  for (const p of getVariants(variantGroup)) {
+    const existing = bySize.get(p.size);
+    if (!existing || p.scent === "Unscented") bySize.set(p.size, p);
+  }
+  return [...bySize.values()].sort((a, b) => a.price - b.price);
+};
+
+/** All active products sharing a scentGroup (same product + size, different scent). */
+export const getScentVariants = (scentGroup: string) =>
+  activeProducts
+    .filter((p) => p.scentGroup === scentGroup)
+    .sort((a, b) => SCENT_OPTIONS.indexOf(a.scent ?? "") - SCENT_OPTIONS.indexOf(b.scent ?? ""));
+
+/** Listing-grid dedupe: keep only the first product per variantGroup (declaration order). */
 export const dedupeVariants = (list: Product[]) => {
   const seen = new Set<string>();
   return list.filter((p) => {

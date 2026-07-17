@@ -15,11 +15,20 @@ export interface ParcelSpec {
 // product, real, owner-measured 2026-07-15) — see CLAUDE.md "RESUME HERE" for the source data.
 export const PARCEL_SPECS: Record<string, ParcelSpec> = {
   // 1oz jar: 1.93"H x 2.36"D, 2.3oz filled (real, owner-measured) — no 4oz jar exists (removed)
+  // Same weight/dims across all 3 scents of the same size — scent doesn't change the jar or fill weight.
   "comfrey-salve-1oz": { weightOz: 2.3, lengthIn: 2.5, widthIn: 2.5, heightIn: 2 },
+  "comfrey-salve-1oz-peppermint": { weightOz: 2.3, lengthIn: 2.5, widthIn: 2.5, heightIn: 2 },
+  "comfrey-salve-1oz-vanilla": { weightOz: 2.3, lengthIn: 2.5, widthIn: 2.5, heightIn: 2 },
   "tallow-cream-1oz": { weightOz: 2.3, lengthIn: 2.5, widthIn: 2.5, heightIn: 2 },
+  "tallow-cream-1oz-peppermint": { weightOz: 2.3, lengthIn: 2.5, widthIn: 2.5, heightIn: 2 },
+  "tallow-cream-1oz-vanilla": { weightOz: 2.3, lengthIn: 2.5, widthIn: 2.5, heightIn: 2 },
   // 2oz jar: 2.42"H x 2.86"D, 3.8oz filled (real) — Tallow Cream and Comfrey Salve share this jar mold
   "tallow-cream-2oz": { weightOz: 3.8, lengthIn: 3, widthIn: 3, heightIn: 2.5 },
+  "tallow-cream-2oz-peppermint": { weightOz: 3.8, lengthIn: 3, widthIn: 3, heightIn: 2.5 },
+  "tallow-cream-2oz-vanilla": { weightOz: 3.8, lengthIn: 3, widthIn: 3, heightIn: 2.5 },
   "comfrey-salve-2oz": { weightOz: 3.8, lengthIn: 3, widthIn: 3, heightIn: 2.5 },
+  "comfrey-salve-2oz-peppermint": { weightOz: 3.8, lengthIn: 3, widthIn: 3, heightIn: 2.5 },
+  "comfrey-salve-2oz-vanilla": { weightOz: 3.8, lengthIn: 3, widthIn: 3, heightIn: 2.5 },
   // Sea Salt Spray bottle: 6.15"H x 2"D, 8.5oz filled (real)
   "sea-salt-spray-her": { weightOz: 8.5, lengthIn: 2.5, widthIn: 2.5, heightIn: 6.5 },
   "sea-salt-spray-him": { weightOz: 8.5, lengthIn: 2.5, widthIn: 2.5, heightIn: 6.5 },

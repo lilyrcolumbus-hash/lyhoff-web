@@ -11,7 +11,6 @@ export function AddToBagButton({
   size,
   image,
   locale,
-  scent,
 }: {
   slug: string;
   name: string;
@@ -19,14 +18,13 @@ export function AddToBagButton({
   size: string;
   image: string;
   locale: Locale;
-  scent?: string;
 }) {
   const dict = t(locale);
   const { addItem, openCart } = useCartStore();
   const [qty, setQty] = useState(1);
 
   function onAdd() {
-    addItem({ slug, name, price, size, image, scent }, qty);
+    addItem({ slug, name, price, size, image }, qty);
     openCart();
   }
 

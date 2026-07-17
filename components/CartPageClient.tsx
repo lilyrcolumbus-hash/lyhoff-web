@@ -47,7 +47,7 @@ export function CartPageClient({ locale }: { locale: Locale }) {
         <>
           <ul className="mt-8 flex flex-col divide-y divide-stone-200 border-t border-b border-stone-200">
             {items.map((item) => (
-              <li key={`${item.slug}::${item.scent ?? ""}`} className="flex gap-5 py-6">
+              <li key={item.slug} className="flex gap-5 py-6">
                 <div className="relative h-28 w-24 shrink-0 overflow-hidden bg-stone-50">
                   <Image src={item.image} alt={item.name} fill sizes="96px" className="object-cover" />
                 </div>
@@ -55,13 +55,12 @@ export function CartPageClient({ locale }: { locale: Locale }) {
                   <p className="font-display text-base font-semibold text-forest-950">{item.name}</p>
                   <p className="text-sm text-stone-500">
                     {item.size}
-                    {item.scent && ` · ${item.scent}`}
                   </p>
                   <div className="mt-3 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <button
                         type="button"
-                        onClick={() => updateQty(item.slug, item.quantity - 1, item.scent)}
+                        onClick={() => updateQty(item.slug, item.quantity - 1)}
                         className="h-7 w-7 rounded-full border border-stone-300 text-sm text-forest-950 hover:border-forest-500"
                         aria-label="-"
                       >
@@ -70,7 +69,7 @@ export function CartPageClient({ locale }: { locale: Locale }) {
                       <span className="w-5 text-center text-sm text-stone-600">{item.quantity}</span>
                       <button
                         type="button"
-                        onClick={() => updateQty(item.slug, item.quantity + 1, item.scent)}
+                        onClick={() => updateQty(item.slug, item.quantity + 1)}
                         className="h-7 w-7 rounded-full border border-stone-300 text-sm text-forest-950 hover:border-forest-500"
                         aria-label="+"
                       >
@@ -83,7 +82,7 @@ export function CartPageClient({ locale }: { locale: Locale }) {
                   </div>
                   <button
                     type="button"
-                    onClick={() => removeItem(item.slug, item.scent)}
+                    onClick={() => removeItem(item.slug)}
                     className="mt-2 self-start text-xs text-stone-400 underline hover:text-earth-600"
                   >
                     {dict.cartRemove}

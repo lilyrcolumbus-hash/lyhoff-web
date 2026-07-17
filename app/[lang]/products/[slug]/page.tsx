@@ -2,10 +2,19 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale, locales, SITE_NAME, SITE_URL, type Locale } from "@/lib/i18n";
-import { dedupeVariants, getProduct, getVariants, products, productsByCategory } from "@/lib/products";
-import { getProductImageUrl, getProductImageUrls, getScentImageUrls } from "@/lib/product-images";
+import {
+  dedupeVariants,
+  getProduct,
+  getScentVariants,
+  getSizeVariants,
+  products,
+  productsByCategory,
+} from "@/lib/products";
+import { getProductImageUrl, getProductImageUrls } from "@/lib/product-images";
 import { ProductCard } from "@/components/ProductCard";
-import { ProductDetailClient } from "@/components/ProductDetailClient";
+import { TrustBadges } from "@/components/TrustBadges";
+import { AddToBagButton } from "@/components/AddToBagButton";
+import { ProductGallery } from "@/components/ProductGallery";
 import { Newsletter } from "@/components/Newsletter";
 
 export const dynamicParams = false;
@@ -68,17 +77,11 @@ export default async function ProductDetailPage({
   const gallery = localImages.length > 0 ? localImages : [fallback.url];
   const isPlaceholderGallery = localImages.length === 0 && fallback.isPlaceholder;
 
-  // Real scent-specific photos, if any exist yet (see getScentImageUrls) — empty
-  // for a scent means "no real photos for it," so the client falls back to `gallery`.
-  const scentGalleries: Record<string, string[]> = {};
-  for (const s of product.scents ?? []) {
-    scentGalleries[s] = getScentImageUrls(product.slug, s);
-  }
-
   const related = dedupeVariants(productsByCategory(product.category)).filter(
     (p) => p.slug !== product.slug && p.variantGroup !== product.variantGroup,
   );
-  const variants = product.variantGroup ? getVariants(product.variantGroup) : [];
+  const sizeVariants = product.variantGroup ? getSizeVariants(product.variantGroup) : [];
+  const scentVariants = product.scentGroup ? getScentVariants(product.scentGroup) : [];
 
   return (
     <div className="bg-cream">
@@ -97,18 +100,138 @@ export default async function ProductDetailPage({
         </nav>
       </div>
 
-      <ProductDetailClient
-        product={product}
-        locale={locale}
-        name={name}
-        tagline={tagline}
-        description={description}
-        badge={badge}
-        defaultGallery={gallery}
-        scentGalleries={scentGalleries}
-        isPlaceholderGallery={isPlaceholderGallery}
-        variants={variants}
-      />
+      <div className="mx-auto grid max-w-6xl gap-12 px-6 py-10 lg:grid-cols-2 lg:gap-16">
+        {/* Gallery */}
+        <ProductGallery
+          images={gallery}
+          alt={name}
+          isPlaceholder={isPlaceholderGallery}
+          placeholderLabel={locale === "en" ? "Photo needed" : "Foto pendiente"}
+        />
+
+        {/* Info */}
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-earth-600 mb-2">
+            {product.size}
+          </p>
+          {badge && (
+            <span className="inline-block mb-3 bg-forest-950 text-cream text-[10px] font-semibold uppercase tracking-widest px-3 py-1">
+              {badge}
+            </span>
+          )}
+          <h1 className="font-display text-3xl font-bold text-forest-950 sm:text-4xl">
+            {name}
+          </h1>
+          <p className="mt-2 text-base font-medium text-stone-500 italic">{tagline}</p>
+          <p className="mt-5 text-base text-stone-600 leading-relaxed">{description}</p>
+
+          <ul className="mt-4 flex flex-col gap-1.5">
+            {product.benefits.map((b) => (
+              <li key={b.en} className="flex items-start gap-2 text-sm text-stone-600">
+                <span className="mt-1 text-earth-500" aria-hidden>✓</span>
+                {b[locale]}
+              </li>
+            ))}
+          </ul>
+
+          {sizeVariants.length > 1 && (
+            <div className="mt-6">
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-2">
+                {locale === "en" ? "Size" : "Tamaño"}
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {sizeVariants.map((v) => (
+                  <Link
+                    key={v.slug}
+                    href={`/${locale}/products/${v.slug}/`}
+                    className={`rounded-sm border px-4 py-2 text-sm font-medium transition ${
+                      v.size === product.size
+                        ? "border-forest-950 bg-forest-950 text-cream"
+                        : "border-stone-300 text-forest-950 hover:border-forest-500"
+                    }`}
+                  >
+                    {v.size}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {scentVariants.length > 1 && (
+            <div className="mt-6">
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-2">
+                {locale === "en" ? "Scent" : "Aroma"}
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {scentVariants.map((v) => (
+                  <Link
+                    key={v.slug}
+                    href={`/${locale}/products/${v.slug}/`}
+                    className={`rounded-sm border px-4 py-2 text-sm font-medium transition ${
+                      v.slug === product.slug
+                        ? "border-forest-950 bg-forest-950 text-cream"
+                        : "border-stone-300 text-forest-950 hover:border-forest-500"
+                    }`}
+                  >
+                    {v.scent}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="mt-6">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-2">
+              {locale === "en" ? "Ingredients" : "Ingredientes"}
+            </h2>
+            <div className="flex flex-wrap gap-1.5">
+              {product.ingredients.map((ing) => (
+                <span
+                  key={ing}
+                  className="text-[10px] font-medium uppercase tracking-wide text-stone-500 border border-stone-200 px-2 py-0.5"
+                >
+                  {ing}
+                </span>
+              ))}
+            </div>
+            <Link
+              href={`/${locale}/ingredients/`}
+              className="mt-3 inline-block text-xs font-medium text-forest-700 hover:underline"
+            >
+              {locale === "en" ? "Learn more about our ingredients →" : "Conoce más sobre nuestros ingredientes →"}
+            </Link>
+          </div>
+
+          <div className="mt-6">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-2">
+              {locale === "en" ? "How to use" : "Cómo usar"}
+            </h2>
+            <p className="text-sm text-stone-600 leading-relaxed">{product.howToUse[locale]}</p>
+          </div>
+
+          <div className="mt-8 flex flex-col gap-4 border-t border-stone-200 pt-8 sm:flex-row sm:items-center sm:justify-between">
+            <span className="font-display text-2xl font-bold text-forest-950">
+              ${product.price.toFixed(2)}
+            </span>
+            <AddToBagButton
+              slug={product.slug}
+              name={name}
+              price={product.price}
+              size={product.size}
+              image={gallery[0]}
+              locale={locale}
+            />
+          </div>
+
+          <p className="mt-4 text-xs text-stone-400">
+            {locale === "en"
+              ? "Shipping calculated in cart · Packed and shipped by us, not a warehouse · Questions? Email us directly."
+              : "Envío calculado en el carrito · Empacado y enviado por nosotros, no por una bodega · ¿Dudas? Escríbenos directo."}
+          </p>
+
+          <TrustBadges locale={locale} theme="light" className="mt-10 border-t border-stone-200 pt-8 sm:grid-cols-1 gap-6" />
+        </div>
+      </div>
 
       {/* Reviews — honest placeholder, no fabricated testimonials */}
       <div className="mx-auto max-w-6xl px-6">
