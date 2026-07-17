@@ -9,11 +9,15 @@ export function ProductGallery({
   alt,
   isPlaceholder,
   placeholderLabel,
+  scentBadge,
 }: {
   images: string[];
   alt: string;
   isPlaceholder: boolean;
   placeholderLabel: string;
+  /** Current scent name, shown as a corner chip so switching scent is visibly
+   * reflected on the gallery even when there's no scent-specific photo yet. */
+  scentBadge?: string;
 }) {
   const [active, setActive] = useState(0);
 
@@ -43,6 +47,20 @@ export function ProductGallery({
           <span className="absolute top-3 left-3 z-10 bg-earth-600 text-cream text-[10px] font-semibold uppercase tracking-widest px-3 py-1">
             {placeholderLabel}
           </span>
+        )}
+        {scentBadge && (
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={scentBadge}
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.2 }}
+              className="absolute top-3 right-3 z-10 bg-cream/90 backdrop-blur-sm text-forest-950 text-[10px] font-semibold uppercase tracking-widest px-3 py-1 shadow-sm"
+            >
+              {scentBadge}
+            </motion.span>
+          </AnimatePresence>
         )}
       </div>
       {images.length > 1 && (

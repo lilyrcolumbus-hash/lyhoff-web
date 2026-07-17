@@ -53,6 +53,7 @@ export function ProductDetailClient({
         alt={displayName}
         isPlaceholder={isPlaceholderGallery && !usingScentPhotos}
         placeholderLabel={locale === "en" ? "Photo needed" : "Foto pendiente"}
+        scentBadge={scent && !usingScentPhotos ? SCENT_LABEL[scent]?.[locale] ?? scent : undefined}
       />
 
       {/* Info */}
