@@ -10,7 +10,7 @@ export function ContactBubble({ locale }: { locale: Locale }) {
   return (
     <div className="fixed bottom-5 right-5 z-40 flex flex-col items-end gap-3">
       {open && (
-        <div className="w-64 rounded-sm border border-stone-200 bg-white p-4 shadow-xl">
+        <div className="w-64 rounded-sm border border-white/60 bg-cream/75 backdrop-blur-2xl p-4 shadow-xl">
           <p className="font-display text-sm font-semibold text-forest-950">
             {locale === "en" ? "Questions before you buy?" : "¿Dudas antes de comprar?"}
           </p>

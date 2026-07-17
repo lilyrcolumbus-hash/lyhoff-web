@@ -8,7 +8,7 @@
   reads these, so this single file is the whole re-skin, no component edits.
   - Forest → muted sage-charcoal (was vivid olive-green)
   - Earth  → muted kraft/terracotta (was bright amber)
-  - Cream  → warm paper white (barely changed)
+  - Cream  → near-white, lightened further 2026-07-16 for the "MUJI + Apple glass" pass below
 */
 @theme {
   --font-display: var(--font-zen-kaku), ui-sans-serif, system-ui, sans-serif;
@@ -33,7 +33,7 @@
   --color-earth-600: #96714f;
   --color-earth-700: #785840;
 
-  --color-cream: #f6f4ee;
+  --color-cream: #fbfaf7;
   --color-ink: #2b2a25;
 }
 

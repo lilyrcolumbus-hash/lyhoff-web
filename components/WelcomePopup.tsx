@@ -51,7 +51,7 @@ export function WelcomePopup({ locale }: { locale: Locale }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-forest-950/50 px-4">
-      <div className="relative w-full max-w-sm rounded-sm bg-cream p-8 text-center shadow-2xl">
+      <div className="relative w-full max-w-sm rounded-sm border border-white/60 bg-cream/75 backdrop-blur-2xl p-8 text-center shadow-2xl">
         <button
           type="button"
           onClick={dismiss}

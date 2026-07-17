@@ -46,7 +46,7 @@ export function ProductCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.5, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-      className="group flex flex-col bg-white border border-stone-200 hover:border-stone-300 hover:shadow-lg transition-all duration-300"
+      className="group flex flex-col bg-cream/60 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgba(43,42,37,0.05)] hover:border-white/90 hover:shadow-[0_12px_36px_rgba(43,42,37,0.09)] transition-all duration-300"
     >
       {/* Image */}
       <Link href={`/${locale}/products/${product.slug}/`} className="block">

@@ -52,7 +52,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 340, damping: 34 }}
-            className="relative flex h-full w-full max-w-md flex-col bg-cream shadow-2xl">
+            className="relative flex h-full w-full max-w-md flex-col border-l border-white/60 bg-cream/75 backdrop-blur-2xl shadow-2xl">
         <div className="flex items-center justify-between border-b border-stone-200 px-6 py-5">
           <h2 className="font-display text-lg font-bold text-forest-950">{dict.cartTitle}</h2>
           <button

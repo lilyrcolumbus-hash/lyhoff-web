@@ -113,7 +113,7 @@ export function Header({ locale }: { locale: Locale }) {
   }, [shopOpen]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-stone-200 bg-cream/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-white/60 bg-cream/60 backdrop-blur-xl shadow-[0_1px_24px_rgba(43,42,37,0.05)]">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
 
         <Link
@@ -158,11 +158,11 @@ export function Header({ locale }: { locale: Locale }) {
                   transition={{ duration: 0.15 }}
                   className="absolute left-0 top-full pt-3"
                 >
-                  <div className="w-56 rounded-xl border border-stone-200 bg-white p-2 shadow-lg">
+                  <div className="w-56 rounded-sm border border-white/60 bg-cream/70 backdrop-blur-xl p-2 shadow-[0_8px_30px_rgba(43,42,37,0.08)]">
                     <Link
                       href={`/${locale}/products/`}
                       onClick={() => setShopOpen(false)}
-                      className="block rounded-lg px-3 py-2 text-sm font-semibold text-forest-950 hover:bg-stone-50"
+                      className="block rounded-sm px-3 py-2 text-sm font-semibold text-forest-950 hover:bg-stone-50"
                     >
                       {locale === "en" ? "All products" : "Todos los productos"}
                     </Link>
@@ -172,7 +172,7 @@ export function Header({ locale }: { locale: Locale }) {
                         key={cat.key}
                         href={`/${locale}/products/category/${cat.key}/`}
                         onClick={() => setShopOpen(false)}
-                        className="block rounded-lg px-3 py-2 text-sm text-stone-600 hover:bg-stone-50 hover:text-forest-900"
+                        className="block rounded-sm px-3 py-2 text-sm text-stone-600 hover:bg-stone-50 hover:text-forest-900"
                       >
                         {cat.label[locale]}
                       </Link>
