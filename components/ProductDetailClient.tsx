@@ -14,23 +14,6 @@ const SCENT_LABEL: Record<string, { en: string; es: string }> = {
   Unscented: { en: "Unscented", es: "Sin fragancia" },
 };
 
-// Short editorial line per scent — makes the listing genuinely read
-// differently per selection even on products with no scent-specific photos yet.
-const SCENT_NOTE: Record<string, { en: string; es: string }> = {
-  Vanilla: {
-    en: "Warm and cozy — our customers' favorite.",
-    es: "Cálido y acogedor — el favorito de nuestros clientes.",
-  },
-  Peppermint: {
-    en: "Cool and bright, a fresh herbal lift.",
-    es: "Fresco y vivo, un toque herbal energizante.",
-  },
-  Unscented: {
-    en: "Nothing added — pure and fragrance-free, safe for sensitive skin.",
-    es: "Sin nada agregado — puro y sin fragancia, seguro para piel sensible.",
-  },
-};
-
 export function ProductDetailClient({
   product,
   locale,
@@ -87,7 +70,7 @@ export function ProductDetailClient({
         </h1>
         <p className="mt-2 text-base font-medium text-stone-500 italic">{tagline}</p>
         {scent && (
-          <p className="mt-1 text-sm text-earth-700">{SCENT_NOTE[scent]?.[locale]}</p>
+          <p className="mt-1 text-sm text-earth-700">{product.scentNotes?.[scent]?.[locale]}</p>
         )}
         <p className="mt-5 text-base text-stone-600 leading-relaxed">{description}</p>
 

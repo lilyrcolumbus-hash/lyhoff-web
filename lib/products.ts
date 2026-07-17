@@ -17,12 +17,46 @@ export interface Product {
   variantGroup?: string;
   /** Scent options, if this product comes in more than one — same price/jar, picked at add-to-bag. */
   scents?: string[];
+  /** Per-scent description, specific to THIS product (never shared/repeated across products). */
+  scentNotes?: Record<string, { en: string; es: string }>;
   /** Short scannable claims, pulled from the description — shown as bullets on the product page. */
   benefits: { en: string; es: string }[];
   howToUse: { en: string; es: string };
 }
 
-export const SCENT_OPTIONS = ["Vanilla", "Peppermint", "Unscented"];
+export const SCENT_OPTIONS = ["Unscented", "Vanilla", "Peppermint"];
+
+// Per-product scent descriptions — written separately for Tallow Cream and Comfrey
+// Salve so no two products (or scents within one product) share the same copy.
+const TALLOW_CREAM_SCENT_NOTES: Record<string, { en: string; es: string }> = {
+  Unscented: {
+    en: "Pure tallow and jojoba, nothing else — no fragrance to mask, nothing to react to. The most honest way to try it.",
+    es: "Sebo y jojoba puros, nada más — sin fragancia que enmascare, nada a lo que reaccionar. La forma más honesta de probarlo.",
+  },
+  Vanilla: {
+    en: "Warm, comforting vanilla folded into the same two-ingredient base — our best-seller for a reason.",
+    es: "Vainilla cálida y reconfortante en la misma base de dos ingredientes — nuestro más vendido, con razón.",
+  },
+  Peppermint: {
+    en: "A cool, awakening peppermint finish — feels incredible after a shower or on tired skin.",
+    es: "Un toque final de menta fresca y despertador — se siente increíble después de la ducha o en piel cansada.",
+  },
+};
+
+const COMFREY_SALVE_SCENT_NOTES: Record<string, { en: string; es: string }> = {
+  Unscented: {
+    en: "No fragrance, no distractions — just comfrey doing its job. The safest choice for sensitive or broken skin.",
+    es: "Sin fragancia, sin distracciones — solo consuelda haciendo su trabajo. La opción más segura para piel sensible o irritada.",
+  },
+  Vanilla: {
+    en: "The same joint-and-muscle relief, softened with warm vanilla for an easier daily ritual.",
+    es: "El mismo alivio para articulaciones y músculos, suavizado con vainilla cálida para un ritual diario más agradable.",
+  },
+  Peppermint: {
+    en: "Peppermint adds a cooling kick that works especially well on sore muscles after a long day.",
+    es: "La menta suma un efecto frío que funciona muy bien en músculos adoloridos después de un día largo.",
+  },
+};
 
 const UNSPLASH = (id: string, w = 800, h = 900) =>
   `https://images.unsplash.com/photo-${id}?w=${w}&h=${h}&q=90&auto=format&fit=crop`;
@@ -56,6 +90,7 @@ export const products: Product[] = [
     active: true,
     variantGroup: "tallow-cream",
     scents: SCENT_OPTIONS,
+    scentNotes: TALLOW_CREAM_SCENT_NOTES,
     benefits: [
       { en: "Two ingredients, nothing else", es: "Dos ingredientes, nada más" },
       { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
@@ -92,6 +127,7 @@ export const products: Product[] = [
     active: false, // hidden from the live site until a real price is set
     variantGroup: "tallow-cream",
     scents: SCENT_OPTIONS,
+    scentNotes: TALLOW_CREAM_SCENT_NOTES,
     benefits: [
       { en: "Two ingredients, nothing else", es: "Dos ingredientes, nada más" },
       { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
@@ -125,6 +161,7 @@ export const products: Product[] = [
     active: true,
     variantGroup: "comfrey-salve",
     scents: SCENT_OPTIONS,
+    scentNotes: COMFREY_SALVE_SCENT_NOTES,
     benefits: [
       { en: "Traditional \"knitbone\" herb, organic", es: "Hierba tradicional \"suelda huesos\", orgánica" },
       { en: "Whipped light, fast-absorbing texture", es: "Textura batida, ligera, absorción rápida" },
@@ -159,6 +196,7 @@ export const products: Product[] = [
     active: false, // hidden from the live site until a real price is set
     variantGroup: "comfrey-salve",
     scents: SCENT_OPTIONS,
+    scentNotes: COMFREY_SALVE_SCENT_NOTES,
     benefits: [
       { en: "Traditional \"knitbone\" herb, organic", es: "Hierba tradicional \"suelda huesos\", orgánica" },
       { en: "Whipped light, fast-absorbing texture", es: "Textura batida, ligera, absorción rápida" },
