@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Newsreader, Inter } from "next/font/google";
 import { notFound } from "next/navigation";
 import "../globals.css";
 import { Header } from "@/components/Header";
@@ -18,10 +18,10 @@ import {
   type Locale,
 } from "@/lib/i18n";
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600"],
   style: ["normal", "italic"],
 });
 
@@ -79,7 +79,7 @@ export default async function LangLayout({
   return (
     <html
       lang={lang}
-      className={`${fraunces.variable} ${inter.variable} h-full`}
+      className={`${newsreader.variable} ${inter.variable} h-full`}
     >
       <body className="min-h-full flex flex-col bg-cream text-ink">
         <ShippingBanner locale={lang} />

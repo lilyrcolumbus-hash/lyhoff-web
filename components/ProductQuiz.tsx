@@ -91,7 +91,7 @@ export function ProductQuiz({
                   key={option.label.en}
                   type="button"
                   onClick={() => choose(option)}
-                  className="w-full rounded-full border border-stone-300 bg-white px-6 py-3.5 text-sm font-semibold text-forest-950 transition hover:border-forest-500 hover:bg-forest-50"
+                  className="w-full rounded-sm border border-stone-300 bg-white px-6 py-3.5 text-sm font-semibold text-forest-950 transition hover:border-forest-500 hover:bg-forest-50"
                 >
                   {option.label[locale]}
                 </button>

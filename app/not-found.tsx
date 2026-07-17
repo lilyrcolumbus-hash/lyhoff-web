@@ -24,13 +24,13 @@ export default function NotFound() {
         <div className="mt-6 flex gap-3">
           <Link
             href="/en/"
-            className="rounded-full bg-forest-800 px-5 py-2.5 text-sm font-semibold text-cream hover:bg-forest-700"
+            className="rounded-sm bg-forest-800 px-5 py-2.5 text-sm font-semibold text-cream hover:bg-forest-700"
           >
             Home
           </Link>
           <Link
             href="/es/"
-            className="rounded-full border border-forest-300 px-5 py-2.5 text-sm font-semibold text-forest-800 hover:bg-forest-50"
+            className="rounded-sm border border-forest-300 px-5 py-2.5 text-sm font-semibold text-forest-800 hover:bg-forest-50"
           >
             Inicio
           </Link>

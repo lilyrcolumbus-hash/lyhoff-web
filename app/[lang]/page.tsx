@@ -75,14 +75,14 @@ export default async function HomePage({
             subtitle={dict.heroSubtitle}
             cta={dict.heroCta}
           />
-          <div className="mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-cream/95 px-4 py-2.5 shadow-lg backdrop-blur-sm">
+          <div className="mt-8 inline-flex w-fit items-center gap-2 rounded-sm bg-cream/95 px-4 py-2.5 shadow-lg backdrop-blur-sm">
             <Leaf className="h-4 w-4 text-forest-600" />
             <span className="font-display text-xs font-semibold text-forest-950">
               {locale === "en" ? "Zero synthetic chemicals" : "Sin químicos sintéticos"}
             </span>
           </div>
         </div>
-        <span className="absolute bottom-4 right-5 rounded-full bg-black/40 px-2 py-0.5 text-[9px] font-medium text-white/90 backdrop-blur-sm">
+        <span className="absolute bottom-4 right-5 rounded-sm bg-black/40 px-2 py-0.5 text-[9px] font-medium text-white/90 backdrop-blur-sm">
           Stock footage
         </span>
       </section>
@@ -162,7 +162,7 @@ export default async function HomePage({
             <div className="mt-8 md:mt-0 md:ml-16 shrink-0">
               <Link
                 href={`/${locale}/about/`}
-                className="inline-flex items-center rounded-full border border-stone-600 px-7 py-3.5 text-sm font-semibold text-cream transition hover:border-cream hover:bg-cream hover:text-forest-950"
+                className="inline-flex items-center rounded-sm border border-stone-600 px-7 py-3.5 text-sm font-semibold text-cream transition hover:border-cream hover:bg-cream hover:text-forest-950"
               >
                 {locale === "en" ? "Meet LYHOFF →" : "Conoce LYHOFF →"}
               </Link>

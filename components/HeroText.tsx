@@ -62,8 +62,8 @@ export function HeroText({
           href="#newsletter"
           className={
             light
-              ? "inline-flex items-center rounded-full bg-cream px-7 py-3.5 text-sm font-semibold text-forest-950 transition hover:bg-white hover:scale-105 active:scale-95"
-              : "inline-flex items-center rounded-full bg-forest-950 px-7 py-3.5 text-sm font-semibold text-cream transition hover:bg-forest-800 hover:scale-105 active:scale-95"
+              ? "inline-flex items-center rounded-sm bg-cream px-7 py-3.5 text-sm font-semibold text-forest-950 transition hover:bg-white hover:scale-105 active:scale-95"
+              : "inline-flex items-center rounded-sm bg-forest-950 px-7 py-3.5 text-sm font-semibold text-cream transition hover:bg-forest-800 hover:scale-105 active:scale-95"
           }
         >
           {cta}
@@ -72,8 +72,8 @@ export function HeroText({
           href={`/${locale}/about/`}
           className={
             light
-              ? "inline-flex items-center rounded-full border border-cream/50 px-7 py-3.5 text-sm font-semibold text-cream transition hover:border-cream hover:bg-cream/10 hover:scale-105 active:scale-95"
-              : "inline-flex items-center rounded-full border border-stone-300 px-7 py-3.5 text-sm font-semibold text-forest-950 transition hover:border-forest-400 hover:bg-forest-50 hover:scale-105 active:scale-95"
+              ? "inline-flex items-center rounded-sm border border-cream/50 px-7 py-3.5 text-sm font-semibold text-cream transition hover:border-cream hover:bg-cream/10 hover:scale-105 active:scale-95"
+              : "inline-flex items-center rounded-sm border border-stone-300 px-7 py-3.5 text-sm font-semibold text-forest-950 transition hover:border-forest-400 hover:bg-forest-50 hover:scale-105 active:scale-95"
           }
         >
           {locale === "en" ? "Our story" : "Nuestra historia"}

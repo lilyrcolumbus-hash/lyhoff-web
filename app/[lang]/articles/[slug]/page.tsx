@@ -161,7 +161,7 @@ export default async function ArticlePage({
         </div>
       </header>
 
-      <div className="mt-8 overflow-hidden rounded-2xl">
+      <div className="mt-8 overflow-hidden rounded-sm">
         <CoverImage
           src={article.heroImage}
           alt={article.title}
@@ -175,7 +175,7 @@ export default async function ArticlePage({
       </div>
 
       {/* Pinterest save CTA */}
-      <div className="mt-10 flex flex-col items-center gap-3 rounded-2xl border border-stone-200 bg-stone-50 px-6 py-8 text-center">
+      <div className="mt-10 flex flex-col items-center gap-3 rounded-sm border border-stone-200 bg-stone-50 px-6 py-8 text-center">
         <p className="font-display text-lg font-semibold text-forest-900">
           {locale === "en" ? "Found this useful?" : "¿Te sirvió esta guía?"}
         </p>

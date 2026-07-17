@@ -86,7 +86,7 @@ export default async function ProductsPage({
         </p>
         <Link
           href={`/${locale}/quiz/`}
-          className="mt-6 inline-flex items-center rounded-full border border-earth-400 px-6 py-2.5 text-xs font-semibold text-earth-700 transition hover:bg-earth-50"
+          className="mt-6 inline-flex items-center rounded-sm border border-earth-400 px-6 py-2.5 text-xs font-semibold text-earth-700 transition hover:bg-earth-50"
         >
           {locale === "en" ? "Not sure where to start? Take the quiz →" : "¿No sabes por dónde empezar? Haz el quiz →"}
         </Link>
@@ -154,7 +154,7 @@ export default async function ProductsPage({
             href="https://www.etsy.com/shop/lyhoff"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-6 inline-flex items-center gap-3 rounded-full border border-stone-700 px-8 py-3.5 text-sm font-semibold text-cream hover:border-stone-500 hover:bg-forest-800 transition"
+            className="mt-6 inline-flex items-center gap-3 rounded-sm border border-stone-700 px-8 py-3.5 text-sm font-semibold text-cream hover:border-stone-500 hover:bg-forest-800 transition"
           >
             {locale === "en" ? "Also on Etsy" : "También en Etsy"}
           </a>

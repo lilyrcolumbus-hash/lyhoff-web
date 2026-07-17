@@ -136,7 +136,7 @@ export default async function ProductDetailPage({
                   <Link
                     key={v.slug}
                     href={`/${locale}/products/${v.slug}/`}
-                    className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
+                    className={`rounded-sm border px-4 py-2 text-sm font-medium transition ${
                       v.slug === product.slug
                         ? "border-forest-950 bg-forest-950 text-cream"
                         : "border-stone-300 text-forest-950 hover:border-forest-500"

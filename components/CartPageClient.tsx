@@ -38,7 +38,7 @@ export function CartPageClient({ locale }: { locale: Locale }) {
           <p className="text-stone-500">{dict.cartEmpty}</p>
           <Link
             href={`/${locale}/products/`}
-            className="mt-6 inline-flex items-center rounded-full bg-forest-950 px-7 py-3.5 text-sm font-semibold text-cream transition hover:bg-forest-800"
+            className="mt-6 inline-flex items-center rounded-sm bg-forest-950 px-7 py-3.5 text-sm font-semibold text-cream transition hover:bg-forest-800"
           >
             {dict.shopAll} →
           </Link>
@@ -126,7 +126,7 @@ export function CartPageClient({ locale }: { locale: Locale }) {
             type="button"
             onClick={onCheckout}
             disabled={checkingOut}
-            className="mt-6 w-full rounded-full bg-forest-950 px-7 py-4 text-sm font-semibold text-cream transition hover:bg-forest-800 disabled:opacity-60 sm:w-auto"
+            className="mt-6 w-full rounded-sm bg-forest-950 px-7 py-4 text-sm font-semibold text-cream transition hover:bg-forest-800 disabled:opacity-60 sm:w-auto"
           >
             {checkingOut ? dict.cartCheckingOut : dict.cartCheckout}
           </button>

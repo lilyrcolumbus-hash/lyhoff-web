@@ -38,8 +38,8 @@ export function Newsletter({
     <div
       className={
         dark
-          ? "rounded-3xl bg-forest-900 px-6 py-10 text-cream sm:px-10"
-          : "rounded-2xl border border-forest-200 bg-forest-50 p-6"
+          ? "rounded-sm bg-forest-900 px-6 py-10 text-cream sm:px-10"
+          : "rounded-sm border border-forest-200 bg-forest-50 p-6"
       }
     >
       <h2
@@ -67,12 +67,12 @@ export function Newsletter({
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder={dict.emailPlaceholder}
-            className="flex-1 rounded-full border border-stone-300 bg-white px-5 py-3 text-sm text-ink outline-none focus:border-forest-500"
+            className="flex-1 rounded-sm border border-stone-300 bg-white px-5 py-3 text-sm text-ink outline-none focus:border-forest-500"
           />
           <button
             type="submit"
             disabled={status === "loading"}
-            className="rounded-full bg-earth-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-earth-600 disabled:opacity-60"
+            className="rounded-sm bg-earth-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-earth-600 disabled:opacity-60"
           >
             {status === "loading" ? dict.subscribing : dict.subscribe}
           </button>

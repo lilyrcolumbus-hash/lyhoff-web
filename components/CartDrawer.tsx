@@ -146,7 +146,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
               type="button"
               onClick={onCheckout}
               disabled={checkingOut}
-              className="mt-4 w-full rounded-full bg-forest-950 px-6 py-3.5 text-sm font-semibold text-cream transition hover:bg-forest-800 disabled:opacity-60"
+              className="mt-4 w-full rounded-sm bg-forest-950 px-6 py-3.5 text-sm font-semibold text-cream transition hover:bg-forest-800 disabled:opacity-60"
             >
               {checkingOut ? dict.cartCheckingOut : dict.cartCheckout}
             </button>

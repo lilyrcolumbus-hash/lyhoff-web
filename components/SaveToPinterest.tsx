@@ -42,7 +42,7 @@ export function SaveToPinterest({
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex items-center gap-2 rounded-full bg-[#e60023] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#c8001e]"
+      className="inline-flex items-center gap-2 rounded-sm bg-[#e60023] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#c8001e]"
     >
       <span aria-hidden>📌</span>
       {dict.saveToPinterest}

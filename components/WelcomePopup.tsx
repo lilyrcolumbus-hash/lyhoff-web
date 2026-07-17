@@ -51,7 +51,7 @@ export function WelcomePopup({ locale }: { locale: Locale }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-forest-950/50 px-4">
-      <div className="relative w-full max-w-sm rounded-2xl bg-cream p-8 text-center shadow-2xl">
+      <div className="relative w-full max-w-sm rounded-sm bg-cream p-8 text-center shadow-2xl">
         <button
           type="button"
           onClick={dismiss}
@@ -96,12 +96,12 @@ export function WelcomePopup({ locale }: { locale: Locale }) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={locale === "en" ? "you@email.com" : "tu@correo.com"}
-                className="rounded-full border border-stone-300 bg-white px-5 py-3 text-sm text-ink outline-none focus:border-forest-500"
+                className="rounded-sm border border-stone-300 bg-white px-5 py-3 text-sm text-ink outline-none focus:border-forest-500"
               />
               <button
                 type="submit"
                 disabled={status === "loading"}
-                className="rounded-full bg-forest-950 px-6 py-3 text-sm font-semibold text-cream transition hover:bg-forest-800 disabled:opacity-60"
+                className="rounded-sm bg-forest-950 px-6 py-3 text-sm font-semibold text-cream transition hover:bg-forest-800 disabled:opacity-60"
               >
                 {status === "loading"
                   ? locale === "en"

@@ -50,7 +50,7 @@ export function AddToBagButton({
                 key={s}
                 type="button"
                 onClick={() => setScent(s)}
-                className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
+                className={`rounded-sm border px-4 py-2 text-sm font-medium transition ${
                   s === scent
                     ? "border-forest-950 bg-forest-950 text-cream"
                     : "border-stone-300 text-forest-950 hover:border-forest-500"
@@ -63,7 +63,7 @@ export function AddToBagButton({
         </div>
       )}
       <div className="flex items-center gap-3">
-      <div className="flex items-center gap-3 rounded-full border border-stone-300 px-3 py-2">
+      <div className="flex items-center gap-3 rounded-sm border border-stone-300 px-3 py-2">
         <button
           type="button"
           onClick={() => setQty((q) => Math.max(1, q - 1))}
@@ -85,7 +85,7 @@ export function AddToBagButton({
       <button
         type="button"
         onClick={onAdd}
-        className="inline-flex items-center gap-2 rounded-full bg-forest-950 px-7 py-3.5 text-sm font-semibold text-cream transition hover:bg-forest-800 active:scale-95"
+        className="inline-flex items-center gap-2 rounded-sm bg-forest-950 px-7 py-3.5 text-sm font-semibold text-cream transition hover:bg-forest-800 active:scale-95"
       >
         {dict.addToBag}
         <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden>

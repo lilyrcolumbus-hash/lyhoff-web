@@ -38,7 +38,7 @@ export default async function CheckoutCancelPage({
       </p>
       <Link
         href={`/${locale}/cart/`}
-        className="mt-8 inline-flex items-center rounded-full bg-forest-950 px-7 py-3.5 text-sm font-semibold text-cream transition hover:bg-forest-800"
+        className="mt-8 inline-flex items-center rounded-sm bg-forest-950 px-7 py-3.5 text-sm font-semibold text-cream transition hover:bg-forest-800"
       >
         {locale === "en" ? "Back to bag" : "Volver a la bolsa"} →
       </Link>

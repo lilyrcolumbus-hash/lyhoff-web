@@ -26,7 +26,7 @@ export function ArticleCard({
     >
       <Link
         href={`/${locale}/articles/${article.slug}/`}
-        className="group flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+        className="group flex flex-col overflow-hidden rounded-sm border border-stone-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
       >
         <div className="overflow-hidden">
           <CoverImage
@@ -42,7 +42,7 @@ export function ArticleCard({
             <span>{cat?.emoji}</span>
             <span>{cat?.label[locale]}</span>
             {article.draft && (
-              <span className="ml-auto rounded-full bg-earth-500/15 px-2 py-0.5 text-[10px] font-semibold normal-case text-earth-700">
+              <span className="ml-auto rounded-sm bg-earth-500/15 px-2 py-0.5 text-[10px] font-semibold normal-case text-earth-700">
                 {dict.draftBadge}
               </span>
             )}

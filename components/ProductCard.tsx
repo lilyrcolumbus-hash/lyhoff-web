@@ -106,7 +106,7 @@ export function ProductCard({
             // product page instead of silently adding an unspecified-scent item.
             <Link
               href={`/${locale}/products/${product.slug}/`}
-              className="inline-flex items-center gap-2 rounded-full bg-forest-950 px-5 py-2.5 text-xs font-semibold text-cream transition hover:bg-forest-800 active:scale-95"
+              className="inline-flex items-center gap-2 rounded-sm bg-forest-950 px-5 py-2.5 text-xs font-semibold text-cream transition hover:bg-forest-800 active:scale-95"
             >
               {locale === "en" ? "Choose scent" : "Elegir aroma"}
             </Link>
@@ -114,7 +114,7 @@ export function ProductCard({
             <button
               type="button"
               onClick={onAddToBag}
-              className="inline-flex items-center gap-2 rounded-full bg-forest-950 px-5 py-2.5 text-xs font-semibold text-cream transition hover:bg-forest-800 active:scale-95"
+              className="inline-flex items-center gap-2 rounded-sm bg-forest-950 px-5 py-2.5 text-xs font-semibold text-cream transition hover:bg-forest-800 active:scale-95"
             >
               {dict.addToBag}
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>

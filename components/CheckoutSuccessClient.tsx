@@ -26,7 +26,7 @@ export function CheckoutSuccessClient({ locale }: { locale: Locale }) {
       </p>
       <Link
         href={`/${locale}/products/`}
-        className="mt-8 inline-flex items-center rounded-full bg-forest-950 px-7 py-3.5 text-sm font-semibold text-cream transition hover:bg-forest-800"
+        className="mt-8 inline-flex items-center rounded-sm bg-forest-950 px-7 py-3.5 text-sm font-semibold text-cream transition hover:bg-forest-800"
       >
         {locale === "en" ? "Continue shopping" : "Seguir comprando"} →
       </Link>

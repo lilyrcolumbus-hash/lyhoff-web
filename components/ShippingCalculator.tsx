@@ -116,7 +116,7 @@ export function ShippingCalculator({
             type="button"
             onClick={calculate}
             disabled={!canCalculate || loading}
-            className="mt-3 w-full rounded-full border border-forest-950 px-4 py-2.5 text-sm font-semibold text-forest-950 transition hover:bg-forest-950 hover:text-cream disabled:cursor-not-allowed disabled:opacity-40"
+            className="mt-3 w-full rounded-sm border border-forest-950 px-4 py-2.5 text-sm font-semibold text-forest-950 transition hover:bg-forest-950 hover:text-cream disabled:cursor-not-allowed disabled:opacity-40"
           >
             {loading
               ? locale === "es"
