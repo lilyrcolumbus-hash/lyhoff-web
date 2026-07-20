@@ -21,15 +21,14 @@
  * by slug — the client only ever sends a slug + quantity, never a price, so a
  * tampered request can't change what gets charged.
  *
- * Shipping is a flat rate shown as a fixed shipping_options entry on Stripe's hosted
- * Checkout page — Stripe collects the full address there, same as every other line
- * item; there's no separate rate-lookup step beforehand. Two flat rates exist
- * (lib/shipping.ts): the core catalog rate and Hummingbird Nectar's own flat-rate-
- * envelope rate — both real numbers from actual Shippo quotes, not guesses.
+ * Shipping is one flat rate (lib/shipping.ts's FLAT_SHIPPING_CENTS) for the whole
+ * catalog, shown as a fixed shipping_options entry with a generic 2-5 business day
+ * estimate (no carrier/service name) on Stripe's hosted Checkout page — Stripe
+ * collects the full address there, same as every other line item.
  */
 
 import { getProduct } from "./lib/products";
-import { FLAT_SHIPPING_CENTS, ENVELOPE_SHIPPING_CENTS, FLAT_RATE_ENVELOPE_SLUGS } from "./lib/shipping";
+import { FLAT_SHIPPING_CENTS } from "./lib/shipping";
 
 interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
@@ -150,14 +149,6 @@ async function handleCheckout(request: Request, env: Env): Promise<Response> {
 
   if (lineItems.length === 0) return json({ error: "empty_cart" }, 400);
 
-  // Hummingbird Nectar ships in its own USPS flat-rate envelope (genuinely fixed price,
-  // doesn't vary by zone) — a cart of only that product gets that rate; anything else
-  // (or a mixed cart) gets the core catalog's flat jar/bottle rate.
-  const validSlugs = items.map((i) => i.slug).filter((s): s is string => !!s && !!getProduct(s));
-  const isEnvelopeOnly =
-    validSlugs.length > 0 && validSlugs.every((slug) => FLAT_RATE_ENVELOPE_SLUGS.has(slug));
-  const shippingCents = isEnvelopeOnly ? ENVELOPE_SHIPPING_CENTS : FLAT_SHIPPING_CENTS;
-
   const origin = request.headers.get("origin") || new URL(request.url).origin;
 
   const params = {
@@ -171,8 +162,12 @@ async function handleCheckout(request: Request, env: Env): Promise<Response> {
       {
         shipping_rate_data: {
           type: "fixed_amount",
-          fixed_amount: { amount: shippingCents, currency: "usd" },
+          fixed_amount: { amount: FLAT_SHIPPING_CENTS, currency: "usd" },
           display_name: locale === "es" ? "Envío estándar" : "Standard shipping",
+          delivery_estimate: {
+            minimum: { unit: "business_day", value: 2 },
+            maximum: { unit: "business_day", value: 5 },
+          },
         },
       },
     ],
