@@ -7,14 +7,12 @@ import { useCartStore } from "@/lib/cart-store";
 import { startCheckout } from "@/lib/checkout";
 import { t, type Locale } from "@/lib/i18n";
 import { FreeShippingProgress } from "@/components/FreeShippingProgress";
-import { ShippingCalculator } from "@/components/ShippingCalculator";
 
 export function CartDrawer({ locale }: { locale: Locale }) {
   const dict = t(locale);
   const { items, isOpen, closeCart, removeItem, updateQty, total } = useCartStore();
   const [checkingOut, setCheckingOut] = useState(false);
   const [error, setError] = useState(false);
-  const [shippingCents, setShippingCents] = useState<number | null>(null);
 
   // The cart store's persist middleware is skipHydration'd (see lib/cart-store.ts) —
   // rehydrate once, here, since this component is always mounted (in the root layout).
@@ -26,7 +24,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
     setError(false);
     setCheckingOut(true);
     try {
-      await startCheckout(items, locale, shippingCents);
+      await startCheckout(items, locale);
     } catch {
       setError(true);
       setCheckingOut(false);
@@ -127,20 +125,11 @@ export function CartDrawer({ locale }: { locale: Locale }) {
                 ${total().toFixed(2)}
               </span>
             </div>
-            <div className="mt-3">
-              <ShippingCalculator
-                items={items}
-                locale={locale}
-                shippingCents={shippingCents}
-                onRateChange={setShippingCents}
-              />
-            </div>
-            <div className="mt-3 flex items-center justify-between border-t border-stone-200 pt-3 text-sm font-medium text-stone-600">
-              <span>{locale === "es" ? "Total" : "Total"}</span>
-              <span className="font-display text-lg font-bold text-forest-950">
-                ${(total() + (shippingCents ?? 0) / 100).toFixed(2)}
-              </span>
-            </div>
+            <p className="mt-2 text-xs text-stone-400">
+              {locale === "es"
+                ? "Envío calculado en el siguiente paso del pago."
+                : "Shipping calculated at the next checkout step."}
+            </p>
             <button
               type="button"
               onClick={onCheckout}

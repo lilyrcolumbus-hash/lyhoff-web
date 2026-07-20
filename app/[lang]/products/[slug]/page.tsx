@@ -225,8 +225,8 @@ export default async function ProductDetailPage({
 
           <p className="mt-4 text-xs text-stone-400">
             {locale === "en"
-              ? "Shipping calculated in cart · Packed and shipped by us, not a warehouse · Questions? Email us directly."
-              : "Envío calculado en el carrito · Empacado y enviado por nosotros, no por una bodega · ¿Dudas? Escríbenos directo."}
+              ? "Shipping calculated at checkout · Packed and shipped by us, not a warehouse · Questions? Email us directly."
+              : "Envío calculado en el pago · Empacado y enviado por nosotros, no por una bodega · ¿Dudas? Escríbenos directo."}
           </p>
 
           <TrustBadges locale={locale} theme="light" className="mt-10 border-t border-stone-200 pt-8 sm:grid-cols-1 gap-6" />
