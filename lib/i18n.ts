@@ -109,7 +109,6 @@ type Dict = {
   cartError: string;
   addToBag: string;
   viewCart: string;
-  freeShippingBanner: string;
   freeShippingUnlocked: string;
 };
 
@@ -157,7 +156,6 @@ export const dictionary: Record<Locale, Dict> = {
     cartError: "Something went wrong. Please try again.",
     addToBag: "Add to bag",
     viewCart: "View bag",
-    freeShippingBanner: "Free shipping on orders over $50",
     freeShippingUnlocked: "🎉 You've unlocked free shipping!",
   },
   es: {
@@ -203,7 +201,6 @@ export const dictionary: Record<Locale, Dict> = {
     cartError: "Algo salió mal. Inténtalo de nuevo.",
     addToBag: "Añadir a la bolsa",
     viewCart: "Ver bolsa",
-    freeShippingBanner: "Envío gratis en pedidos mayores a $50",
     freeShippingUnlocked: "🎉 ¡Desbloqueaste envío gratis!",
   },
 };

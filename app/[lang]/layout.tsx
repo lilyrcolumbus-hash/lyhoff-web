@@ -5,7 +5,7 @@ import "../globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
-import { ShippingBanner } from "@/components/ShippingBanner";
+import { AnnouncementBar } from "@/components/AnnouncementBar";
 import { ContactBubble } from "@/components/ContactBubble";
 import { WelcomePopup } from "@/components/WelcomePopup";
 import {
@@ -81,7 +81,7 @@ export default async function LangLayout({
       className={`${zenKaku.variable} ${inter.variable} h-full`}
     >
       <body className="min-h-full flex flex-col bg-cream text-ink">
-        <ShippingBanner locale={lang} />
+        <AnnouncementBar locale={lang} />
         <Header locale={lang} />
         <main className="flex-1">{children}</main>
         <Footer locale={lang} />
