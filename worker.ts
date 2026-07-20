@@ -153,6 +153,11 @@ async function handleCheckout(request: Request, env: Env): Promise<Response> {
 
   const params = {
     mode: "payment",
+    // Without this, Stripe defaults to "auto" — it renders its own UI chrome (delivery
+    // estimates, form labels, buttons) in the customer's BROWSER language, independent of
+    // our own locale strings above, which is how "Envío estándar" and "(2-5 business days)"
+    // ended up on the same line. Pinning it to our own locale keeps the whole page consistent.
+    locale,
     success_url: `${origin}/${locale}/checkout/success/?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${origin}/${locale}/checkout/cancel/`,
     line_items: lineItems,
