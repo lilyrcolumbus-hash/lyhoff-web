@@ -120,10 +120,6 @@ function toStripeFormBody(params: Record<string, unknown>): string {
 
 
 interface ShippingAddress {
-  name?: string;
-  street1?: string;
-  city?: string;
-  state?: string;
   zip?: string;
 }
 
@@ -147,7 +143,7 @@ async function handleShippingRate(request: Request, env: Env): Promise<Response>
     return json({ error: "invalid_body" }, 400);
   }
 
-  if (!address.name || !address.street1 || !address.city || !address.state || !address.zip) {
+  if (!address.zip) {
     return json({ error: "invalid_address" }, 400);
   }
 
@@ -166,11 +162,10 @@ async function handleShippingRate(request: Request, env: Env): Promise<Response>
     return json({ error: "bad_ship_from_config" }, 500);
   }
 
+  // Only ZIP is collected from the customer (see ShippingCalculator) — Shippo can quote
+  // USPS domestic rates from zip + country alone, no full street address needed.
   const addressTo = {
-    name: address.name,
-    street1: address.street1,
-    city: address.city,
-    state: address.state,
+    name: "Customer",
     zip: address.zip,
     country: "US",
   };

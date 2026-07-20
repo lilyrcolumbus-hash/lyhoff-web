@@ -5,14 +5,10 @@ import type { CartItem } from "@/lib/cart-store";
 import type { Locale } from "@/lib/i18n";
 
 interface Address {
-  name: string;
-  street1: string;
-  city: string;
-  state: string;
   zip: string;
 }
 
-const EMPTY_ADDRESS: Address = { name: "", street1: "", city: "", state: "", zip: "" };
+const EMPTY_ADDRESS: Address = { zip: "" };
 
 export function ShippingCalculator({
   items,
@@ -40,12 +36,7 @@ export function ShippingCalculator({
     }
   }, [itemsKey, onRateChange]);
 
-  const canCalculate =
-    address.name.trim() &&
-    address.street1.trim() &&
-    address.city.trim() &&
-    address.state.trim() &&
-    address.zip.trim();
+  const canCalculate = address.zip.trim().length > 0;
 
   async function calculate() {
     setError(false);
@@ -78,59 +69,43 @@ export function ShippingCalculator({
       {shippingCents === null ? (
         <>
           <p className="text-xs font-medium text-stone-600">
-            {locale === "es" ? "Calcula tu envío" : "Calculate your shipping"}
+            {locale === "es"
+              ? "Código postal para ver el envío exacto (opcional)"
+              : "ZIP code for exact shipping (optional)"}
           </p>
-          <div className="mt-2 grid grid-cols-2 gap-2">
-            <input
-              className={`${inputClass} col-span-2`}
-              placeholder={locale === "es" ? "Nombre completo" : "Full name"}
-              value={address.name}
-              onChange={(e) => setAddress({ ...address, name: e.target.value })}
-            />
-            <input
-              className={`${inputClass} col-span-2`}
-              placeholder={locale === "es" ? "Dirección" : "Street address"}
-              value={address.street1}
-              onChange={(e) => setAddress({ ...address, street1: e.target.value })}
-            />
+          <div className="mt-2 flex gap-2">
             <input
               className={inputClass}
-              placeholder={locale === "es" ? "Ciudad" : "City"}
-              value={address.city}
-              onChange={(e) => setAddress({ ...address, city: e.target.value })}
-            />
-            <input
-              className={inputClass}
-              placeholder={locale === "es" ? "Estado" : "State"}
-              value={address.state}
-              onChange={(e) => setAddress({ ...address, state: e.target.value })}
-            />
-            <input
-              className={`${inputClass} col-span-2`}
               placeholder="ZIP"
+              inputMode="numeric"
               value={address.zip}
-              onChange={(e) => setAddress({ ...address, zip: e.target.value })}
+              onChange={(e) => setAddress({ zip: e.target.value })}
             />
+            <button
+              type="button"
+              onClick={calculate}
+              disabled={!canCalculate || loading}
+              className="shrink-0 rounded-sm border border-forest-950 px-4 py-2 text-sm font-semibold text-forest-950 transition hover:bg-forest-950 hover:text-cream disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              {loading
+                ? locale === "es"
+                  ? "Calculando..."
+                  : "Calculating..."
+                : locale === "es"
+                  ? "Calcular"
+                  : "Calculate"}
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={calculate}
-            disabled={!canCalculate || loading}
-            className="mt-3 w-full rounded-sm border border-forest-950 px-4 py-2.5 text-sm font-semibold text-forest-950 transition hover:bg-forest-950 hover:text-cream disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            {loading
-              ? locale === "es"
-                ? "Calculando..."
-                : "Calculating..."
-              : locale === "es"
-                ? "Calcular envío"
-                : "Calculate shipping"}
-          </button>
+          <p className="mt-2 text-xs text-stone-400">
+            {locale === "es"
+              ? "Puedes omitir esto — el envío se confirma en el siguiente paso del pago."
+              : "You can skip this — shipping is confirmed on the next checkout step."}
+          </p>
           {error && (
             <p className="mt-2 text-xs text-earth-700">
               {locale === "es"
-                ? "No pudimos calcular el envío. Revisa la dirección o inténtalo de nuevo — se usará una tarifa estándar en el pago."
-                : "We couldn't calculate shipping. Check the address or try again — a standard rate will be used at checkout."}
+                ? "No pudimos calcular el envío con ese código postal — se usará una tarifa estándar en el pago."
+                : "We couldn't calculate shipping for that ZIP — a standard rate will be used at checkout."}
             </p>
           )}
         </>
