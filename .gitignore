@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# scratch folder for owner-dropped raw photos, sorted into public/images/products/ manually
+/_fotos-nuevas/

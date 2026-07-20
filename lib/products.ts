@@ -123,7 +123,7 @@ export const products: Product[] = [
     price: 29.99,
     size: "2 oz",
     image: UNSPLASH("1596755389378-c31d21fd1273"),
-    active: true,
+    active: false, // hidden for now — owner: keep only Unscented + Peppermint live (2026-07-20)
     variantGroup: "tallow-cream",
     scent: "Vanilla",
     scentGroup: "tallow-cream-2oz",
