@@ -111,6 +111,9 @@ export const products: Product[] = [
       en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
       es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
     },
+    reviews: [
+      { text: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", author: "Jayden", location: "Stillwater, OK" },
+    ],
   },
   {
     asin: "B0FHJ5YC63",
@@ -145,6 +148,9 @@ export const products: Product[] = [
       en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
       es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
     },
+    reviews: [
+      { text: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", author: "Jayden", location: "Stillwater, OK" },
+    ],
   },
   {
     // Owner action: confirm real price, then flip active to true.
@@ -219,6 +225,9 @@ export const products: Product[] = [
       en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
       es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
     },
+    reviews: [
+      { text: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", author: "Jayden", location: "Stillwater, OK" },
+    ],
   },
   {
     asin: "PENDING-TALLOW-1OZ",
@@ -253,6 +262,9 @@ export const products: Product[] = [
       en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
       es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
     },
+    reviews: [
+      { text: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", author: "Jayden", location: "Stillwater, OK" },
+    ],
   },
   {
     asin: "B0FPMDLPQL",
