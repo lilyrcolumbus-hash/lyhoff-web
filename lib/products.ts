@@ -617,6 +617,11 @@ export const products: Product[] = [
       en: "Use strictly according to the product label. Consult a healthcare provider before use.",
       es: "Usar estrictamente según la etiqueta del producto. Consulta a un profesional de salud antes de usar.",
     },
+    reviews: [
+      { text: "Pharmaceutical USP grade, no formaldehyde or alcohol, which is a serious quality standard.", author: "Sedona", location: "Sandford, ME" },
+      { text: "The label recommends consulting a doctor before use, which is a good thing given the nature of the product.", author: "Orion", location: "Oak Hill, WV" },
+      { text: "It's a delicate substance that can interact with medications like antidepressants, so it's not something to take lightly.", author: "Mason", location: "Seymour, IN" },
+    ],
   },
 ];
 
