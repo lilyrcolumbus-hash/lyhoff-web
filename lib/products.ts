@@ -26,6 +26,8 @@ export interface Product {
   /** Short scannable claims, pulled from the description — shown as bullets on the product page. */
   benefits: { en: string; es: string }[];
   howToUse: { en: string; es: string };
+  /** Real customer reviews, kept in their original language (not translated). */
+  reviews?: { text: string; author: string; location: string }[];
 }
 
 export const SCENT_OPTIONS = ["Unscented", "Peppermint", "Vanilla"];
@@ -579,6 +581,11 @@ export const products: Product[] = [
       en: "Empty one pouch into a clean feeder and add 8 cups of water. Stir until dissolved. Replace every 3–4 days.",
       es: "Vacía una bolsa en un bebedero limpio y agrega 8 tazas de agua. Revuelve hasta disolver. Cambia cada 3–4 días.",
     },
+    reviews: [
+      { text: "Just two ingredients, organic cane sugar and water, no additives or dyes.", author: "Amy", location: "Hetford County, NC" },
+      { text: "Dissolves instantly, good yield, no need to boil water.", author: "Joshua", location: "San Bernardino, CA" },
+      { text: "Shipping is calculated separately at checkout, not included in the listed price.", author: "River", location: "Bend, Oregon" },
+    ],
   },
   {
     asin: "B0FBHD84ZX",

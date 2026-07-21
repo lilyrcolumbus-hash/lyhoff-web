@@ -233,17 +233,30 @@ export default async function ProductDetailPage({
         </div>
       </div>
 
-      {/* Reviews — honest placeholder, no fabricated testimonials */}
+      {/* Reviews — real customer quotes only, no fabricated testimonials */}
       <div className="mx-auto max-w-6xl px-6">
         <div className="border-t border-stone-200 py-10">
           <h2 className="font-display text-xs font-semibold uppercase tracking-[0.25em] text-stone-400 mb-3">
             {locale === "en" ? "Reviews" : "Reseñas"}
           </h2>
-          <p className="text-sm text-stone-500 max-w-md">
-            {locale === "en"
-              ? "Real customer reviews are coming soon. We'd rather wait and show you real ones than make them up."
-              : "Las reseñas reales de clientes llegan pronto. Preferimos esperar y mostrarte reseñas reales antes que inventarlas."}
-          </p>
+          {product.reviews && product.reviews.length > 0 ? (
+            <div className="grid gap-6 sm:grid-cols-3">
+              {product.reviews.map((r, i) => (
+                <blockquote key={i} className="bg-cream/60 backdrop-blur-xl border border-stone-200 p-5">
+                  <p className="text-sm text-stone-700 leading-relaxed">&ldquo;{r.text}&rdquo;</p>
+                  <footer className="mt-3 text-xs font-medium text-stone-400">
+                    {r.author}, {r.location}
+                  </footer>
+                </blockquote>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-stone-500 max-w-md">
+              {locale === "en"
+                ? "Real customer reviews are coming soon. We'd rather wait and show you real ones than make them up."
+                : "Las reseñas reales de clientes llegan pronto. Preferimos esperar y mostrarte reseñas reales antes que inventarlas."}
+            </p>
+          )}
         </div>
       </div>
 
