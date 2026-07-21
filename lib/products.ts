@@ -281,6 +281,10 @@ export const products: Product[] = [
       en: "Massage a small amount into the area of concern 1–2 times daily. For external use only.",
       es: "Masajea una pequeña cantidad en la zona de interés 1–2 veces al día. Solo para uso externo.",
     },
+    reviews: [
+      { text: "This salve is practical, whipped-texture and fast-absorbing, easy to apply on joints or muscles.", author: "Cheyenne", location: "Jackson Township, MO" },
+      { text: "It's a simple combination of tallow, jojoba, and comfrey (\"knitbone\") extract, unscented, good for sensitive skin.", author: "Luna", location: "Ord, NE" },
+    ],
   },
   {
     asin: "B0FPMDLPQL",
@@ -315,6 +319,9 @@ export const products: Product[] = [
       en: "Massage a small amount into the area of concern 1–2 times daily. For external use only.",
       es: "Masajea una pequeña cantidad en la zona de interés 1–2 veces al día. Solo para uso externo.",
     },
+    reviews: [
+      { text: "This salve is practical, whipped-texture and fast-absorbing, easy to apply on joints or muscles.", author: "Cheyenne", location: "Jackson Township, MO" },
+    ],
   },
   {
     asin: "B0FPMDLPQL",
@@ -349,6 +356,9 @@ export const products: Product[] = [
       en: "Massage a small amount into the area of concern 1–2 times daily. For external use only.",
       es: "Masajea una pequeña cantidad en la zona de interés 1–2 veces al día. Solo para uso externo.",
     },
+    reviews: [
+      { text: "This salve is practical, whipped-texture and fast-absorbing, easy to apply on joints or muscles.", author: "Cheyenne", location: "Jackson Township, MO" },
+    ],
   },
   {
     // Owner action: confirm real price, then flip active to true.
@@ -384,6 +394,10 @@ export const products: Product[] = [
       en: "Massage a small amount into the area of concern 1–2 times daily. For external use only.",
       es: "Masajea una pequeña cantidad en la zona de interés 1–2 veces al día. Solo para uso externo.",
     },
+    reviews: [
+      { text: "This salve is practical, whipped-texture and fast-absorbing, easy to apply on joints or muscles.", author: "Cheyenne", location: "Jackson Township, MO" },
+      { text: "It's a simple combination of tallow, jojoba, and comfrey (\"knitbone\") extract, unscented, good for sensitive skin.", author: "Luna", location: "Ord, NE" },
+    ],
   },
   {
     asin: "PENDING-COMFREY-1OZ",
@@ -418,6 +432,9 @@ export const products: Product[] = [
       en: "Massage a small amount into the area of concern 1–2 times daily. For external use only.",
       es: "Masajea una pequeña cantidad en la zona de interés 1–2 veces al día. Solo para uso externo.",
     },
+    reviews: [
+      { text: "This salve is practical, whipped-texture and fast-absorbing, easy to apply on joints or muscles.", author: "Cheyenne", location: "Jackson Township, MO" },
+    ],
   },
   {
     asin: "PENDING-COMFREY-1OZ",
@@ -452,6 +469,9 @@ export const products: Product[] = [
       en: "Massage a small amount into the area of concern 1–2 times daily. For external use only.",
       es: "Masajea una pequeña cantidad en la zona de interés 1–2 veces al día. Solo para uso externo.",
     },
+    reviews: [
+      { text: "This salve is practical, whipped-texture and fast-absorbing, easy to apply on joints or muscles.", author: "Cheyenne", location: "Jackson Township, MO" },
+    ],
   },
   {
     asin: "B0DX7J7N6B",
