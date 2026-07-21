@@ -584,7 +584,7 @@ export const products: Product[] = [
     reviews: [
       { text: "Just two ingredients, organic cane sugar and water, no additives or dyes.", author: "Amy", location: "Hetford County, NC" },
       { text: "Dissolves instantly, good yield, no need to boil water.", author: "Joshua", location: "San Bernardino, CA" },
-      { text: "Shipping is calculated separately at checkout, not included in the listed price.", author: "River", location: "Bend, Oregon" },
+      { text: "Shipping is calculated separately at checkout, not included in the listed price.", author: "River", location: "Bend, OR" },
     ],
   },
   {
