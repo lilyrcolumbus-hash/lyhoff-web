@@ -604,7 +604,7 @@ export const products: Product[] = [
       es: "Azul de metileno grado farmacéutico USP. Concentración 1% en frasco gotero de 59ml. Sin formaldehído, sin alcohol, libre de gluten.",
     },
     ingredients: ["Methylene blue USP", "Purified water"],
-    price: 18.97,
+    price: 24.97,
     size: "2 oz / 59 ml",
     image: UNSPLASH("1587854692152-cbe660dbde88"),
     active: true,
