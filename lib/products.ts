@@ -508,7 +508,7 @@ export const products: Product[] = [
       es: "Romero, ortiga y jojoba micronizados con ultrasonido para mayor penetración. No graso. Incluye gorro de satén y masajeador de cuero cabelludo.",
     },
     ingredients: ["Rosemary extract", "Nettle extract", "Jojoba oil"],
-    price: 49.97,
+    price: 38.97,
     size: "2 oz",
     image: UNSPLASH("1527799820374-87036042f89f"),
     badge: { en: "New", es: "Nuevo" },
