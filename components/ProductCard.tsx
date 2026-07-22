@@ -89,10 +89,10 @@ export function ProductCard({
         <div className="mt-4 flex flex-wrap gap-1.5">
           {product.ingredients.slice(0, 3).map((ing) => (
             <span
-              key={ing}
+              key={ing.en}
               className="text-[10px] font-medium uppercase tracking-wide text-stone-500 border border-stone-200 px-2 py-0.5"
             >
-              {ing}
+              {ing[locale]}
             </span>
           ))}
         </div>

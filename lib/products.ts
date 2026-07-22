@@ -11,7 +11,7 @@ export interface Product {
   name: { en: string; es: string };
   tagline: { en: string; es: string };
   description: { en: string; es: string };
-  ingredients: string[];
+  ingredients: { en: string; es: string }[];
   price: number;
   size: string;
   image: string;
@@ -56,7 +56,7 @@ export const products: Product[] = [
       en: "Grass-fed beef tallow and jojoba oil — two ingredients, nothing else, no fragrance. Rich in vitamins A, D, E & K. Absorbs fast, no greasy residue. Includes a jade roller.",
       es: "Sebo de res grass-fed y aceite de jojoba — dos ingredientes, nada más, sin fragancia. Rico en vitaminas A, D, E y K. Absorción rápida, sin residuo graso. Incluye jade roller.",
     },
-    ingredients: ["Grass-fed beef tallow", "Jojoba oil"],
+    ingredients: [{ en: "Grass-fed beef tallow", es: "Sebo de res grass-fed" }, { en: "Jojoba oil", es: "Aceite de jojoba" }],
     price: 13.99,
     size: "2 oz",
     image: UNSPLASH("1596755389378-c31d21fd1273"),
@@ -94,7 +94,7 @@ export const products: Product[] = [
       en: "Grass-fed beef tallow and jojoba oil with a cool, awakening peppermint finish — feels incredible after a shower or on tired skin. Rich in vitamins A, D, E & K.",
       es: "Sebo de res grass-fed y aceite de jojoba con un toque final de menta fresca y despertador — se siente increíble después de la ducha o en piel cansada. Rico en vitaminas A, D, E y K.",
     },
-    ingredients: ["Grass-fed beef tallow", "Jojoba oil", "Peppermint oil"],
+    ingredients: [{ en: "Grass-fed beef tallow", es: "Sebo de res grass-fed" }, { en: "Jojoba oil", es: "Aceite de jojoba" }, { en: "Peppermint oil", es: "Aceite de menta" }],
     price: 13.99,
     size: "2 oz",
     image: UNSPLASH("1596755389378-c31d21fd1273"),
@@ -131,7 +131,7 @@ export const products: Product[] = [
       en: "Grass-fed beef tallow and jojoba oil with warm, comforting vanilla folded in — our customers' favorite. Rich in vitamins A, D, E & K.",
       es: "Sebo de res grass-fed y aceite de jojoba con vainilla cálida y reconfortante — el favorito de nuestros clientes. Rico en vitaminas A, D, E y K.",
     },
-    ingredients: ["Grass-fed beef tallow", "Jojoba oil", "Vanilla extract"],
+    ingredients: [{ en: "Grass-fed beef tallow", es: "Sebo de res grass-fed" }, { en: "Jojoba oil", es: "Aceite de jojoba" }, { en: "Vanilla extract", es: "Extracto de vainilla" }],
     price: 13.99,
     size: "2 oz",
     image: UNSPLASH("1596755389378-c31d21fd1273"),
@@ -171,7 +171,7 @@ export const products: Product[] = [
       en: "Grass-fed beef tallow and jojoba oil — two ingredients, nothing else, no fragrance. Rich in vitamins A, D, E & K. Absorbs fast, no greasy residue.",
       es: "Sebo de res grass-fed y aceite de jojoba — dos ingredientes, nada más, sin fragancia. Rico en vitaminas A, D, E y K. Absorción rápida, sin residuo graso.",
     },
-    ingredients: ["Grass-fed beef tallow", "Jojoba oil"],
+    ingredients: [{ en: "Grass-fed beef tallow", es: "Sebo de res grass-fed" }, { en: "Jojoba oil", es: "Aceite de jojoba" }],
     price: 0, // PLACEHOLDER — owner has not confirmed the real 1oz price yet.
     size: "1 oz",
     image: UNSPLASH("1596755389378-c31d21fd1273"),
@@ -208,7 +208,7 @@ export const products: Product[] = [
       en: "Grass-fed beef tallow and jojoba oil with a cool, awakening peppermint finish. Rich in vitamins A, D, E & K.",
       es: "Sebo de res grass-fed y aceite de jojoba con un toque final de menta fresca y despertador. Rico en vitaminas A, D, E y K.",
     },
-    ingredients: ["Grass-fed beef tallow", "Jojoba oil", "Peppermint oil"],
+    ingredients: [{ en: "Grass-fed beef tallow", es: "Sebo de res grass-fed" }, { en: "Jojoba oil", es: "Aceite de jojoba" }, { en: "Peppermint oil", es: "Aceite de menta" }],
     price: 0, // PLACEHOLDER — owner has not confirmed the real 1oz price yet.
     size: "1 oz",
     image: UNSPLASH("1596755389378-c31d21fd1273"),
@@ -245,7 +245,7 @@ export const products: Product[] = [
       en: "Grass-fed beef tallow and jojoba oil with warm, comforting vanilla folded in. Rich in vitamins A, D, E & K.",
       es: "Sebo de res grass-fed y aceite de jojoba con vainilla cálida y reconfortante. Rico en vitaminas A, D, E y K.",
     },
-    ingredients: ["Grass-fed beef tallow", "Jojoba oil", "Vanilla extract"],
+    ingredients: [{ en: "Grass-fed beef tallow", es: "Sebo de res grass-fed" }, { en: "Jojoba oil", es: "Aceite de jojoba" }, { en: "Vanilla extract", es: "Extracto de vainilla" }],
     price: 0, // PLACEHOLDER — owner has not confirmed the real 1oz price yet.
     size: "1 oz",
     image: UNSPLASH("1596755389378-c31d21fd1273"),
@@ -282,7 +282,7 @@ export const products: Product[] = [
       en: "Organic comfrey extract blended with grass-fed beef tallow and jojoba oil, no fragrance added. Whipped light texture, fast-absorbing. The safest choice for sensitive or broken skin.",
       es: "Extracto orgánico de consuelda con sebo grass-fed y aceite de jojoba, sin fragancia agregada. Textura batida y ligera, absorción rápida. La opción más segura para piel sensible o irritada.",
     },
-    ingredients: ["Grass-fed beef tallow", "Jojoba oil", "Organic comfrey extract"],
+    ingredients: [{ en: "Grass-fed beef tallow", es: "Sebo de res grass-fed" }, { en: "Jojoba oil", es: "Aceite de jojoba" }, { en: "Organic comfrey extract", es: "Extracto orgánico de consuelda" }],
     price: 14.97,
     size: "2 oz",
     image: UNSPLASH("1617714651703-d4e8b66efb73"),
@@ -320,7 +320,7 @@ export const products: Product[] = [
       en: "Organic comfrey extract blended with grass-fed beef tallow and jojoba oil. Peppermint adds a cooling kick that works especially well on sore muscles after a long day.",
       es: "Extracto orgánico de consuelda con sebo grass-fed y aceite de jojoba. La menta suma un efecto frío que funciona muy bien en músculos adoloridos después de un día largo.",
     },
-    ingredients: ["Grass-fed beef tallow", "Jojoba oil", "Organic comfrey extract", "Peppermint oil"],
+    ingredients: [{ en: "Grass-fed beef tallow", es: "Sebo de res grass-fed" }, { en: "Jojoba oil", es: "Aceite de jojoba" }, { en: "Organic comfrey extract", es: "Extracto orgánico de consuelda" }, { en: "Peppermint oil", es: "Aceite de menta" }],
     price: 14.97,
     size: "2 oz",
     image: UNSPLASH("1617714651703-d4e8b66efb73"),
@@ -357,7 +357,7 @@ export const products: Product[] = [
       en: "Organic comfrey extract blended with grass-fed beef tallow and jojoba oil, softened with warm vanilla for an easier daily ritual.",
       es: "Extracto orgánico de consuelda con sebo grass-fed y aceite de jojoba, suavizado con vainilla cálida para un ritual diario más agradable.",
     },
-    ingredients: ["Grass-fed beef tallow", "Jojoba oil", "Organic comfrey extract", "Vanilla extract"],
+    ingredients: [{ en: "Grass-fed beef tallow", es: "Sebo de res grass-fed" }, { en: "Jojoba oil", es: "Aceite de jojoba" }, { en: "Organic comfrey extract", es: "Extracto orgánico de consuelda" }, { en: "Vanilla extract", es: "Extracto de vainilla" }],
     price: 14.97,
     size: "2 oz",
     image: UNSPLASH("1617714651703-d4e8b66efb73"),
@@ -395,7 +395,7 @@ export const products: Product[] = [
       en: "Organic comfrey extract blended with grass-fed beef tallow and jojoba oil, no fragrance added. Whipped light texture, fast-absorbing. The safest choice for sensitive or broken skin.",
       es: "Extracto orgánico de consuelda con sebo grass-fed y aceite de jojoba, sin fragancia agregada. Textura batida y ligera, absorción rápida. La opción más segura para piel sensible o irritada.",
     },
-    ingredients: ["Grass-fed beef tallow", "Jojoba oil", "Organic comfrey extract"],
+    ingredients: [{ en: "Grass-fed beef tallow", es: "Sebo de res grass-fed" }, { en: "Jojoba oil", es: "Aceite de jojoba" }, { en: "Organic comfrey extract", es: "Extracto orgánico de consuelda" }],
     price: 0, // PLACEHOLDER — owner has not confirmed the real 1oz price yet.
     size: "1 oz",
     image: UNSPLASH("1617714651703-d4e8b66efb73"),
@@ -433,7 +433,7 @@ export const products: Product[] = [
       en: "Organic comfrey extract blended with grass-fed beef tallow and jojoba oil. Peppermint adds a cooling kick that works especially well on sore muscles after a long day.",
       es: "Extracto orgánico de consuelda con sebo grass-fed y aceite de jojoba. La menta suma un efecto frío que funciona muy bien en músculos adoloridos después de un día largo.",
     },
-    ingredients: ["Grass-fed beef tallow", "Jojoba oil", "Organic comfrey extract", "Peppermint oil"],
+    ingredients: [{ en: "Grass-fed beef tallow", es: "Sebo de res grass-fed" }, { en: "Jojoba oil", es: "Aceite de jojoba" }, { en: "Organic comfrey extract", es: "Extracto orgánico de consuelda" }, { en: "Peppermint oil", es: "Aceite de menta" }],
     price: 0, // PLACEHOLDER — owner has not confirmed the real 1oz price yet.
     size: "1 oz",
     image: UNSPLASH("1617714651703-d4e8b66efb73"),
@@ -470,7 +470,7 @@ export const products: Product[] = [
       en: "Organic comfrey extract blended with grass-fed beef tallow and jojoba oil, softened with warm vanilla for an easier daily ritual.",
       es: "Extracto orgánico de consuelda con sebo grass-fed y aceite de jojoba, suavizado con vainilla cálida para un ritual diario más agradable.",
     },
-    ingredients: ["Grass-fed beef tallow", "Jojoba oil", "Organic comfrey extract", "Vanilla extract"],
+    ingredients: [{ en: "Grass-fed beef tallow", es: "Sebo de res grass-fed" }, { en: "Jojoba oil", es: "Aceite de jojoba" }, { en: "Organic comfrey extract", es: "Extracto orgánico de consuelda" }, { en: "Vanilla extract", es: "Extracto de vainilla" }],
     price: 0, // PLACEHOLDER — owner has not confirmed the real 1oz price yet.
     size: "1 oz",
     image: UNSPLASH("1617714651703-d4e8b66efb73"),
@@ -507,7 +507,7 @@ export const products: Product[] = [
       en: "Ultrasonic micronized rosemary, nettle, and jojoba oil. Particles broken down for deeper follicle penetration. Non-greasy. Includes satin bonnet and scalp massager.",
       es: "Romero, ortiga y jojoba micronizados con ultrasonido para mayor penetración. No graso. Incluye gorro de satén y masajeador de cuero cabelludo.",
     },
-    ingredients: ["Rosemary extract", "Nettle extract", "Jojoba oil"],
+    ingredients: [{ en: "Rosemary extract", es: "Extracto de romero" }, { en: "Nettle extract", es: "Extracto de ortiga" }, { en: "Jojoba oil", es: "Aceite de jojoba" }],
     price: 38.97,
     size: "2 oz",
     image: UNSPLASH("1527799820374-87036042f89f"),
@@ -539,7 +539,7 @@ export const products: Product[] = [
       en: "Ancient sea salt from Utah's inland sea. No microplastics, no dyes, no synthetic fragrance. Matte finish, non-sticky. Works on all hair types.",
       es: "Sal marina antigua del mar interior de Utah. Sin microplásticos, sin colorantes, sin fragancia sintética. Acabado mate, no pegajoso.",
     },
-    ingredients: ["Ancient Utah sea salt", "Purified water", "Natural minerals"],
+    ingredients: [{ en: "Ancient Utah sea salt", es: "Sal marina antigua de Utah" }, { en: "Purified water", es: "Agua purificada" }, { en: "Natural minerals", es: "Minerales naturales" }],
     price: 23.97,
     size: "8 oz — For Her",
     image: UNSPLASH("1505118380757-91f5f5632de0"),
@@ -573,7 +573,7 @@ export const products: Product[] = [
       en: "Ancient sea salt from Utah's inland sea. No microplastics, no dyes, no synthetic fragrance. Matte finish, non-sticky. Works on all hair types.",
       es: "Sal marina antigua del mar interior de Utah. Sin microplásticos, sin colorantes, sin fragancia sintética. Acabado mate, no pegajoso.",
     },
-    ingredients: ["Ancient Utah sea salt", "Purified water", "Natural minerals"],
+    ingredients: [{ en: "Ancient Utah sea salt", es: "Sal marina antigua de Utah" }, { en: "Purified water", es: "Agua purificada" }, { en: "Natural minerals", es: "Minerales naturales" }],
     price: 23.97,
     size: "8 oz — For Him",
     image: UNSPLASH("1505118380757-91f5f5632de0"),
@@ -605,7 +605,7 @@ export const products: Product[] = [
       en: "100% organic powder, dissolves instantly in water. No dyes, no preservatives, no additives. Each 8oz pouch makes 64oz of nectar. 4-pack for full garden coverage.",
       es: "Polvo 100% orgánico, se disuelve al instante en agua. Sin colorantes, sin conservantes. Cada bolsa de 8oz hace 64oz de néctar. Pack de 4.",
     },
-    ingredients: ["Organic cane sugar", "Purified water"],
+    ingredients: [{ en: "Organic cane sugar", es: "Azúcar de caña orgánica" }, { en: "Purified water", es: "Agua purificada" }],
     price: 22.97,
     size: "4-Pack / 8 oz each",
     image: UNSPLASH("1552728089-57bdde30beb3"),
@@ -641,7 +641,7 @@ export const products: Product[] = [
       en: "USP pharmaceutical grade methylene blue. 1% concentration in a 2oz dropper bottle. No formaldehyde, no alcohol, gluten-free. For technical and research applications.",
       es: "Azul de metileno grado farmacéutico USP. Concentración 1% en frasco gotero de 59ml. Sin formaldehído, sin alcohol, libre de gluten.",
     },
-    ingredients: ["Methylene blue USP", "Purified water"],
+    ingredients: [{ en: "Methylene blue USP", es: "Azul de metileno USP" }, { en: "Purified water", es: "Agua purificada" }],
     price: 24.97,
     size: "2 oz / 59 ml",
     image: UNSPLASH("1587854692152-cbe660dbde88"),

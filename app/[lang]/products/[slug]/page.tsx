@@ -187,10 +187,10 @@ export default async function ProductDetailPage({
             <div className="flex flex-wrap gap-1.5">
               {product.ingredients.map((ing) => (
                 <span
-                  key={ing}
+                  key={ing.en}
                   className="text-[10px] font-medium uppercase tracking-wide text-stone-500 border border-stone-200 px-2 py-0.5"
                 >
-                  {ing}
+                  {ing[locale]}
                 </span>
               ))}
             </div>
