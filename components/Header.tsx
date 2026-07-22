@@ -158,7 +158,7 @@ export function Header({ locale }: { locale: Locale }) {
                   transition={{ duration: 0.15 }}
                   className="absolute left-0 top-full pt-3"
                 >
-                  <div className="w-56 rounded-sm border border-white/60 bg-cream/70 backdrop-blur-xl p-2 shadow-[0_8px_30px_rgba(43,42,37,0.08)]">
+                  <div className="w-56 rounded-sm border border-white/60 bg-cream/95 backdrop-blur-2xl p-2 shadow-[0_8px_30px_rgba(43,42,37,0.08)]">
                     <Link
                       href={`/${locale}/products/`}
                       onClick={() => setShopOpen(false)}

@@ -63,7 +63,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-6 py-6">
+        <div className="min-h-0 flex-1 overflow-y-auto px-6 py-6">
           {items.length === 0 ? (
             <p className="text-sm text-stone-500">{dict.cartEmpty}</p>
           ) : (

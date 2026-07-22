@@ -5,7 +5,7 @@ export function Footer({ locale }: { locale: Locale }) {
   const dict = t(locale);
   return (
     <footer className="mt-24 border-t border-stone-200 bg-forest-950 text-stone-300">
-      <div className="mx-auto max-w-6xl px-6 py-14">
+      <div className="mx-auto max-w-6xl px-6 pt-14 pb-28">
         <div className="flex flex-col gap-10 md:flex-row md:justify-between">
           <div className="max-w-xs">
             <div className="font-display text-2xl font-bold tracking-tight text-cream">
