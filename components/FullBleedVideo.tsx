@@ -38,9 +38,6 @@ export function FullBleedVideo({
           )}
         </div>
       )}
-      <span className="absolute bottom-3 right-4 rounded-sm bg-black/40 px-2 py-0.5 text-[9px] font-medium text-white/90 backdrop-blur-sm">
-        Stock footage
-      </span>
     </section>
   );
 }

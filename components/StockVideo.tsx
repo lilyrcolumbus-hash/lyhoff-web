@@ -40,9 +40,6 @@ export function StockVideo({
         preload="metadata"
         className="absolute inset-0 h-full w-full object-cover"
       />
-      <span className="absolute bottom-2 right-2 rounded-sm bg-black/40 px-2 py-0.5 text-[9px] font-medium text-white/90 backdrop-blur-sm">
-        Stock footage
-      </span>
       {children}
     </div>
   );
