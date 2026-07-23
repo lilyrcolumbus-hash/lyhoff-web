@@ -22,6 +22,10 @@ const zenKaku = Zen_Kaku_Gothic_New({
   variable: "--font-zen-kaku",
   subsets: ["latin"],
   weight: ["400", "500", "700"],
+  // This font has thousands of CJK glyphs split across many unicode-range
+  // .woff2 chunks — preload:true (the default) forces Next.js to eagerly
+  // download every chunk instead of only the ones the page actually needs.
+  preload: false,
 });
 
 const inter = Inter({

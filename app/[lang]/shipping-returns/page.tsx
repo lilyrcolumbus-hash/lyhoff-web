@@ -50,8 +50,8 @@ export default async function ShippingReturnsPage({
           <li>
             <strong>{en ? "Shipping cost:" : "Costo de envío:"}</strong>{" "}
             {en
-              ? "a flat $6.99, or free on orders of $50 or more (calculated at checkout)."
-              : "$6.99 fijo, o gratis en pedidos de $50 o más (se calcula en el checkout)."}
+              ? "a flat $9.99 on every order, added at checkout."
+              : "$9.99 fijo en cada pedido, se agrega en el checkout."}
           </li>
           <li>
             <strong>{en ? "Where we ship:" : "A dónde enviamos:"}</strong>{" "}

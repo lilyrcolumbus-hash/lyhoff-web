@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale, t, type Locale } from "@/lib/i18n";
-import { activeProducts, dedupeVariants, productsByCategory } from "@/lib/products";
+import { dedupeVariants, productsByCategory } from "@/lib/products";
 import { getProductImageUrl } from "@/lib/product-images";
 import { ProductCard } from "@/components/ProductCard";
 import { FullBleedVideo } from "@/components/FullBleedVideo";
@@ -64,6 +64,8 @@ export default async function ProductsPage({
     },
   ].filter((s) => s.products.length > 0);
 
+  const uniqueProductCount = sections.reduce((sum, s) => sum + s.products.length, 0);
+
   return (
     <div className="bg-cream">
       {/* Header */}
@@ -81,8 +83,8 @@ export default async function ProductsPage({
         </p>
         <p className="mt-4 text-sm text-stone-400">
           {locale === "en"
-            ? `${activeProducts.length} products, shipped by us`
-            : `${activeProducts.length} productos, enviados por nosotros`}
+            ? `${uniqueProductCount} products, shipped by us`
+            : `${uniqueProductCount} productos, enviados por nosotros`}
         </p>
         <Link
           href={`/${locale}/quiz/`}
