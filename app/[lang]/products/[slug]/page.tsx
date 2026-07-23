@@ -114,11 +114,18 @@ export default async function ProductDetailPage({
           <p className="text-[10px] font-semibold uppercase tracking-widest text-earth-600 mb-2">
             {product.size}
           </p>
-          {badge && (
-            <span className="inline-block mb-3 bg-forest-950 text-cream text-[10px] font-semibold uppercase tracking-widest px-3 py-1">
-              {badge}
-            </span>
-          )}
+          <div className="mb-3 flex flex-wrap gap-2">
+            {badge && (
+              <span className="inline-block bg-forest-950 text-cream text-[10px] font-semibold uppercase tracking-widest px-3 py-1">
+                {badge}
+              </span>
+            )}
+            {product.gift && (
+              <span className="inline-block bg-earth-600 text-cream text-[10px] font-semibold uppercase tracking-widest px-3 py-1">
+                {locale === "en" ? "+ Free gift" : "+ Regalo"}
+              </span>
+            )}
+          </div>
           <h1 className="font-display text-3xl font-bold text-forest-950 sm:text-4xl">
             {name}
           </h1>
@@ -133,15 +140,6 @@ export default async function ProductDetailPage({
               </li>
             ))}
           </ul>
-
-          {product.gift && (
-            <div className="mt-4 flex items-center gap-3 border border-earth-500/40 bg-earth-500/10 px-4 py-3">
-              <span className="text-xs font-semibold uppercase tracking-widest text-earth-700">
-                {locale === "en" ? "Free gift" : "Regalo"}
-              </span>
-              <span className="text-sm font-medium text-forest-950">{product.gift[locale]}</span>
-            </div>
-          )}
 
           {sizeVariants.length > 1 && (
             <div className="mt-6">
@@ -218,7 +216,16 @@ export default async function ProductDetailPage({
             <p className="text-sm text-stone-600 leading-relaxed">{product.howToUse[locale]}</p>
           </div>
 
-          <div className="mt-8 flex flex-col gap-4 border-t border-stone-200 pt-8 sm:flex-row sm:items-center sm:justify-between">
+          {product.gift && (
+            <div className="mt-8 flex items-center gap-3 bg-earth-600 px-4 py-3.5">
+              <span className="text-sm font-bold uppercase tracking-wide text-cream shrink-0">
+                {locale === "en" ? "Free gift:" : "Regalo:"}
+              </span>
+              <span className="text-sm font-medium text-cream">{product.gift[locale]}</span>
+            </div>
+          )}
+
+          <div className={`flex flex-col gap-4 border-t border-stone-200 pt-8 sm:flex-row sm:items-center sm:justify-between ${product.gift ? "mt-4" : "mt-8"}`}>
             <span className="font-display text-2xl font-bold text-forest-950">
               ${product.price.toFixed(2)}
             </span>
