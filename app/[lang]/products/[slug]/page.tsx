@@ -134,6 +134,15 @@ export default async function ProductDetailPage({
             ))}
           </ul>
 
+          {product.gift && (
+            <div className="mt-4 flex items-center gap-3 border border-earth-500/40 bg-earth-500/10 px-4 py-3">
+              <span className="text-xs font-semibold uppercase tracking-widest text-earth-700">
+                {locale === "en" ? "Free gift" : "Regalo"}
+              </span>
+              <span className="text-sm font-medium text-forest-950">{product.gift[locale]}</span>
+            </div>
+          )}
+
           {sizeVariants.length > 1 && (
             <div className="mt-6">
               <h2 className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-2">

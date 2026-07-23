@@ -28,6 +28,8 @@ export interface Product {
   howToUse: { en: string; es: string };
   /** Real customer reviews, kept in their original language (not translated). */
   reviews?: { text: string; author: string; location: string }[];
+  /** Free physical gift included with purchase — shown as a standalone highlighted callout, not buried in benefits. */
+  gift?: { en: string; es: string };
 }
 
 export const SCENT_OPTIONS = ["Unscented", "Peppermint", "Vanilla"];
@@ -69,8 +71,8 @@ export const products: Product[] = [
       { en: "Two ingredients, nothing else", es: "Dos ingredientes, nada más" },
       { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
       { en: "Absorbs fast, no greasy residue", es: "Absorción rápida, sin residuo graso" },
-      { en: "Free jade facial roller included", es: "Incluye rodillo de jade de regalo" },
     ],
+    gift: { en: "Free jade facial roller", es: "Rodillo de jade de regalo" },
     howToUse: {
       en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
       es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
@@ -107,8 +109,8 @@ export const products: Product[] = [
       { en: "Cool, awakening peppermint finish", es: "Toque final de menta fresca y despertador" },
       { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
       { en: "Absorbs fast, no greasy residue", es: "Absorción rápida, sin residuo graso" },
-      { en: "Free jade facial roller included", es: "Incluye rodillo de jade de regalo" },
     ],
+    gift: { en: "Free jade facial roller", es: "Rodillo de jade de regalo" },
     howToUse: {
       en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
       es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
@@ -145,8 +147,8 @@ export const products: Product[] = [
       { en: "Warm, comforting vanilla scent", es: "Aroma cálido y reconfortante a vainilla" },
       { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
       { en: "Absorbs fast, no greasy residue", es: "Absorción rápida, sin residuo graso" },
-      { en: "Free jade facial roller included", es: "Incluye rodillo de jade de regalo" },
     ],
+    gift: { en: "Free jade facial roller", es: "Rodillo de jade de regalo" },
     howToUse: {
       en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
       es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
@@ -186,8 +188,8 @@ export const products: Product[] = [
       { en: "Two ingredients, nothing else", es: "Dos ingredientes, nada más" },
       { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
       { en: "Absorbs fast, no greasy residue", es: "Absorción rápida, sin residuo graso" },
-      { en: "Free jade facial roller included", es: "Incluye rodillo de jade de regalo" },
     ],
+    gift: { en: "Free jade facial roller", es: "Rodillo de jade de regalo" },
     howToUse: {
       en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
       es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
@@ -224,8 +226,8 @@ export const products: Product[] = [
       { en: "Cool, awakening peppermint finish", es: "Toque final de menta fresca y despertador" },
       { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
       { en: "Absorbs fast, no greasy residue", es: "Absorción rápida, sin residuo graso" },
-      { en: "Free jade facial roller included", es: "Incluye rodillo de jade de regalo" },
     ],
+    gift: { en: "Free jade facial roller", es: "Rodillo de jade de regalo" },
     howToUse: {
       en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
       es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
@@ -262,8 +264,8 @@ export const products: Product[] = [
       { en: "Warm, comforting vanilla scent", es: "Aroma cálido y reconfortante a vainilla" },
       { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
       { en: "Absorbs fast, no greasy residue", es: "Absorción rápida, sin residuo graso" },
-      { en: "Free jade facial roller included", es: "Incluye rodillo de jade de regalo" },
     ],
+    gift: { en: "Free jade facial roller", es: "Rodillo de jade de regalo" },
     howToUse: {
       en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
       es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
@@ -522,8 +524,8 @@ export const products: Product[] = [
     benefits: [
       { en: "Ultrasonic micronized for deeper penetration", es: "Micronizado con ultrasonido para mayor penetración" },
       { en: "Non-greasy, no heavy residue", es: "No graso, sin residuo pesado" },
-      { en: "Free silicone scalp massager + black satin bonnet included", es: "Incluye de regalo masajeador de silicona + gorro de satén negro" },
     ],
+    gift: { en: "Free silicone scalp massager + black satin bonnet", es: "Masajeador de silicona + gorro de satén negro de regalo" },
     howToUse: {
       en: "Apply a few drops directly to the scalp and massage in circular motions for 2–3 minutes. Use 3–4 times per week.",
       es: "Aplica unas gotas directo en el cuero cabelludo y masajea en círculos por 2–3 minutos. Usa 3–4 veces por semana.",
