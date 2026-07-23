@@ -53,8 +53,8 @@ export const products: Product[] = [
       es: "Piel que realmente sana.",
     },
     description: {
-      en: "Grass-fed beef tallow and jojoba oil — two ingredients, nothing else, no fragrance. Rich in vitamins A, D, E & K. Absorbs fast, no greasy residue. Includes a jade roller.",
-      es: "Sebo de res grass-fed y aceite de jojoba — dos ingredientes, nada más, sin fragancia. Rico en vitaminas A, D, E y K. Absorción rápida, sin residuo graso. Incluye jade roller.",
+      en: "Grass-fed beef tallow and jojoba oil — two ingredients, nothing else, no fragrance. Rich in vitamins A, D, E & K. Absorbs fast, no greasy residue. Includes a free jade facial roller.",
+      es: "Sebo de res grass-fed y aceite de jojoba — dos ingredientes, nada más, sin fragancia. Rico en vitaminas A, D, E y K. Absorción rápida, sin residuo graso. Incluye un rodillo de jade de regalo.",
     },
     ingredients: [{ en: "Grass-fed beef tallow", es: "Sebo de res grass-fed" }, { en: "Jojoba oil", es: "Aceite de jojoba" }],
     price: 13.99,
@@ -69,6 +69,7 @@ export const products: Product[] = [
       { en: "Two ingredients, nothing else", es: "Dos ingredientes, nada más" },
       { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
       { en: "Absorbs fast, no greasy residue", es: "Absorción rápida, sin residuo graso" },
+      { en: "Free jade facial roller included", es: "Incluye rodillo de jade de regalo" },
     ],
     howToUse: {
       en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
@@ -91,8 +92,8 @@ export const products: Product[] = [
       es: "Piel que realmente sana.",
     },
     description: {
-      en: "Grass-fed beef tallow and jojoba oil with a cool, awakening peppermint finish — feels incredible after a shower or on tired skin. Rich in vitamins A, D, E & K.",
-      es: "Sebo de res grass-fed y aceite de jojoba con un toque final de menta fresca y despertador — se siente increíble después de la ducha o en piel cansada. Rico en vitaminas A, D, E y K.",
+      en: "Grass-fed beef tallow and jojoba oil with a cool, awakening peppermint finish — feels incredible after a shower or on tired skin. Rich in vitamins A, D, E & K. Includes a free jade facial roller.",
+      es: "Sebo de res grass-fed y aceite de jojoba con un toque final de menta fresca y despertador — se siente increíble después de la ducha o en piel cansada. Rico en vitaminas A, D, E y K. Incluye un rodillo de jade de regalo.",
     },
     ingredients: [{ en: "Grass-fed beef tallow", es: "Sebo de res grass-fed" }, { en: "Jojoba oil", es: "Aceite de jojoba" }, { en: "Peppermint oil", es: "Aceite de menta" }],
     price: 13.99,
@@ -106,6 +107,7 @@ export const products: Product[] = [
       { en: "Cool, awakening peppermint finish", es: "Toque final de menta fresca y despertador" },
       { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
       { en: "Absorbs fast, no greasy residue", es: "Absorción rápida, sin residuo graso" },
+      { en: "Free jade facial roller included", es: "Incluye rodillo de jade de regalo" },
     ],
     howToUse: {
       en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
@@ -128,8 +130,8 @@ export const products: Product[] = [
       es: "Piel que realmente sana.",
     },
     description: {
-      en: "Grass-fed beef tallow and jojoba oil with warm, comforting vanilla folded in — our customers' favorite. Rich in vitamins A, D, E & K.",
-      es: "Sebo de res grass-fed y aceite de jojoba con vainilla cálida y reconfortante — el favorito de nuestros clientes. Rico en vitaminas A, D, E y K.",
+      en: "Grass-fed beef tallow and jojoba oil with warm, comforting vanilla folded in — our customers' favorite. Rich in vitamins A, D, E & K. Includes a free jade facial roller.",
+      es: "Sebo de res grass-fed y aceite de jojoba con vainilla cálida y reconfortante — el favorito de nuestros clientes. Rico en vitaminas A, D, E y K. Incluye un rodillo de jade de regalo.",
     },
     ingredients: [{ en: "Grass-fed beef tallow", es: "Sebo de res grass-fed" }, { en: "Jojoba oil", es: "Aceite de jojoba" }, { en: "Vanilla extract", es: "Extracto de vainilla" }],
     price: 13.99,
@@ -143,6 +145,7 @@ export const products: Product[] = [
       { en: "Warm, comforting vanilla scent", es: "Aroma cálido y reconfortante a vainilla" },
       { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
       { en: "Absorbs fast, no greasy residue", es: "Absorción rápida, sin residuo graso" },
+      { en: "Free jade facial roller included", es: "Incluye rodillo de jade de regalo" },
     ],
     howToUse: {
       en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
@@ -168,8 +171,8 @@ export const products: Product[] = [
       es: "Piel que realmente sana.",
     },
     description: {
-      en: "Grass-fed beef tallow and jojoba oil — two ingredients, nothing else, no fragrance. Rich in vitamins A, D, E & K. Absorbs fast, no greasy residue.",
-      es: "Sebo de res grass-fed y aceite de jojoba — dos ingredientes, nada más, sin fragancia. Rico en vitaminas A, D, E y K. Absorción rápida, sin residuo graso.",
+      en: "Grass-fed beef tallow and jojoba oil — two ingredients, nothing else, no fragrance. Rich in vitamins A, D, E & K. Absorbs fast, no greasy residue. Includes a free jade facial roller.",
+      es: "Sebo de res grass-fed y aceite de jojoba — dos ingredientes, nada más, sin fragancia. Rico en vitaminas A, D, E y K. Absorción rápida, sin residuo graso. Incluye un rodillo de jade de regalo.",
     },
     ingredients: [{ en: "Grass-fed beef tallow", es: "Sebo de res grass-fed" }, { en: "Jojoba oil", es: "Aceite de jojoba" }],
     price: 0, // PLACEHOLDER — owner has not confirmed the real 1oz price yet.
@@ -183,6 +186,7 @@ export const products: Product[] = [
       { en: "Two ingredients, nothing else", es: "Dos ingredientes, nada más" },
       { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
       { en: "Absorbs fast, no greasy residue", es: "Absorción rápida, sin residuo graso" },
+      { en: "Free jade facial roller included", es: "Incluye rodillo de jade de regalo" },
     ],
     howToUse: {
       en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
@@ -205,8 +209,8 @@ export const products: Product[] = [
       es: "Piel que realmente sana.",
     },
     description: {
-      en: "Grass-fed beef tallow and jojoba oil with a cool, awakening peppermint finish. Rich in vitamins A, D, E & K.",
-      es: "Sebo de res grass-fed y aceite de jojoba con un toque final de menta fresca y despertador. Rico en vitaminas A, D, E y K.",
+      en: "Grass-fed beef tallow and jojoba oil with a cool, awakening peppermint finish. Rich in vitamins A, D, E & K. Includes a free jade facial roller.",
+      es: "Sebo de res grass-fed y aceite de jojoba con un toque final de menta fresca y despertador. Rico en vitaminas A, D, E y K. Incluye un rodillo de jade de regalo.",
     },
     ingredients: [{ en: "Grass-fed beef tallow", es: "Sebo de res grass-fed" }, { en: "Jojoba oil", es: "Aceite de jojoba" }, { en: "Peppermint oil", es: "Aceite de menta" }],
     price: 0, // PLACEHOLDER — owner has not confirmed the real 1oz price yet.
@@ -220,6 +224,7 @@ export const products: Product[] = [
       { en: "Cool, awakening peppermint finish", es: "Toque final de menta fresca y despertador" },
       { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
       { en: "Absorbs fast, no greasy residue", es: "Absorción rápida, sin residuo graso" },
+      { en: "Free jade facial roller included", es: "Incluye rodillo de jade de regalo" },
     ],
     howToUse: {
       en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
@@ -242,8 +247,8 @@ export const products: Product[] = [
       es: "Piel que realmente sana.",
     },
     description: {
-      en: "Grass-fed beef tallow and jojoba oil with warm, comforting vanilla folded in. Rich in vitamins A, D, E & K.",
-      es: "Sebo de res grass-fed y aceite de jojoba con vainilla cálida y reconfortante. Rico en vitaminas A, D, E y K.",
+      en: "Grass-fed beef tallow and jojoba oil with warm, comforting vanilla folded in. Rich in vitamins A, D, E & K. Includes a free jade facial roller.",
+      es: "Sebo de res grass-fed y aceite de jojoba con vainilla cálida y reconfortante. Rico en vitaminas A, D, E y K. Incluye un rodillo de jade de regalo.",
     },
     ingredients: [{ en: "Grass-fed beef tallow", es: "Sebo de res grass-fed" }, { en: "Jojoba oil", es: "Aceite de jojoba" }, { en: "Vanilla extract", es: "Extracto de vainilla" }],
     price: 0, // PLACEHOLDER — owner has not confirmed the real 1oz price yet.
@@ -257,6 +262,7 @@ export const products: Product[] = [
       { en: "Warm, comforting vanilla scent", es: "Aroma cálido y reconfortante a vainilla" },
       { en: "Rich in vitamins A, D, E & K", es: "Rico en vitaminas A, D, E y K" },
       { en: "Absorbs fast, no greasy residue", es: "Absorción rápida, sin residuo graso" },
+      { en: "Free jade facial roller included", es: "Incluye rodillo de jade de regalo" },
     ],
     howToUse: {
       en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
@@ -504,8 +510,8 @@ export const products: Product[] = [
       es: "Raíces más fuertes. Crecimiento visible.",
     },
     description: {
-      en: "Ultrasonic micronized rosemary, nettle, and jojoba oil. Particles broken down for deeper follicle penetration. Non-greasy. Includes satin bonnet and scalp massager.",
-      es: "Romero, ortiga y jojoba micronizados con ultrasonido para mayor penetración. No graso. Incluye gorro de satén y masajeador de cuero cabelludo.",
+      en: "Ultrasonic micronized rosemary, nettle, and jojoba oil. Particles broken down for deeper follicle penetration. Non-greasy. Includes a free silicone scalp massager and a black satin bonnet.",
+      es: "Romero, ortiga y jojoba micronizados con ultrasonido para mayor penetración. No graso. Incluye de regalo un masajeador de cuero cabelludo de silicona y un gorro de satén negro.",
     },
     ingredients: [{ en: "Rosemary extract", es: "Extracto de romero" }, { en: "Nettle extract", es: "Extracto de ortiga" }, { en: "Jojoba oil", es: "Aceite de jojoba" }],
     price: 38.97,
@@ -516,7 +522,7 @@ export const products: Product[] = [
     benefits: [
       { en: "Ultrasonic micronized for deeper penetration", es: "Micronizado con ultrasonido para mayor penetración" },
       { en: "Non-greasy, no heavy residue", es: "No graso, sin residuo pesado" },
-      { en: "Includes satin bonnet + scalp massager", es: "Incluye gorro de satén + masajeador de cuero cabelludo" },
+      { en: "Free silicone scalp massager + black satin bonnet included", es: "Incluye de regalo masajeador de silicona + gorro de satén negro" },
     ],
     howToUse: {
       en: "Apply a few drops directly to the scalp and massage in circular motions for 2–3 minutes. Use 3–4 times per week.",
