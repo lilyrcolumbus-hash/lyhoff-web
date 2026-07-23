@@ -66,6 +66,11 @@ export function ProductCard({
               {locale === "en" ? "Photo needed" : "Foto pendiente"}
             </span>
           )}
+          {product.gift && (
+            <span className="absolute top-3 right-3 bg-earth-600 text-cream text-[10px] font-semibold uppercase tracking-widest px-3 py-1">
+              {locale === "en" ? "+ Free gift" : "+ Regalo"}
+            </span>
+          )}
         </TiltImage>
       </Link>
 
@@ -96,6 +101,15 @@ export function ProductCard({
             </span>
           ))}
         </div>
+
+        {product.gift && (
+          <div className="mt-4 flex items-center gap-2 bg-earth-600 px-3 py-2">
+            <span className="text-[10px] font-bold uppercase tracking-wide text-cream shrink-0">
+              {locale === "en" ? "Free gift:" : "Regalo:"}
+            </span>
+            <span className="text-[10px] font-medium text-cream truncate">{product.gift[locale]}</span>
+          </div>
+        )}
 
         <div className="mt-auto pt-6 flex items-center justify-between">
           <span className="font-display text-xl font-bold text-forest-950">

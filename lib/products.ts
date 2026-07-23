@@ -74,8 +74,8 @@ export const products: Product[] = [
     ],
     gift: { en: "Free jade facial roller", es: "Rodillo de jade de regalo" },
     howToUse: {
-      en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
-      es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
+      en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower. Finish with the included jade roller over your face for extra cooling and glow.",
+      es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha. Termina pasando el rodillo de jade incluido sobre tu rostro para un efecto refrescante extra.",
     },
     reviews: [
       { text: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", author: "Jayden", location: "Stillwater, OK" },
@@ -112,8 +112,8 @@ export const products: Product[] = [
     ],
     gift: { en: "Free jade facial roller", es: "Rodillo de jade de regalo" },
     howToUse: {
-      en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
-      es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
+      en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower. Finish with the included jade roller over your face for extra cooling and glow.",
+      es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha. Termina pasando el rodillo de jade incluido sobre tu rostro para un efecto refrescante extra.",
     },
     reviews: [
       { text: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", author: "Jayden", location: "Stillwater, OK" },
@@ -150,8 +150,8 @@ export const products: Product[] = [
     ],
     gift: { en: "Free jade facial roller", es: "Rodillo de jade de regalo" },
     howToUse: {
-      en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
-      es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
+      en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower. Finish with the included jade roller over your face for extra cooling and glow.",
+      es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha. Termina pasando el rodillo de jade incluido sobre tu rostro para un efecto refrescante extra.",
     },
     reviews: [
       { text: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", author: "Jayden", location: "Stillwater, OK" },
@@ -191,8 +191,8 @@ export const products: Product[] = [
     ],
     gift: { en: "Free jade facial roller", es: "Rodillo de jade de regalo" },
     howToUse: {
-      en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
-      es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
+      en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower. Finish with the included jade roller over your face for extra cooling and glow.",
+      es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha. Termina pasando el rodillo de jade incluido sobre tu rostro para un efecto refrescante extra.",
     },
     reviews: [
       { text: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", author: "Jayden", location: "Stillwater, OK" },
@@ -229,8 +229,8 @@ export const products: Product[] = [
     ],
     gift: { en: "Free jade facial roller", es: "Rodillo de jade de regalo" },
     howToUse: {
-      en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
-      es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
+      en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower. Finish with the included jade roller over your face for extra cooling and glow.",
+      es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha. Termina pasando el rodillo de jade incluido sobre tu rostro para un efecto refrescante extra.",
     },
     reviews: [
       { text: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", author: "Jayden", location: "Stillwater, OK" },
@@ -267,8 +267,8 @@ export const products: Product[] = [
     ],
     gift: { en: "Free jade facial roller", es: "Rodillo de jade de regalo" },
     howToUse: {
-      en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower.",
-      es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha.",
+      en: "Warm a small amount between your palms and massage into clean, dry skin — face or body. Best applied right after a shower. Finish with the included jade roller over your face for extra cooling and glow.",
+      es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha. Termina pasando el rodillo de jade incluido sobre tu rostro para un efecto refrescante extra.",
     },
     reviews: [
       { text: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", author: "Jayden", location: "Stillwater, OK" },
@@ -527,8 +527,8 @@ export const products: Product[] = [
     ],
     gift: { en: "Free silicone scalp massager + black satin bonnet", es: "Masajeador de silicona + gorro de satén negro de regalo" },
     howToUse: {
-      en: "Apply a few drops directly to the scalp and massage in circular motions for 2–3 minutes. Use 3–4 times per week.",
-      es: "Aplica unas gotas directo en el cuero cabelludo y masajea en círculos por 2–3 minutos. Usa 3–4 veces por semana.",
+      en: "Apply a few drops directly to the scalp and work in with the included silicone massager in circular motions for 2–3 minutes. For deeper absorption, cover with the included satin bonnet for 20+ minutes before rinsing or styling. Use 3–4 times per week.",
+      es: "Aplica unas gotas directo en el cuero cabelludo y masajea en círculos con el masajeador de silicona incluido por 2–3 minutos. Para mayor absorción, cubre con el gorro de satén incluido por 20+ minutos antes de enjuagar o peinar. Usa 3–4 veces por semana.",
     },
   },
   {
