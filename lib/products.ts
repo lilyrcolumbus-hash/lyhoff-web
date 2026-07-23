@@ -527,8 +527,8 @@ export const products: Product[] = [
     ],
     gift: { en: "Free silicone scalp massager + black satin bonnet", es: "Masajeador de silicona + gorro de satén negro de regalo" },
     howToUse: {
-      en: "Apply a few drops directly to the scalp and work in with the included silicone massager in circular motions for 2–3 minutes. For deeper absorption, cover with the included satin bonnet for 20+ minutes before rinsing or styling. Use 3–4 times per week.",
-      es: "Aplica unas gotas directo en el cuero cabelludo y masajea en círculos con el masajeador de silicona incluido por 2–3 minutos. Para mayor absorción, cubre con el gorro de satén incluido por 20+ minutos antes de enjuagar o peinar. Usa 3–4 veces por semana.",
+      en: "Apply a few drops directly to the scalp and work in with the included silicone massager in circular motions for 2–3 minutes. Cover with the included satin bonnet — leave it on for 20+ minutes before rinsing for deeper absorption, or sleep in it all night for a deeper overnight treatment. Unlike cotton, satin won't soak up the oil or rub against your hair, so the treatment stays on your scalp (not your pillow) and your hair wakes up smooth instead of frizzed or broken from friction. Use 3–4 times per week.",
+      es: "Aplica unas gotas directo en el cuero cabelludo y masajea en círculos con el masajeador de silicona incluido por 2–3 minutos. Cubre con el gorro de satén incluido — déjalo puesto 20+ minutos antes de enjuagar para mayor absorción, o duerme con él toda la noche para un tratamiento más profundo. A diferencia del algodón, el satén no absorbe el aceite ni genera fricción con tu cabello, así que el tratamiento se queda en tu cuero cabelludo (no en tu almohada) y tu cabello amanece liso, sin frizz ni rotura por fricción. Usa 3–4 veces por semana.",
     },
   },
   {
