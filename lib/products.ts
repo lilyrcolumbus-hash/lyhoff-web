@@ -523,18 +523,18 @@ export const products: Product[] = [
     slug: "hair-growth-oil",
     category: "hair",
     name: {
-      en: "Hair Growth Oil",
-      es: "Aceite para el Crecimiento Capilar",
+      en: "Scalp & Hair Growth Oil",
+      es: "Aceite para el Cuero Cabelludo y Crecimiento Capilar",
     },
     tagline: {
       en: "Stronger roots. Visible growth.",
       es: "Raíces más fuertes. Crecimiento visible.",
     },
     description: {
-      en: "Ultrasonic micronized rosemary, nettle, and jojoba oil. Particles broken down for deeper follicle penetration. Non-greasy. Includes a free silicone scalp massager and a black satin bonnet.",
-      es: "Romero, ortiga y jojoba micronizados con ultrasonido para mayor penetración. No graso. Incluye de regalo un masajeador de cuero cabelludo de silicona y un gorro de satén negro.",
+      en: "Ultrasonic micronized rosemary, nettle, peppermint, and jojoba oil. Particles broken down for deeper follicle penetration. Non-greasy. Includes a free silicone scalp massager and a black satin bonnet.",
+      es: "Romero, ortiga, menta y jojoba micronizados con ultrasonido para mayor penetración. No graso. Incluye de regalo un masajeador de cuero cabelludo de silicona y un gorro de satén negro.",
     },
-    ingredients: [{ en: "Rosemary extract", es: "Extracto de romero" }, { en: "Nettle extract", es: "Extracto de ortiga" }, { en: "Jojoba oil", es: "Aceite de jojoba" }],
+    ingredients: [{ en: "Rosemary extract", es: "Extracto de romero" }, { en: "Nettle extract", es: "Extracto de ortiga" }, { en: "Peppermint oil", es: "Aceite de menta" }, { en: "Jojoba oil", es: "Aceite de jojoba" }],
     price: 38.97,
     size: "2 oz",
     image: UNSPLASH("1527799820374-87036042f89f"),
