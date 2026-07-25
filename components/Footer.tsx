@@ -1,5 +1,24 @@
 import Link from "next/link";
 import { categories, t, type Locale } from "@/lib/i18n";
+import {
+  TikTokIcon,
+  FacebookIcon,
+  InstagramIcon,
+  YouTubeIcon,
+  PinterestIcon,
+  ThreadsIcon,
+  XIcon,
+} from "@/components/illustrations";
+
+const SOCIAL_LINKS = [
+  { name: "TikTok", href: "https://www.tiktok.com/@lyhoff.com", Icon: TikTokIcon },
+  { name: "Facebook", href: "https://www.facebook.com/share/1Bw3Xr3chz/?mibextid=wwXIfr", Icon: FacebookIcon },
+  { name: "YouTube", href: "https://youtube.com/@lyhoff?si=ql49F2_AZV63O3Td", Icon: YouTubeIcon },
+  { name: "Instagram", href: "https://www.instagram.com/lyhoff.greencore", Icon: InstagramIcon },
+  { name: "Pinterest", href: "https://pin.it/5qmmHWTGn", Icon: PinterestIcon },
+  { name: "Threads", href: "https://www.threads.com/@lyhoff.greencore", Icon: ThreadsIcon },
+  { name: "X", href: "https://x.com/lyhoff32879?s=11", Icon: XIcon },
+];
 
 export function Footer({ locale }: { locale: Locale }) {
   const dict = t(locale);
@@ -20,63 +39,19 @@ export function Footer({ locale }: { locale: Locale }) {
             >
               lyhoffllc.info@gmail.com
             </a>
-            <div className="mt-4 flex gap-4 text-sm">
-              <a
-                href="https://www.tiktok.com/@lyhoff.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-stone-400 hover:text-cream transition-colors"
-              >
-                TikTok
-              </a>
-              <a
-                href="https://www.facebook.com/share/1Bw3Xr3chz/?mibextid=wwXIfr"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-stone-400 hover:text-cream transition-colors"
-              >
-                Facebook
-              </a>
-              <a
-                href="https://youtube.com/@lyhoff?si=ql49F2_AZV63O3Td"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-stone-400 hover:text-cream transition-colors"
-              >
-                YouTube
-              </a>
-              <a
-                href="https://www.instagram.com/lyhoff.greencore"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-stone-400 hover:text-cream transition-colors"
-              >
-                Instagram
-              </a>
-              <a
-                href="https://pin.it/5qmmHWTGn"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-stone-400 hover:text-cream transition-colors"
-              >
-                Pinterest
-              </a>
-              <a
-                href="https://www.threads.com/@lyhoff.greencore"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-stone-400 hover:text-cream transition-colors"
-              >
-                Threads
-              </a>
-              <a
-                href="https://x.com/lyhoff32879?s=11"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-stone-400 hover:text-cream transition-colors"
-              >
-                X
-              </a>
+            <div className="mt-5 flex flex-wrap gap-2">
+              {SOCIAL_LINKS.map(({ name, href, Icon }) => (
+                <a
+                  key={name}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={name}
+                  className="flex h-9 w-9 items-center justify-center border border-white/10 bg-cream/5 text-stone-300 backdrop-blur-sm transition-colors hover:border-white/25 hover:bg-cream/10 hover:text-cream"
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
             </div>
           </div>
 
