@@ -5,6 +5,7 @@ import { getAllArticles, getArticlesByCategory } from "@/lib/content";
 import { ArticleCard } from "@/components/ArticleCard";
 import { Newsletter } from "@/components/Newsletter";
 import { CategoryIcon } from "@/components/CategoryIcon";
+import { CategoryTiles } from "@/components/CategoryTiles";
 
 export async function generateMetadata({
   params,
@@ -41,7 +42,14 @@ export default async function TopicsPage({
         </h1>
       </header>
 
-      {total === 0 && <p className="mt-8 text-stone-500">{dict.noArticles}</p>}
+      {total === 0 && (
+        <>
+          <p className="mt-8 text-stone-500">{dict.noArticles}</p>
+          <div className="mt-8">
+            <CategoryTiles locale={locale} />
+          </div>
+        </>
+      )}
 
       {categories.map((c) => {
         const articles = getArticlesByCategory(c.slug, locale);
