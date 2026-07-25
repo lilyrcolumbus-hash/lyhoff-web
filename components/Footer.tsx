@@ -139,7 +139,7 @@ export function Footer({ locale }: { locale: Locale }) {
               </li>
               <li>
                 <a
-                  href="https://www.amazon.com/sp?seller=A3QMAV0EEV748Q"
+                  href="https://www.amazon.com/s?me=A3QMAV0EEV748Q&marketplaceID=ATVPDKIKX0DER"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-stone-400 hover:text-cream transition-colors"
