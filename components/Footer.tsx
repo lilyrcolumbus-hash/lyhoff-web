@@ -137,6 +137,16 @@ export function Footer({ locale }: { locale: Locale }) {
                   Etsy
                 </a>
               </li>
+              <li>
+                <a
+                  href="https://www.amazon.com/sp?seller=A3QMAV0EEV748Q"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-stone-400 hover:text-cream transition-colors"
+                >
+                  Amazon
+                </a>
+              </li>
             </ul>
           </div>
 
