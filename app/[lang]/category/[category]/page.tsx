@@ -58,12 +58,14 @@ export default async function CategoryPage({
   if (!cat) notFound();
   const dict = t(locale);
   const articles = getArticlesByCategory(category, locale);
-  // Content categories (garden/food/bodycare/remedies) and product categories
-  // (bodycare/hair/home/hoff) only cleanly overlap on "bodycare" — only cross-sell there.
+  // Content categories (bodycare/remedies) and product categories
+  // (bodycare/hair/home/hoff) don't share names 1:1 — map each manually.
   const shopProducts =
     category === "bodycare"
       ? dedupeVariants([...productsByCategory("bodycare"), ...productsByCategory("hair")])
-      : [];
+      : category === "remedies"
+        ? dedupeVariants(productsByCategory("hoff"))
+        : [];
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">

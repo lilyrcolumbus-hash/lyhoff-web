@@ -11,9 +11,9 @@ export function isLocale(value: string): value is Locale {
 export const otherLocale = (l: Locale): Locale => (l === "en" ? "es" : "en");
 
 // Category slugs are English-based and shared across both languages (one URL per category).
+// Only categories with real products behind them are shown — "garden"/"food" were dropped
+// (2026-07-23) since nothing is sold in those lines yet.
 export type CategorySlug =
-  | "garden"
-  | "food"
   | "bodycare"
   | "remedies";
 
@@ -26,24 +26,6 @@ export interface Category {
 
 export const categories: Category[] = [
   {
-    slug: "garden",
-    emoji: "🌱",
-    label: { en: "The Garden", es: "El Huerto" },
-    blurb: {
-      en: "Where it all begins — grown naturally, with care.",
-      es: "Donde todo comienza — cultivado al natural, con cuidado.",
-    },
-  },
-  {
-    slug: "food",
-    emoji: "🌾",
-    label: { en: "From the Harvest", es: "De la Cosecha" },
-    blurb: {
-      en: "Wholesome food and preserves from the harvest.",
-      es: "Comida sana y conservas de la cosecha.",
-    },
-  },
-  {
     slug: "bodycare",
     emoji: "🌸",
     label: { en: "Skin & Hair", es: "Piel y Cabello" },
@@ -54,11 +36,11 @@ export const categories: Category[] = [
   },
   {
     slug: "remedies",
-    emoji: "🌿",
-    label: { en: "Herbal Remedies", es: "Remedios Herbales" },
+    emoji: "🧪",
+    label: { en: "The Lab", es: "El Laboratorio" },
     blurb: {
-      en: "Plant-based remedies and extracts.",
-      es: "Remedios y extractos a base de plantas.",
+      en: "Precision formulas from HOFF, made in our own certified lab.",
+      es: "Fórmulas de precisión de HOFF, hechas en nuestro propio laboratorio certificado.",
     },
   },
 ];
