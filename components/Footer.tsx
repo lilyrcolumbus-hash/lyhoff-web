@@ -47,9 +47,12 @@ export function Footer({ locale }: { locale: Locale }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={name}
-                  className="flex h-9 w-9 items-center justify-center border border-white/10 bg-cream/5 text-stone-300 backdrop-blur-sm transition-colors hover:border-white/25 hover:bg-cream/10 hover:text-cream"
+                  className="group relative flex h-9 w-9 items-center justify-center border border-white/10 bg-cream/5 text-stone-300 backdrop-blur-sm transition-colors hover:border-white/25 hover:bg-cream/10 hover:text-cream"
                 >
                   <Icon className="h-4 w-4" />
+                  <span className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap border border-white/10 bg-forest-950 px-2 py-1 text-[10px] font-medium text-cream opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+                    {name}
+                  </span>
                 </a>
               ))}
             </div>
