@@ -5,6 +5,7 @@ import Link from "next/link";
 import { getCategory, t, type Locale } from "@/lib/i18n";
 import type { ArticleMeta } from "@/lib/content";
 import { CoverImage } from "./CoverImage";
+import { CategoryIcon } from "@/components/CategoryIcon";
 
 export function ArticleCard({
   article,
@@ -39,7 +40,7 @@ export function ArticleCard({
         </div>
         <div className="flex flex-1 flex-col p-5">
           <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-forest-600">
-            <span>{cat?.emoji}</span>
+            {cat && <CategoryIcon slug={cat.slug} className="h-3.5 w-3.5" />}
             <span>{cat?.label[locale]}</span>
             {article.draft && (
               <span className="ml-auto rounded-sm bg-earth-500/15 px-2 py-0.5 text-[10px] font-semibold normal-case text-earth-700">

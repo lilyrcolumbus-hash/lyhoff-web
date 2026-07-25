@@ -2,21 +2,13 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import type { ComponentType } from "react";
-import { categories, type CategorySlug, type Locale } from "@/lib/i18n";
-import { Droplet, Jar, Flask } from "@/components/illustrations";
-
-const ICONS: Record<CategorySlug, ComponentType<{ className?: string }>> = {
-  bodycare: Droplet,
-  remedies: Jar,
-  lab: Flask,
-};
+import { categories, type Locale } from "@/lib/i18n";
+import { CategoryIcon } from "@/components/CategoryIcon";
 
 export function CategoryTiles({ locale }: { locale: Locale }) {
   return (
     <div className="grid gap-px bg-stone-200 border border-stone-200 sm:grid-cols-2 lg:grid-cols-3">
       {categories.map((c, i) => {
-        const Icon = ICONS[c.slug];
         return (
           <motion.div
             key={c.slug}
@@ -30,7 +22,7 @@ export function CategoryTiles({ locale }: { locale: Locale }) {
               className="group flex h-full flex-col justify-between bg-white p-8 transition hover:bg-forest-950"
             >
               <div>
-                <Icon className="h-7 w-7 text-earth-500 group-hover:text-earth-300 transition-colors" />
+                <CategoryIcon slug={c.slug} className="h-7 w-7 text-earth-500 group-hover:text-earth-300 transition-colors" />
                 <h3 className="mt-4 font-display text-lg font-semibold text-forest-950 group-hover:text-cream transition-colors">
                   {c.label[locale]}
                 </h3>

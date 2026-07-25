@@ -1,6 +1,7 @@
 "use client";
 
 import { t, type Locale } from "@/lib/i18n";
+import { Pin } from "@/components/illustrations";
 
 /**
  * "Save to Pinterest" button. Opens the Pinterest Pin-it create dialog with the
@@ -44,7 +45,7 @@ export function SaveToPinterest({
       onClick={onClick}
       className="inline-flex items-center gap-2 rounded-sm bg-[#e60023] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#c8001e]"
     >
-      <span aria-hidden>📌</span>
+      <Pin className="h-4 w-4" />
       {dict.saveToPinterest}
     </button>
   );

@@ -15,6 +15,7 @@ import { getProductImageUrl } from "@/lib/product-images";
 import { ArticleCard } from "@/components/ArticleCard";
 import { ProductCard } from "@/components/ProductCard";
 import { Newsletter } from "@/components/Newsletter";
+import { CategoryIcon } from "@/components/CategoryIcon";
 
 export const dynamicParams = false;
 
@@ -72,7 +73,7 @@ export default async function CategoryPage({
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">
       <header className="border-b border-stone-200 pb-8">
-        <span className="text-4xl">{cat.emoji}</span>
+        <CategoryIcon slug={cat.slug} className="h-9 w-9 text-earth-600" />
         <h1 className="mt-3 font-display text-3xl font-bold text-forest-950 sm:text-4xl">
           {cat.label[locale]}
         </h1>

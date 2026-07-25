@@ -1,4 +1,5 @@
-import { getCategory, type CategorySlug } from "@/lib/i18n";
+import { type CategorySlug } from "@/lib/i18n";
+import { CategoryIcon } from "@/components/CategoryIcon";
 
 /**
  * Article cover image. When a real image path is provided it renders it;
@@ -25,7 +26,6 @@ export function CoverImage({
       : ratio === "square"
         ? "aspect-square"
         : "aspect-[16/9]";
-  const cat = getCategory(category);
 
   if (src) {
     return (
@@ -45,9 +45,7 @@ export function CoverImage({
       role="img"
       aria-label={alt}
     >
-      <span aria-hidden className="text-4xl drop-shadow-sm">
-        {cat?.emoji ?? "🌱"}
-      </span>
+      <CategoryIcon slug={category} className="h-9 w-9 text-cream/90" />
       <span className="mt-2 px-4 font-display text-sm font-medium text-cream/90">
         {alt}
       </span>

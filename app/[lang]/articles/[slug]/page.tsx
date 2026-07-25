@@ -16,6 +16,7 @@ import { CoverImage } from "@/components/CoverImage";
 import { ArticleCard } from "@/components/ArticleCard";
 import { Newsletter } from "@/components/Newsletter";
 import { SaveToPinterest } from "@/components/SaveToPinterest";
+import { CategoryIcon } from "@/components/CategoryIcon";
 
 export const dynamicParams = false;
 
@@ -126,13 +127,13 @@ export default async function ArticlePage({
 
       {article.draft && (
         <p className="mt-4 rounded-sm border border-earth-400/40 bg-earth-500/10 px-3 py-2 text-xs font-semibold text-earth-700">
-          ⚠️ {dict.draftBadge}
+          {dict.draftBadge}
         </p>
       )}
 
       <header className="mt-4">
         <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-forest-600">
-          <span>{cat?.emoji}</span>
+          {cat && <CategoryIcon slug={cat.slug} className="h-4 w-4" />}
           <span>{cat?.label[locale]}</span>
         </div>
         <h1 className="mt-3 font-display text-3xl font-bold leading-tight text-forest-950 sm:text-4xl">

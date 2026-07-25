@@ -57,7 +57,7 @@ export function Newsletter({
             dark ? "bg-forest-800 text-cream" : "bg-forest-100 text-forest-800"
           }`}
         >
-          ✅ {dict.subscribed}
+          ✓ {dict.subscribed}
         </p>
       ) : (
         <form onSubmit={onSubmit} className="mt-5 flex flex-col gap-3 sm:flex-row">
