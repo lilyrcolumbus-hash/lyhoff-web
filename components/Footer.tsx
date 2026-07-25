@@ -20,6 +20,64 @@ export function Footer({ locale }: { locale: Locale }) {
             >
               lyhoffllc.info@gmail.com
             </a>
+            <div className="mt-4 flex gap-4 text-sm">
+              <a
+                href="https://www.tiktok.com/@lyhoff.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-stone-400 hover:text-cream transition-colors"
+              >
+                TikTok
+              </a>
+              <a
+                href="https://www.facebook.com/share/1Bw3Xr3chz/?mibextid=wwXIfr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-stone-400 hover:text-cream transition-colors"
+              >
+                Facebook
+              </a>
+              <a
+                href="https://youtube.com/@lyhoff?si=ql49F2_AZV63O3Td"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-stone-400 hover:text-cream transition-colors"
+              >
+                YouTube
+              </a>
+              <a
+                href="https://www.instagram.com/lyhoff.greencore"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-stone-400 hover:text-cream transition-colors"
+              >
+                Instagram
+              </a>
+              <a
+                href="https://pin.it/5qmmHWTGn"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-stone-400 hover:text-cream transition-colors"
+              >
+                Pinterest
+              </a>
+              <a
+                href="https://www.threads.com/@lyhoff.greencore"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-stone-400 hover:text-cream transition-colors"
+              >
+                Threads
+              </a>
+              <a
+                href="https://x.com/lyhoff32879?s=11"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-stone-400 hover:text-cream transition-colors"
+              >
+                X
+              </a>
+            </div>
           </div>
 
           <div>
