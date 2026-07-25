@@ -15,7 +15,8 @@ export const otherLocale = (l: Locale): Locale => (l === "en" ? "es" : "en");
 // (2026-07-23) since nothing is sold in those lines yet.
 export type CategorySlug =
   | "bodycare"
-  | "remedies";
+  | "remedies"
+  | "lab";
 
 export interface Category {
   slug: CategorySlug;
@@ -36,6 +37,15 @@ export const categories: Category[] = [
   },
   {
     slug: "remedies",
+    emoji: "🌿",
+    label: { en: "Herbal Remedies", es: "Remedios Herbales" },
+    blurb: {
+      en: "Plant-based remedies and extracts.",
+      es: "Remedios y extractos a base de plantas.",
+    },
+  },
+  {
+    slug: "lab",
     emoji: "🧪",
     label: { en: "The Lab", es: "El Laboratorio" },
     blurb: {

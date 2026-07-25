@@ -4,16 +4,17 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import type { ComponentType } from "react";
 import { categories, type CategorySlug, type Locale } from "@/lib/i18n";
-import { Droplet, Jar } from "@/components/illustrations";
+import { Droplet, Jar, Flask } from "@/components/illustrations";
 
 const ICONS: Record<CategorySlug, ComponentType<{ className?: string }>> = {
   bodycare: Droplet,
   remedies: Jar,
+  lab: Flask,
 };
 
 export function CategoryTiles({ locale }: { locale: Locale }) {
   return (
-    <div className="grid gap-px bg-stone-200 border border-stone-200 sm:grid-cols-2">
+    <div className="grid gap-px bg-stone-200 border border-stone-200 sm:grid-cols-2 lg:grid-cols-3">
       {categories.map((c, i) => {
         const Icon = ICONS[c.slug];
         return (

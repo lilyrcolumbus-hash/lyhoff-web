@@ -10,7 +10,7 @@ import {
   type Locale,
 } from "@/lib/i18n";
 import { getArticlesByCategory } from "@/lib/content";
-import { dedupeVariants, productsByCategory } from "@/lib/products";
+import { dedupeVariants, getVariants, productsByCategory } from "@/lib/products";
 import { getProductImageUrl } from "@/lib/product-images";
 import { ArticleCard } from "@/components/ArticleCard";
 import { ProductCard } from "@/components/ProductCard";
@@ -58,14 +58,16 @@ export default async function CategoryPage({
   if (!cat) notFound();
   const dict = t(locale);
   const articles = getArticlesByCategory(category, locale);
-  // Content categories (bodycare/remedies) and product categories
+  // Content categories (bodycare/remedies/lab) and product categories
   // (bodycare/hair/home/hoff) don't share names 1:1 — map each manually.
   const shopProducts =
     category === "bodycare"
       ? dedupeVariants([...productsByCategory("bodycare"), ...productsByCategory("hair")])
       : category === "remedies"
-        ? dedupeVariants(productsByCategory("hoff"))
-        : [];
+        ? dedupeVariants(getVariants("comfrey-salve"))
+        : category === "lab"
+          ? dedupeVariants(productsByCategory("hoff"))
+          : [];
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">
