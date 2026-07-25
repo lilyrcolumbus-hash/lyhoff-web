@@ -153,7 +153,7 @@ export default async function ProductsPage({
               : "Cada pedido sale de nuestras propias manos, sin intermediarios."}
           </p>
           <a
-            href="https://www.etsy.com/shop/lyhoff"
+            href="https://www.etsy.com/shop/LaPappa"
             target="_blank"
             rel="noopener noreferrer"
             className="mt-6 inline-flex items-center gap-3 rounded-sm border border-stone-700 px-8 py-3.5 text-sm font-semibold text-cream hover:border-stone-500 hover:bg-forest-800 transition"
