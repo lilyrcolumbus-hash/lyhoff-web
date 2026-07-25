@@ -1,3 +1,5 @@
+import type { Locale } from "./i18n";
+
 // Owner decision (2026-07-21): prices below already have the $9.99 flat shipping rate
 // (worker.ts's FLAT_SHIPPING_CENTS) subtracted out, so product price + shipping at checkout
 // equals what used to be the standalone product price. If FLAT_SHIPPING_CENTS ever changes,
@@ -26,13 +28,30 @@ export interface Product {
   /** Short scannable claims, pulled from the description — shown as bullets on the product page. */
   benefits: { en: string; es: string }[];
   howToUse: { en: string; es: string };
-  /** Real customer reviews, kept in their original language (not translated). */
-  reviews?: { text: string; author: string; location: string }[];
+  /** Real customer reviews — translated to both languages so the site never mixes languages. */
+  reviews?: { text: { en: string; es: string }; author: string; location: string }[];
   /** Free physical gift included with purchase — shown as a standalone highlighted callout, not buried in benefits. */
   gift?: { en: string; es: string };
 }
 
 export const SCENT_OPTIONS = ["Unscented", "Peppermint", "Vanilla"];
+
+export const SCENT_LABELS: Record<string, { en: string; es: string }> = {
+  Unscented: { en: "Unscented", es: "Sin fragancia" },
+  Peppermint: { en: "Peppermint", es: "Menta" },
+  Vanilla: { en: "Vanilla", es: "Vainilla" },
+};
+
+// `Product.size` is the canonical English string used for cart/Stripe/dedup
+// keys — this only translates the handful of English words inside it
+// ("For Her"/"For Him"/"each") for display, without changing the stored value.
+export function translateSize(size: string, locale: Locale): string {
+  if (locale === "en") return size;
+  return size
+    .replace("For Her", "Para Ella")
+    .replace("For Him", "Para Él")
+    .replace("each", "c/u");
+}
 
 const UNSPLASH = (id: string, w = 800, h = 900) =>
   `https://images.unsplash.com/photo-${id}?w=${w}&h=${h}&q=90&auto=format&fit=crop`;
@@ -78,7 +97,7 @@ export const products: Product[] = [
       es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha. Termina pasando el rodillo de jade incluido sobre tu rostro para un efecto refrescante extra.",
     },
     reviews: [
-      { text: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", author: "Jayden", location: "Stillwater, OK" },
+      { text: { en: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", es: "Honestamente, lo que más me gusta es lo honesta que es la fórmula: solo tallow y jojoba, sin ingredientes raros escondidos — se agradece esa transparencia." }, author: "Jayden", location: "Stillwater, OK" },
     ],
   },
   {
@@ -116,7 +135,7 @@ export const products: Product[] = [
       es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha. Termina pasando el rodillo de jade incluido sobre tu rostro para un efecto refrescante extra.",
     },
     reviews: [
-      { text: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", author: "Jayden", location: "Stillwater, OK" },
+      { text: { en: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", es: "Honestamente, lo que más me gusta es lo honesta que es la fórmula: solo tallow y jojoba, sin ingredientes raros escondidos — se agradece esa transparencia." }, author: "Jayden", location: "Stillwater, OK" },
     ],
   },
   {
@@ -154,7 +173,7 @@ export const products: Product[] = [
       es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha. Termina pasando el rodillo de jade incluido sobre tu rostro para un efecto refrescante extra.",
     },
     reviews: [
-      { text: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", author: "Jayden", location: "Stillwater, OK" },
+      { text: { en: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", es: "Honestamente, lo que más me gusta es lo honesta que es la fórmula: solo tallow y jojoba, sin ingredientes raros escondidos — se agradece esa transparencia." }, author: "Jayden", location: "Stillwater, OK" },
     ],
   },
   {
@@ -195,7 +214,7 @@ export const products: Product[] = [
       es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha. Termina pasando el rodillo de jade incluido sobre tu rostro para un efecto refrescante extra.",
     },
     reviews: [
-      { text: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", author: "Jayden", location: "Stillwater, OK" },
+      { text: { en: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", es: "Honestamente, lo que más me gusta es lo honesta que es la fórmula: solo tallow y jojoba, sin ingredientes raros escondidos — se agradece esa transparencia." }, author: "Jayden", location: "Stillwater, OK" },
     ],
   },
   {
@@ -233,7 +252,7 @@ export const products: Product[] = [
       es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha. Termina pasando el rodillo de jade incluido sobre tu rostro para un efecto refrescante extra.",
     },
     reviews: [
-      { text: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", author: "Jayden", location: "Stillwater, OK" },
+      { text: { en: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", es: "Honestamente, lo que más me gusta es lo honesta que es la fórmula: solo tallow y jojoba, sin ingredientes raros escondidos — se agradece esa transparencia." }, author: "Jayden", location: "Stillwater, OK" },
     ],
   },
   {
@@ -271,7 +290,7 @@ export const products: Product[] = [
       es: "Calienta una pequeña cantidad entre tus palmas y masajea sobre piel limpia y seca — rostro o cuerpo. Se aplica mejor justo después de la ducha. Termina pasando el rodillo de jade incluido sobre tu rostro para un efecto refrescante extra.",
     },
     reviews: [
-      { text: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", author: "Jayden", location: "Stillwater, OK" },
+      { text: { en: "Honestly, what I like most is how honest the formula is: just tallow and jojoba, no weird hidden ingredients — that transparency is appreciated.", es: "Honestamente, lo que más me gusta es lo honesta que es la fórmula: solo tallow y jojoba, sin ingredientes raros escondidos — se agradece esa transparencia." }, author: "Jayden", location: "Stillwater, OK" },
     ],
   },
   {
@@ -308,8 +327,8 @@ export const products: Product[] = [
       es: "Masajea una pequeña cantidad en la zona de interés 1–2 veces al día. Solo para uso externo.",
     },
     reviews: [
-      { text: "This salve is practical, whipped-texture and fast-absorbing, easy to apply on joints or muscles.", author: "Cheyenne", location: "Jackson Township, MO" },
-      { text: "It's a simple combination of tallow, jojoba, and comfrey (\"knitbone\") extract, unscented, good for sensitive skin.", author: "Luna", location: "Ord, NE" },
+      { text: { en: "This salve is practical, whipped-texture and fast-absorbing, easy to apply on joints or muscles.", es: "Este bálsamo es práctico, de textura batida y absorción rápida, fácil de aplicar en articulaciones o músculos." }, author: "Cheyenne", location: "Jackson Township, MO" },
+      { text: { en: "It's a simple combination of tallow, jojoba, and comfrey (\"knitbone\") extract, unscented, good for sensitive skin.", es: "Es una combinación simple de tallow, jojoba y extracto de consuelda (\"knitbone\"), sin fragancia, buena para pieles sensibles." }, author: "Luna", location: "Ord, NE" },
     ],
   },
   {
@@ -346,7 +365,7 @@ export const products: Product[] = [
       es: "Masajea una pequeña cantidad en la zona de interés 1–2 veces al día. Solo para uso externo.",
     },
     reviews: [
-      { text: "This salve is practical, whipped-texture and fast-absorbing, easy to apply on joints or muscles.", author: "Cheyenne", location: "Jackson Township, MO" },
+      { text: { en: "This salve is practical, whipped-texture and fast-absorbing, easy to apply on joints or muscles.", es: "Este bálsamo es práctico, de textura batida y absorción rápida, fácil de aplicar en articulaciones o músculos." }, author: "Cheyenne", location: "Jackson Township, MO" },
     ],
   },
   {
@@ -383,7 +402,7 @@ export const products: Product[] = [
       es: "Masajea una pequeña cantidad en la zona de interés 1–2 veces al día. Solo para uso externo.",
     },
     reviews: [
-      { text: "This salve is practical, whipped-texture and fast-absorbing, easy to apply on joints or muscles.", author: "Cheyenne", location: "Jackson Township, MO" },
+      { text: { en: "This salve is practical, whipped-texture and fast-absorbing, easy to apply on joints or muscles.", es: "Este bálsamo es práctico, de textura batida y absorción rápida, fácil de aplicar en articulaciones o músculos." }, author: "Cheyenne", location: "Jackson Township, MO" },
     ],
   },
   {
@@ -421,8 +440,8 @@ export const products: Product[] = [
       es: "Masajea una pequeña cantidad en la zona de interés 1–2 veces al día. Solo para uso externo.",
     },
     reviews: [
-      { text: "This salve is practical, whipped-texture and fast-absorbing, easy to apply on joints or muscles.", author: "Cheyenne", location: "Jackson Township, MO" },
-      { text: "It's a simple combination of tallow, jojoba, and comfrey (\"knitbone\") extract, unscented, good for sensitive skin.", author: "Luna", location: "Ord, NE" },
+      { text: { en: "This salve is practical, whipped-texture and fast-absorbing, easy to apply on joints or muscles.", es: "Este bálsamo es práctico, de textura batida y absorción rápida, fácil de aplicar en articulaciones o músculos." }, author: "Cheyenne", location: "Jackson Township, MO" },
+      { text: { en: "It's a simple combination of tallow, jojoba, and comfrey (\"knitbone\") extract, unscented, good for sensitive skin.", es: "Es una combinación simple de tallow, jojoba y extracto de consuelda (\"knitbone\"), sin fragancia, buena para pieles sensibles." }, author: "Luna", location: "Ord, NE" },
     ],
   },
   {
@@ -459,7 +478,7 @@ export const products: Product[] = [
       es: "Masajea una pequeña cantidad en la zona de interés 1–2 veces al día. Solo para uso externo.",
     },
     reviews: [
-      { text: "This salve is practical, whipped-texture and fast-absorbing, easy to apply on joints or muscles.", author: "Cheyenne", location: "Jackson Township, MO" },
+      { text: { en: "This salve is practical, whipped-texture and fast-absorbing, easy to apply on joints or muscles.", es: "Este bálsamo es práctico, de textura batida y absorción rápida, fácil de aplicar en articulaciones o músculos." }, author: "Cheyenne", location: "Jackson Township, MO" },
     ],
   },
   {
@@ -496,7 +515,7 @@ export const products: Product[] = [
       es: "Masajea una pequeña cantidad en la zona de interés 1–2 veces al día. Solo para uso externo.",
     },
     reviews: [
-      { text: "This salve is practical, whipped-texture and fast-absorbing, easy to apply on joints or muscles.", author: "Cheyenne", location: "Jackson Township, MO" },
+      { text: { en: "This salve is practical, whipped-texture and fast-absorbing, easy to apply on joints or muscles.", es: "Este bálsamo es práctico, de textura batida y absorción rápida, fácil de aplicar en articulaciones o músculos." }, author: "Cheyenne", location: "Jackson Township, MO" },
     ],
   },
   {
@@ -628,9 +647,9 @@ export const products: Product[] = [
       es: "Vacía una bolsa en un bebedero limpio y agrega 8 tazas de agua. Revuelve hasta disolver. Cambia cada 3–4 días.",
     },
     reviews: [
-      { text: "Just two ingredients, organic cane sugar and water, no additives or dyes.", author: "Amy", location: "Hetford County, NC" },
-      { text: "Dissolves instantly, good yield, no need to boil water.", author: "Joshua", location: "San Bernardino, CA" },
-      { text: "Shipping is calculated separately at checkout, not included in the listed price.", author: "River", location: "Bend, OR" },
+      { text: { en: "Just two ingredients, organic cane sugar and water, no additives or dyes.", es: "Solo dos ingredientes, azúcar de caña orgánica y agua, sin aditivos ni colorantes." }, author: "Amy", location: "Hetford County, NC" },
+      { text: { en: "Dissolves instantly, good yield, no need to boil water.", es: "Se disuelve al instante, buen rendimiento, no hace falta hervir agua." }, author: "Joshua", location: "San Bernardino, CA" },
+      { text: { en: "Shipping is calculated separately at checkout, not included in the listed price.", es: "El envío se calcula por separado en el checkout, no está incluido en el precio listado." }, author: "River", location: "Bend, OR" },
     ],
   },
   {
@@ -664,9 +683,9 @@ export const products: Product[] = [
       es: "Usar estrictamente según la etiqueta del producto. Consulta a un profesional de salud antes de usar.",
     },
     reviews: [
-      { text: "Pharmaceutical USP grade, no formaldehyde or alcohol, which is a serious quality standard.", author: "Sedona", location: "Sandford, ME" },
-      { text: "The label recommends consulting a doctor before use, which is a good thing given the nature of the product.", author: "Orion", location: "Oak Hill, WV" },
-      { text: "It's a delicate substance that can interact with medications like antidepressants, so it's not something to take lightly.", author: "Mason", location: "Seymour, IN" },
+      { text: { en: "Pharmaceutical USP grade, no formaldehyde or alcohol, which is a serious quality standard.", es: "Grado USP farmacéutico, sin formaldehído ni alcohol, lo cual es un estándar serio de calidad." }, author: "Sedona", location: "Sandford, ME" },
+      { text: { en: "The label recommends consulting a doctor before use, which is a good thing given the nature of the product.", es: "La etiqueta recomienda consultar a un médico antes de usarlo, algo positivo dada la naturaleza del producto." }, author: "Orion", location: "Oak Hill, WV" },
+      { text: { en: "It's a delicate substance that can interact with medications like antidepressants, so it's not something to take lightly.", es: "Es una sustancia delicada que puede interactuar con medicamentos como antidepresivos, así que no es para tomarla a la ligera." }, author: "Mason", location: "Seymour, IN" },
     ],
   },
 ];

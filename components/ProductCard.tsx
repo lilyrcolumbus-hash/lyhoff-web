@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { type Product } from "@/lib/products";
+import { type Product, translateSize } from "@/lib/products";
 import { useCartStore } from "@/lib/cart-store";
 import { t, type Locale } from "@/lib/i18n";
 import { TiltImage } from "@/components/TiltImage";
@@ -77,7 +77,7 @@ export function ProductCard({
       {/* Content */}
       <div className="flex flex-col flex-1 p-6">
         <p className="text-[10px] font-semibold uppercase tracking-widest text-earth-600 mb-2">
-          {product.size}
+          {translateSize(product.size, locale)}
         </p>
         <h3 className="font-display text-lg font-bold text-forest-950 leading-tight">
           <Link href={`/${locale}/products/${product.slug}/`} className="hover:underline">

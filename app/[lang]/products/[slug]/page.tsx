@@ -9,6 +9,8 @@ import {
   getSizeVariants,
   products,
   productsByCategory,
+  SCENT_LABELS,
+  translateSize,
 } from "@/lib/products";
 import { getProductImageUrl, getProductImageUrls } from "@/lib/product-images";
 import { ProductCard } from "@/components/ProductCard";
@@ -112,7 +114,7 @@ export default async function ProductDetailPage({
         {/* Info */}
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-widest text-earth-600 mb-2">
-            {product.size}
+            {translateSize(product.size, locale)}
           </p>
           <div className="mb-3 flex flex-wrap gap-2">
             {badge && (
@@ -157,7 +159,7 @@ export default async function ProductDetailPage({
                         : "border-stone-300 text-forest-950 hover:border-forest-500"
                     }`}
                   >
-                    {v.size}
+                    {translateSize(v.size, locale)}
                   </Link>
                 ))}
               </div>
@@ -180,7 +182,7 @@ export default async function ProductDetailPage({
                         : "border-stone-300 text-forest-950 hover:border-forest-500"
                     }`}
                   >
-                    {v.scent}
+                    {v.scent ? (SCENT_LABELS[v.scent]?.[locale] ?? v.scent) : v.scent}
                   </Link>
                 ))}
               </div>
@@ -259,7 +261,7 @@ export default async function ProductDetailPage({
             <div className="grid gap-6 sm:grid-cols-3">
               {product.reviews.map((r, i) => (
                 <blockquote key={i} className="bg-cream/60 backdrop-blur-xl border border-stone-200 p-5">
-                  <p className="text-sm text-stone-700 leading-relaxed">&ldquo;{r.text}&rdquo;</p>
+                  <p className="text-sm text-stone-700 leading-relaxed">&ldquo;{r.text[locale]}&rdquo;</p>
                   <footer className="mt-3 text-xs font-medium text-stone-400">
                     {r.author}, {r.location}
                   </footer>

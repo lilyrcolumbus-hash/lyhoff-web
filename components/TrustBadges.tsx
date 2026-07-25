@@ -40,8 +40,8 @@ const items: {
     icon: Hand,
     label: { en: "30-day guarantee", es: "Garantía de 30 días" },
     desc: {
-      en: "Not happy? Full refund, no hassle.",
-      es: "¿No te convenció? Reembolso completo, sin vueltas.",
+      en: "Unopened returns within 30 days. If something's not right, email us and we'll make it right.",
+      es: "Devoluciones sin abrir dentro de 30 días. Si algo no te funciona, escríbenos y lo resolvemos.",
     },
     href: "/shipping-returns/",
   },
