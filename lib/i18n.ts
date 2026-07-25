@@ -47,7 +47,7 @@ export const categories: Category[] = [
   {
     slug: "lab",
     emoji: "🧪",
-    label: { en: "The Lab", es: "El Laboratorio" },
+    label: { en: "Wellness", es: "Salud" },
     blurb: {
       en: "Precision formulas from HOFF, made in our own certified lab.",
       es: "Fórmulas de precisión de HOFF, hechas en nuestro propio laboratorio certificado.",
