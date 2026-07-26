@@ -29,7 +29,7 @@ const copy: Record<Locale, { title: string; body: string[] }> = {
     body: [
       "Most store shelves are full of products with ingredients you can't pronounce — synthetic fillers, fragrances, preservatives nobody asked for. We got tired of trusting labels we couldn't understand, so we started making our own.",
       "It started small — a garden, a few jars, ingredients we could actually explain to each other. As we grew more of what we needed ourselves, we built our own certified lab to process it properly, with the same care and precision as any professional formulator — just none of the shortcuts. No synthetic fillers. No ingredients we can't pronounce. Just nature, handled with real equipment and real standards.",
-      "We started this for our own family, for the same reason you're probably reading this now — wanting something real for the people you love, without having to guess what's actually inside.",
+      "Everything on supermarket shelves today is packed with synthetic ingredients — dozens of them, sometimes hundreds, in a single bottle. None of it actually solves the problem it claims to. It solves the company's problem: cheaper to make, longer to sit on a shelf, more profit per bottle. We wanted to live differently — fewer ingredients, all of them real, all of them things we understand. Sometimes less really is more.",
       "Every formula is small-batch, and every one of them we use on ourselves first, every day, before it ever reaches a jar for sale.",
     ],
   },
@@ -38,7 +38,7 @@ const copy: Record<Locale, { title: string; body: string[] }> = {
     body: [
       "La mayoría de los productos de tienda están llenos de ingredientes que no podés pronunciar — rellenos sintéticos, fragancias, conservantes que nadie pidió. Nos cansamos de confiar en etiquetas que no entendíamos, así que empezamos a hacer los nuestros.",
       "Empezó pequeño — un huerto, unos cuantos frascos, ingredientes que de verdad podíamos explicarnos el uno al otro. A medida que cultivábamos más de lo que necesitábamos, construimos nuestro propio laboratorio certificado para procesarlo como corresponde, con el mismo cuidado y precisión que cualquier formulador profesional — solo que sin atajos. Sin rellenos sintéticos. Sin ingredientes que no podamos pronunciar. Solo naturaleza, tratada con equipo real y estándares reales.",
-      "Empezamos esto por nuestra propia familia, por la misma razón por la que probablemente estás leyendo esto ahora — queriendo algo real para la gente que querés, sin tener que adivinar qué hay realmente adentro.",
+      "Todo lo que se vende hoy en los supermercados está lleno de ingredientes sintéticos — decenas, a veces cientos, en un solo frasco. Nada de eso resuelve de verdad el problema que promete resolver. Resuelve el problema de la empresa: más barato de fabricar, más tiempo en el estante, más ganancia por frasco. Nosotros quisimos vivir distinto — menos ingredientes, todos reales, todos algo que entendemos. A veces menos es más.",
       "Cada fórmula es en pequeños lotes, y cada una la usamos nosotros primero, a diario, antes de que llegue a un frasco a la venta.",
     ],
   },
