@@ -28,7 +28,8 @@ const copy: Record<Locale, { title: string; body: string[] }> = {
     title: "About LYHOFF",
     body: [
       "Most store shelves are full of products with ingredients you can't pronounce — synthetic fillers, fragrances, preservatives nobody asked for. We got tired of trusting labels we couldn't understand, so we started making our own.",
-      "We're a bilingual couple who grow much of what we use ourselves — then process that harvest in our own certified laboratory, with the same care and precision as any professional formulator. The difference is what we leave out: no synthetic fillers, no shortcuts, no ingredients we can't pronounce. Just nature, handled with real equipment and real standards.",
+      "It started small — a garden, a few jars, ingredients we could actually explain to each other. As we grew more of what we needed ourselves, we built our own certified lab to process it properly, with the same care and precision as any professional formulator — just none of the shortcuts. No synthetic fillers. No ingredients we can't pronounce. Just nature, handled with real equipment and real standards.",
+      "We started this for our own family, for the same reason you're probably reading this now — wanting something real for the people you love, without having to guess what's actually inside.",
       "Every formula is small-batch, and every one of them we use on ourselves first, every day, before it ever reaches a jar for sale.",
     ],
   },
@@ -36,7 +37,8 @@ const copy: Record<Locale, { title: string; body: string[] }> = {
     title: "Sobre LYHOFF",
     body: [
       "La mayoría de los productos de tienda están llenos de ingredientes que no podés pronunciar — rellenos sintéticos, fragancias, conservantes que nadie pidió. Nos cansamos de confiar en etiquetas que no entendíamos, así que empezamos a hacer los nuestros.",
-      "Somos una pareja bilingüe que cultiva gran parte de lo que usa — y procesa esa cosecha en nuestro propio laboratorio certificado, con el mismo cuidado y precisión que cualquier formulador profesional. La diferencia está en lo que dejamos afuera: sin rellenos sintéticos, sin atajos, sin ingredientes que no podamos pronunciar. Solo naturaleza, tratada con equipo real y estándares reales.",
+      "Empezó pequeño — un huerto, unos cuantos frascos, ingredientes que de verdad podíamos explicarnos el uno al otro. A medida que cultivábamos más de lo que necesitábamos, construimos nuestro propio laboratorio certificado para procesarlo como corresponde, con el mismo cuidado y precisión que cualquier formulador profesional — solo que sin atajos. Sin rellenos sintéticos. Sin ingredientes que no podamos pronunciar. Solo naturaleza, tratada con equipo real y estándares reales.",
+      "Empezamos esto por nuestra propia familia, por la misma razón por la que probablemente estás leyendo esto ahora — queriendo algo real para la gente que querés, sin tener que adivinar qué hay realmente adentro.",
       "Cada fórmula es en pequeños lotes, y cada una la usamos nosotros primero, a diario, antes de que llegue a un frasco a la venta.",
     ],
   },
