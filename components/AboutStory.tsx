@@ -81,11 +81,11 @@ export function AboutStoryClosing({
   const values = [
     {
       icon: Leaf,
-      label: locale === "en" ? "Simple ingredients" : "Ingredientes simples",
+      label: locale === "en" ? "Ingredients we choose carefully" : "Ingredientes elegidos con cuidado",
       desc:
         locale === "en"
-          ? "A handful of real ingredients, never dozens of synthetic ones."
-          : "Un puñado de ingredientes reales, nunca decenas de sintéticos.",
+          ? "We're our own first test, so every ingredient has to earn its place before it goes in a jar."
+          : "Somos nuestra propia primera prueba, así que cada ingrediente se gana su lugar antes de entrar en un frasco.",
     },
     {
       icon: Droplet,
