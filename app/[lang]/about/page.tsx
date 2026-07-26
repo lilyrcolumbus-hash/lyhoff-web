@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 import { isLocale, t, type Locale } from "@/lib/i18n";
 import { Newsletter } from "@/components/Newsletter";
 import { StockPhoto } from "@/components/StockPhoto";
-import { StockVideo } from "@/components/StockVideo";
 import { FullBleedVideo } from "@/components/FullBleedVideo";
+import { AboutStoryRows, AboutStoryClosing } from "@/components/AboutStory";
 import { Blob } from "@/components/illustrations";
 
 export async function generateMetadata({
@@ -69,10 +69,9 @@ export default async function AboutPage({
             alt={locale === "en" ? "Hands in the garden" : "Manos en el huerto"}
           />
         </div>
-        <div className="prose-sg mt-8">
-          {c.body.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
+
+        <div className="mt-16">
+          <AboutStoryRows locale={locale} paragraphs={[c.body[0], c.body[1]]} />
         </div>
       </div>
 
@@ -91,17 +90,10 @@ export default async function AboutPage({
         }
       />
 
-      <div className="mx-auto max-w-3xl px-4 py-12">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <StockPhoto
-            ratio="square"
-            rounded
-            src="https://images.unsplash.com/photo-1709666414115-47ecd5143293?w=600&h=600&q=80&auto=format&fit=crop"
-            alt={locale === "en" ? "Bottled and labeled in small batches" : "Envasado y etiquetado en pequeños lotes"}
-          />
-          <StockVideo ratio="square" rounded src="/videos/soil.mp4" />
-        </div>
-        <section className="mt-12">
+      <div className="mx-auto max-w-3xl px-4 py-16">
+        <AboutStoryClosing locale={locale} paragraphs={[c.body[2], c.body[3]]} />
+
+        <section className="mt-20">
           <Newsletter locale={locale} variant="panel" />
         </section>
       </div>
