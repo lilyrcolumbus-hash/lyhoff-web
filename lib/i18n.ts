@@ -107,9 +107,9 @@ type Dict = {
 export const dictionary: Record<Locale, Dict> = {
   en: {
     tagline: "Pure. Natural. Chemical-free.",
-    heroTitle: "Naturally grown, thoughtfully made",
+    heroTitle: "Nothing synthetic. Nothing to hide.",
     heroSubtitle:
-      "Organic, plant-based ingredients — grown with care, processed in our own certified lab. Real ingredients, real quality control, nothing artificial.",
+      "The confidence of knowing exactly what's in every jar — grown with care, made in our own certified lab, tested on ourselves before anyone else.",
     heroCta: "Join the list",
     featured: "Start here",
     browseByTopic: "Browse by topic",
@@ -152,9 +152,9 @@ export const dictionary: Record<Locale, Dict> = {
   },
   es: {
     tagline: "Puro. Natural. Sin químicos.",
-    heroTitle: "Cultivado al natural, hecho con cuidado",
+    heroTitle: "Nada sintético. Nada que ocultar.",
     heroSubtitle:
-      "Ingredientes orgánicos, a base de plantas — cultivados con cuidado, procesados en nuestro propio laboratorio certificado. Ingredientes reales, control de calidad real, nada artificial.",
+      "La tranquilidad de saber exactamente qué hay en cada frasco — cultivado con cuidado, hecho en nuestro propio laboratorio certificado, probado en nosotros antes que en nadie más.",
     heroCta: "Únete a la lista",
     featured: "Empieza aquí",
     browseByTopic: "Explorar por tema",
