@@ -10,6 +10,7 @@ import { StockVideo } from "@/components/StockVideo";
 import { FullBleedVideo } from "@/components/FullBleedVideo";
 import { TrustBadges } from "@/components/TrustBadges";
 import { CategoryTiles } from "@/components/CategoryTiles";
+import { QuizBanner } from "@/components/QuizBanner";
 import { Newsletter } from "@/components/Newsletter";
 import { WaveDivider, Leaf } from "@/components/illustrations";
 import { HeroText } from "@/components/HeroText";
@@ -87,6 +88,8 @@ export default async function HomePage({
       {/* Divider */}
       <WaveDivider className="bg-white py-6" />
 
+      <QuizBanner locale={locale} />
+
       {/* Featured Products */}
       {featuredProducts.length > 0 && (
         <>
@@ -96,20 +99,12 @@ export default async function HomePage({
                 <h2 className="font-display text-xs font-semibold uppercase tracking-[0.25em] text-stone-400">
                   {dict.featuredProducts}
                 </h2>
-                <div className="flex items-center gap-5">
-                  <Link
-                    href={`/${locale}/quiz/`}
-                    className="text-xs font-medium text-earth-700 hover:underline"
-                  >
-                    {locale === "en" ? "Not sure? Take the quiz" : "¿No sabes? Haz el quiz"}
-                  </Link>
-                  <Link
-                    href={`/${locale}/products/`}
-                    className="text-xs font-medium text-forest-700 hover:underline"
-                  >
-                    {dict.shopAll} →
-                  </Link>
-                </div>
+                <Link
+                  href={`/${locale}/products/`}
+                  className="text-xs font-medium text-forest-700 hover:underline"
+                >
+                  {dict.shopAll} →
+                </Link>
               </div>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {featuredProducts.map((product, i) => {

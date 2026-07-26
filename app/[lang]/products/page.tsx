@@ -6,6 +6,7 @@ import { dedupeVariants, productsByCategory } from "@/lib/products";
 import { getProductImageUrl } from "@/lib/product-images";
 import { ProductCard } from "@/components/ProductCard";
 import { FullBleedVideo } from "@/components/FullBleedVideo";
+import { QuizBanner } from "@/components/QuizBanner";
 
 export async function generateMetadata({
   params,
@@ -86,15 +87,9 @@ export default async function ProductsPage({
             ? `${uniqueProductCount} products, shipped by us`
             : `${uniqueProductCount} productos, enviados por nosotros`}
         </p>
-        <Link
-          href={`/${locale}/quiz/`}
-          className="mt-6 inline-flex items-center rounded-sm border border-earth-400 px-6 py-2.5 text-xs font-semibold text-earth-700 transition hover:bg-earth-50"
-        >
-          {locale === "en" ? "Not sure where to start? Take the quiz →" : "¿No sabes por dónde empezar? Haz el quiz →"}
-        </Link>
       </div>
 
-      <div className="border-t border-stone-200" />
+      <QuizBanner locale={locale} />
 
       <FullBleedVideo
         src="/videos/bottling.mp4"
