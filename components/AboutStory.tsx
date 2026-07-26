@@ -97,7 +97,7 @@ export function AboutStoryClosing({
     },
     {
       icon: Jar,
-      label: locale === "en" ? "Our own certified lab" : "Laboratorio propio certificado",
+      label: locale === "en" ? "Our own professional lab" : "Laboratorio propio profesional",
       desc:
         locale === "en"
           ? "Real equipment, real standards — not a kitchen shortcut."

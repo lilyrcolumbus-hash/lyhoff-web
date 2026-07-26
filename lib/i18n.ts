@@ -49,8 +49,8 @@ export const categories: Category[] = [
     emoji: "🧪",
     label: { en: "Wellness", es: "Salud" },
     blurb: {
-      en: "Precision formulas from HOFF, made in our own certified lab.",
-      es: "Fórmulas de precisión de HOFF, hechas en nuestro propio laboratorio certificado.",
+      en: "Precision formulas from HOFF, made in our own professional lab.",
+      es: "Fórmulas de precisión de HOFF, hechas en nuestro propio laboratorio profesional.",
     },
   },
 ];
@@ -109,7 +109,7 @@ export const dictionary: Record<Locale, Dict> = {
     tagline: "Pure. Natural. Chemical-free.",
     heroTitle: "Nothing synthetic. Nothing to hide.",
     heroSubtitle:
-      "The confidence of knowing exactly what's in every jar — grown with care, made in our own certified lab, tested on ourselves before anyone else.",
+      "The confidence of knowing exactly what's in every jar — grown with care, made in our own professional lab, tested on ourselves before anyone else.",
     heroCta: "Join the list",
     featured: "Start here",
     browseByTopic: "Browse by topic",
@@ -154,7 +154,7 @@ export const dictionary: Record<Locale, Dict> = {
     tagline: "Puro. Natural. Sin químicos.",
     heroTitle: "Nada sintético. Nada que ocultar.",
     heroSubtitle:
-      "La tranquilidad de saber exactamente qué hay en cada frasco — cultivado con cuidado, hecho en nuestro propio laboratorio certificado, probado en nosotros antes que en nadie más.",
+      "La tranquilidad de saber exactamente qué hay en cada frasco — cultivado con cuidado, hecho en nuestro propio laboratorio profesional, probado en nosotros antes que en nadie más.",
     heroCta: "Únete a la lista",
     featured: "Empieza aquí",
     browseByTopic: "Explorar por tema",

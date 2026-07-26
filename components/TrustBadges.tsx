@@ -14,7 +14,7 @@ const items: {
 }[] = [
   {
     icon: Jar,
-    label: { en: "Our own certified lab", es: "Laboratorio propio certificado" },
+    label: { en: "Our own professional lab", es: "Laboratorio propio profesional" },
     desc: {
       en: "Real equipment, real standards — not a kitchen recipe.",
       es: "Equipo real, estándares reales — no una receta de cocina.",
