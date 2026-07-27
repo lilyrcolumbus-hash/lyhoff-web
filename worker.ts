@@ -39,8 +39,8 @@ interface Env {
 
 // Public-safe defaults (same anon key already shipped in the sibling apps'
 // client bundles). Overridable via Worker env vars if you ever rotate them.
-const DEFAULT_SUPABASE_URL = "https://xgprfrckkziglufsxyfm.supabase.co";
-const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhncHJmcmNra3ppZ2x1ZnN4eWZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1ODM0MDcsImV4cCI6MjA5NDE1OTQwN30.j6xgkfyboWbLzOdH-AGZqI-MqbwVJRn4LBLgG55tc4Y";
+const DEFAULT_SUPABASE_URL = "https://egxtilwjhfhohrhcjgbe.supabase.co";
+const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVneHRpbHdqaGZob2hyaGNqZ2JlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxODYzODgsImV4cCI6MjEwMDc2MjM4OH0.Q9SATTl0QmaAX0NrpxntyD3rWSu8tZ258b492v0Sp9w";
 
 const json = (data: unknown, status = 200) =>
   new Response(JSON.stringify(data), {
