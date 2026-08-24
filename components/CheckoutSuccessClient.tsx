@@ -5,12 +5,14 @@ import Link from "next/link";
 import { useCartStore } from "@/lib/cart-store";
 import { type Locale } from "@/lib/i18n";
 import { Leaf } from "@/components/illustrations";
+import { WELCOME_CODE_STORAGE_KEY } from "@/lib/checkout";
 
 export function CheckoutSuccessClient({ locale }: { locale: Locale }) {
   const clearCart = useCartStore((s) => s.clearCart);
 
   useEffect(() => {
     clearCart();
+    localStorage.removeItem(WELCOME_CODE_STORAGE_KEY);
   }, [clearCart]);
 
   return (

@@ -3,14 +3,25 @@
 import type { CartItem } from "@/lib/cart-store";
 import type { Locale } from "@/lib/i18n";
 
+// Both known codes share this one slot — a customer only ever has one
+// applicable code at a time (first-order welcome, or a later returning-
+// customer code from a thank-you card), and the checkout only ever pre-applies
+// whichever was written here last.
+export const WELCOME_CODE_STORAGE_KEY = "lyhoff-welcome-code";
+export const WELCOME_CODE = "WELCOME10";
+export const RETURNING_CODE = "THANKYOU15";
+
 /** POSTs the cart to the Worker's /api/checkout and redirects to Stripe Checkout. */
 export async function startCheckout(items: CartItem[], locale: Locale): Promise<void> {
+  const promoCode = localStorage.getItem(WELCOME_CODE_STORAGE_KEY) || undefined;
+
   const res = await fetch("/api/checkout", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       items: items.map((i) => ({ slug: i.slug, quantity: i.quantity })),
       locale,
+      promoCode,
     }),
   });
 

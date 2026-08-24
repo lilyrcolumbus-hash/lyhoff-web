@@ -83,7 +83,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
                         <button
                           type="button"
                           onClick={() => updateQty(item.slug, item.quantity - 1)}
-                          className="h-6 w-6 rounded-full border border-stone-300 text-xs text-forest-950 hover:border-forest-500"
+                          className="h-6 w-6 rounded-full border border-stone-300 text-xs text-forest-950 hover:border-indigo-400"
                           aria-label="-"
                         >
                           −
@@ -92,7 +92,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
                         <button
                           type="button"
                           onClick={() => updateQty(item.slug, item.quantity + 1)}
-                          className="h-6 w-6 rounded-full border border-stone-300 text-xs text-forest-950 hover:border-forest-500"
+                          className="h-6 w-6 rounded-full border border-stone-300 text-xs text-forest-950 hover:border-indigo-400"
                           aria-label="+"
                         >
                           +
@@ -138,7 +138,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
             >
               {checkingOut ? dict.cartCheckingOut : dict.cartCheckout}
             </button>
-            {error && <p className="mt-3 text-xs text-earth-700">{dict.cartError}</p>}
+            {error && <p className="mt-3 text-xs text-clay-600">{dict.cartError}</p>}
           </div>
         )}
           </motion.div>

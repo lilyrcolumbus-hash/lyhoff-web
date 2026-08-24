@@ -11,6 +11,12 @@
     "directory": "./out",
     "binding": "ASSETS",
     "html_handling": "auto-trailing-slash",
-    "not_found_handling": "404-page"
+    "not_found_handling": "404-page",
+    // Without this, Cloudflare's asset router answers browser NAVIGATION
+    // requests itself (Sec-Fetch-Mode: navigate) and serves the 404 page before
+    // worker.ts ever sees them. fetch()/XHR calls fall through fine, which is
+    // why every /api route appeared to work while a link clicked out of an
+    // email 404'd. Anything under /api must reach the Worker first.
+    "run_worker_first": ["/api/*"]
   }
 }

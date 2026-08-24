@@ -3,14 +3,10 @@
 import { useEffect, useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import { Leaf } from "@/components/illustrations";
+import { WELCOME_CODE, WELCOME_CODE_STORAGE_KEY } from "@/lib/checkout";
 
 const STORAGE_KEY = "lyhoff-welcome-seen";
-// Owner action: create a matching promotion code named WELCOME10 in the Stripe
-// dashboard (Products → Coupons → +New, then add a promotion code "WELCOME10")
-// with whatever discount you want to actually honor. Checkout already accepts
-// promo codes (allow_promotion_codes: true in worker.ts) — this just needs the
-// code to exist on Stripe's side to actually work.
-const CODE = "WELCOME10";
+const CODE = WELCOME_CODE;
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -38,10 +34,13 @@ export function WelcomePopup({ locale }: { locale: Locale }) {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, locale }),
+        body: JSON.stringify({ email, locale, source: "popup" }),
       });
       setStatus(res.ok ? "success" : "error");
-      if (res.ok) localStorage.setItem(STORAGE_KEY, "1");
+      if (res.ok) {
+        localStorage.setItem(STORAGE_KEY, "1");
+        localStorage.setItem(WELCOME_CODE_STORAGE_KEY, CODE);
+      }
     } catch {
       setStatus("error");
     }
@@ -96,7 +95,7 @@ export function WelcomePopup({ locale }: { locale: Locale }) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={locale === "en" ? "you@email.com" : "tu@correo.com"}
-                className="rounded-sm border border-stone-300 bg-white px-5 py-3 text-sm text-ink outline-none focus:border-forest-500"
+                className="rounded-sm border border-stone-300 bg-white px-5 py-3 text-sm text-ink outline-none focus:border-indigo-500"
               />
               <button
                 type="submit"
@@ -113,7 +112,7 @@ export function WelcomePopup({ locale }: { locale: Locale }) {
               </button>
             </form>
             {status === "error" && (
-              <p className="mt-3 text-xs text-earth-700">
+              <p className="mt-3 text-xs text-clay-600">
                 {locale === "en" ? "Something went wrong. Please try again." : "Algo salió mal. Inténtalo de nuevo."}
               </p>
             )}

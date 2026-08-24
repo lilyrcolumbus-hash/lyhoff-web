@@ -1,4 +1,5 @@
 export { Leaf } from "./Leaf";
+export { LogoMark } from "./LogoMark";
 export { Droplet } from "./Droplet";
 export { Jar } from "./Jar";
 export { Flask } from "./Flask";

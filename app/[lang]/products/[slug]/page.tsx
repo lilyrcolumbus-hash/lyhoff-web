@@ -156,7 +156,7 @@ export default async function ProductDetailPage({
                     className={`rounded-sm border px-4 py-2 text-sm font-medium transition ${
                       v.size === product.size
                         ? "border-forest-950 bg-forest-950 text-cream"
-                        : "border-stone-300 text-forest-950 hover:border-forest-500"
+                        : "border-stone-300 text-forest-950 hover:border-indigo-400"
                     }`}
                   >
                     {translateSize(v.size, locale)}
@@ -179,7 +179,7 @@ export default async function ProductDetailPage({
                     className={`rounded-sm border px-4 py-2 text-sm font-medium transition ${
                       v.slug === product.slug
                         ? "border-forest-950 bg-forest-950 text-cream"
-                        : "border-stone-300 text-forest-950 hover:border-forest-500"
+                        : "border-stone-300 text-forest-950 hover:border-indigo-400"
                     }`}
                   >
                     {v.scent ? (SCENT_LABELS[v.scent]?.[locale] ?? v.scent) : v.scent}

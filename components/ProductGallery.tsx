@@ -53,7 +53,7 @@ export function ProductGallery({
               type="button"
               onClick={() => setActive(i)}
               className={`relative aspect-square overflow-hidden bg-stone-50 ring-1 transition ${
-                i === active ? "ring-forest-950" : "ring-transparent hover:ring-forest-500"
+                i === active ? "ring-forest-950" : "ring-transparent hover:ring-indigo-400"
               }`}
               aria-label={`${alt} ${i + 1}`}
               aria-current={i === active}
