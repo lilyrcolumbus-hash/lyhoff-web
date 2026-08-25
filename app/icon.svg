@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 130" width="130" height="130">
+  <!-- Cream ground rather than transparency: a favicon sits on browser chrome
+       that may be light or dark, and a transparent mark disappears on one of
+       them. -->
+  <rect width="130" height="130" fill="#fbfaf7"/>
+  <!-- Same frame as components/illustrations/LogoMark.tsx — gap centred on the
+       top edge, thick "rooted" bottom — but at 4x the stroke weight, because
+       the site's 1.4 hairline vanishes at 16px. -->
+  <path d="M72.5,10 L120,10 L120,120 L10,120 L10,10 L57.5,10"
+        fill="none" stroke="#1c1b17" stroke-width="5"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M10,120 L120,120"
+        fill="none" stroke="#1c1b17" stroke-width="11"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- LF drawn as shapes, not text: a favicon carries no webfont with it. -->
+  <g fill="#1c1b17">
+    <rect x="37" y="45" width="8" height="42"/>
+    <rect x="37" y="79" width="27" height="8"/>
+    <rect x="72" y="45" width="8" height="42"/>
+    <rect x="72" y="45" width="25" height="8"/>
+    <rect x="72" y="62" width="20" height="8"/>
+  </g>
+</svg>

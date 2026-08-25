@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { categories, t, type Locale } from "@/lib/i18n";
 import {
+  LogoMark,
   TikTokIcon,
   FacebookIcon,
   InstagramIcon,
@@ -27,7 +28,11 @@ export function Footer({ locale }: { locale: Locale }) {
       <div className="mx-auto max-w-6xl px-6 pt-14 pb-28">
         <div className="flex flex-col gap-10 md:flex-row md:justify-between">
           <div className="max-w-xs">
-            <div className="font-display text-2xl font-bold tracking-tight text-cream">
+            {/* The monogram signs off the page. Kept out of the header on
+                purpose — a mark and a wordmark competing in the same spot is
+                what makes a small brand look busy. */}
+            <LogoMark className="h-11 w-11 text-cream" textClassName="text-sm" />
+            <div className="mt-4 font-display text-2xl font-normal text-cream" style={{ letterSpacing: "0.18em" }}>
               LYHOFF
             </div>
             <p className="mt-3 text-sm text-stone-400 leading-relaxed">

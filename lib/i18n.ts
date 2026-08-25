@@ -202,7 +202,7 @@ export const t = (locale: Locale) => dictionary[locale];
 // Single source of truth for the production URL (used for SEO/canonical/sitemap).
 // Currently the Cloudflare Workers Static Assets URL; swap to the custom domain
 // (e.g. https://smartgrowth.farm) when it's connected.
-export const SITE_URL = "https://lyhoff-web.lilyrcolumbus.workers.dev";
+export const SITE_URL = "https://lyhoff.com";
 export const SITE_NAME = "LYHOFF";
 
 // Pinterest "Claim your website" verification. In Pinterest (business account) →

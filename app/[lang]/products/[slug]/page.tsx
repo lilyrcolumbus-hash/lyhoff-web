@@ -54,6 +54,18 @@ export async function generateMetadata({
       url: `${SITE_URL}/${locale}/products/${slug}/`,
       siteName: SITE_NAME,
       locale: locale === "en" ? "en_US" : "es_ES",
+      // The real jar, not the brand card: someone pasting a product link into
+      // Pinterest or a chat is showing a person the product. Overrides the
+      // site-wide app/opengraph-image.tsx for these pages only.
+      images: [
+        { url: `${SITE_URL}${getProductImageUrl(slug, product.image).url}`, alt: product.name[locale] },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.name[locale],
+      description: product.description[locale],
+      images: [`${SITE_URL}${getProductImageUrl(slug, product.image).url}`],
     },
   };
 }

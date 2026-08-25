@@ -8,6 +8,7 @@ import { CartDrawer } from "@/components/CartDrawer";
 import { AnnouncementBar } from "@/components/AnnouncementBar";
 import { ContactBubble } from "@/components/ContactBubble";
 import { WelcomePopup } from "@/components/WelcomePopup";
+import { RootProgress } from "@/components/RootProgress";
 import {
   isLocale,
   locales,
@@ -85,6 +86,7 @@ export default async function LangLayout({
       className={`${zenKaku.variable} ${inter.variable} h-full`}
     >
       <body className="min-h-full flex flex-col bg-cream text-ink">
+        <RootProgress />
         <AnnouncementBar locale={lang} />
         <Header locale={lang} />
         <main className="flex-1">{children}</main>

@@ -118,7 +118,8 @@ export function Header({ locale }: { locale: Locale }) {
 
         <Link
           href={`/${locale}/`}
-          className="font-display text-2xl font-bold tracking-tight text-forest-950"
+          className="font-display text-2xl font-normal text-forest-950"
+          style={{ letterSpacing: "0.18em" }}
           onClick={() => setOpen(false)}
         >
           LYHOFF
