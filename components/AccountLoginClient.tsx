@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { type Locale } from "@/lib/i18n";
 import { LogoMark } from "@/components/illustrations";
+import { PasswordField } from "@/components/PasswordField";
 
 type Mode = "login" | "register" | "forgot";
 type Status = "idle" | "loading" | "error" | "sentConfirmation" | "sentReset";
@@ -189,28 +190,22 @@ export function AccountLoginClient({ locale }: { locale: Locale }) {
           </div>
 
           {mode !== "forgot" && (
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-forest-950" htmlFor="account-password">
-                {es ? "Contraseña" : "Password"}
-              </label>
-              <input
-                id="account-password"
-                type="password"
-                required
-                minLength={MIN_PASSWORD_LENGTH}
-                autoComplete={mode === "register" ? "new-password" : "current-password"}
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                className={inputClass}
-              />
-              {mode === "register" && (
-                <p className="text-xs text-stone-500">
-                  {es
+            <PasswordField
+              id="account-password"
+              label={es ? "Contraseña" : "Password"}
+              value={password}
+              onChange={setPassword}
+              autoComplete={mode === "register" ? "new-password" : "current-password"}
+              minLength={MIN_PASSWORD_LENGTH}
+              locale={locale}
+              hint={
+                mode === "register"
+                  ? es
                     ? `Mínimo ${MIN_PASSWORD_LENGTH} caracteres.`
-                    : `At least ${MIN_PASSWORD_LENGTH} characters.`}
-                </p>
-              )}
-            </div>
+                    : `At least ${MIN_PASSWORD_LENGTH} characters.`
+                  : undefined
+              }
+            />
           )}
 
           <button type="submit" disabled={status === "loading"} className={primaryButtonClass}>

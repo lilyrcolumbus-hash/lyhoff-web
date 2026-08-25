@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { type Locale } from "@/lib/i18n";
 import { LogoMark } from "@/components/illustrations";
+import { PasswordField } from "@/components/PasswordField";
 
 type Status = "checking" | "ready" | "loading" | "error" | "noSession";
 
@@ -98,22 +99,16 @@ export function ResetPasswordClient({ locale }: { locale: Locale }) {
       </div>
 
       <form onSubmit={submit} className="mt-10 flex flex-col gap-4 border-t border-stone-200 pt-8">
-        <label className="text-sm font-medium text-forest-950" htmlFor="new-password">
-          {es ? "Elige una contraseña" : "Choose a password"}
-        </label>
-        <input
+        <PasswordField
           id="new-password"
-          type="password"
-          required
-          minLength={MIN_PASSWORD_LENGTH}
-          autoComplete="new-password"
+          label={es ? "Elige una contraseña" : "Choose a password"}
           value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          className="w-full rounded-sm border border-stone-300 bg-white px-4 py-3 text-sm text-ink outline-none focus:border-indigo-500"
+          onChange={setPassword}
+          autoComplete="new-password"
+          minLength={MIN_PASSWORD_LENGTH}
+          locale={locale}
+          hint={es ? `Mínimo ${MIN_PASSWORD_LENGTH} caracteres.` : `At least ${MIN_PASSWORD_LENGTH} characters.`}
         />
-        <p className="text-xs text-stone-500">
-          {es ? `Mínimo ${MIN_PASSWORD_LENGTH} caracteres.` : `At least ${MIN_PASSWORD_LENGTH} characters.`}
-        </p>
 
         <button
           type="submit"
@@ -135,13 +130,17 @@ export function ResetPasswordClient({ locale }: { locale: Locale }) {
               ? es
                 ? `La contraseña debe tener al menos ${MIN_PASSWORD_LENGTH} caracteres.`
                 : `Your password needs at least ${MIN_PASSWORD_LENGTH} characters.`
-              : errorKey === "link_expired"
+              : errorKey === "same_password"
                 ? es
-                  ? "Este enlace ya se usó o caducó. Pide uno nuevo."
-                  : "This link was already used or has expired. Request a new one."
-                : es
-                  ? "Algo falló — inténtalo de nuevo."
-                  : "Something went wrong — please try again."}
+                  ? "Esa es la contraseña que ya tenías. Elige una distinta."
+                  : "That's the password you already had. Choose a different one."
+                : errorKey === "link_expired"
+                  ? es
+                    ? "Este enlace ya se usó o caducó. Pide uno nuevo."
+                    : "This link was already used or has expired. Request a new one."
+                  : es
+                    ? "No pudimos guardarla. Inténtalo de nuevo."
+                    : "We couldn't save it. Please try again."}
           </p>
         )}
       </form>

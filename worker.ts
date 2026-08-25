@@ -765,10 +765,16 @@ async function handleResetPassword(request: Request, env: Env): Promise<Response
   if (!res.ok) {
     const detail = await res.text().catch(() => "");
     console.error("password reset failed", res.status, detail);
-    if (detail.includes("weak_password") || detail.includes("Password")) {
+    // Report the real reason. This used to collapse every failure into
+    // "link expired", which sent people off to request another email when the
+    // actual problem was the password they had just typed.
+    if (detail.includes("same_password") || detail.includes("should be different")) {
+      return jsonWithCookies({ error: "same_password" }, session.setCookies, 400);
+    }
+    if (detail.includes("weak_password") || detail.includes("at least")) {
       return jsonWithCookies({ error: "weak_password" }, session.setCookies, 400);
     }
-    return jsonWithCookies({ error: "link_expired" }, session.setCookies, 400);
+    return jsonWithCookies({ error: "save_failed" }, session.setCookies, 400);
   }
 
   return jsonWithCookies({ ok: true }, session.setCookies);
