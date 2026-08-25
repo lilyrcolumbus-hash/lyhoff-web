@@ -793,10 +793,20 @@ async function handleAuthConfirm(request: Request, env: Env): Promise<Response> 
   const requested = url.searchParams.get("redirect_to") ?? "";
   const locale = requested.includes("/es/") ? "es" : "en";
 
+  // A recovery link has exactly one sensible destination: the form that sets the
+  // new password. It is pinned rather than taken from `redirect_to`, because a
+  // customer who clicked "I forgot my password" and lands on their account page
+  // — signed in, no form in sight — has no way to finish what they started.
+  // That was the real bug: `redirect_to` arrived empty, the fallback sent them
+  // to /account/, and the reset silently went nowhere.
+  const isRecovery = type === "recovery";
+  const fallback = isRecovery
+    ? `${SITE_ORIGIN}/${locale}/account/reset-password/`
+    : `${SITE_ORIGIN}/${locale}/account/`;
   // Never redirect to a URL just because it arrived in a query param — that is
   // an open redirect, and an emailed link is exactly how it would be abused.
   const destination =
-    requested.startsWith(`${SITE_ORIGIN}/`) ? requested : `${SITE_ORIGIN}/${locale}/account/`;
+    !isRecovery && requested.startsWith(`${SITE_ORIGIN}/`) ? requested : fallback;
   const failure = `${SITE_ORIGIN}/${locale}/account/login/?error=link`;
 
   const redirect = (to: string, cookies: string[] = []) => {
@@ -828,7 +838,12 @@ async function handleAuthConfirm(request: Request, env: Env): Promise<Response> 
   // to sign in normally rather than telling them the link was broken.
   if (!cookies) return redirect(`${SITE_ORIGIN}/${locale}/account/login/`);
 
-  return redirect(destination, cookies);
+  // Tell the account page it was reached by confirming, so it can say so. A
+  // button that appears to do nothing reads as broken even when it worked.
+  const arrival = isRecovery
+    ? destination
+    : `${destination}${destination.includes("?") ? "&" : "?"}confirmed=1`;
+  return redirect(arrival, cookies);
 }
 
 async function handleLogout(request: Request, env: Env): Promise<Response> {

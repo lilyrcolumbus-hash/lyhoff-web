@@ -31,10 +31,23 @@ export function AccountClient({ locale }: { locale: Locale }) {
   // run yet) — the section hides itself rather than showing a broken toggle.
   const [subscribed, setSubscribed] = useState<boolean | null>(null);
   const [savingNewsletter, setSavingNewsletter] = useState(false);
+  // Confirmation feedback: an action that changes nothing on screen reads as
+  // broken, however well it worked.
+  const [justConfirmed, setJustConfirmed] = useState(false);
+  const [newsletterSaved, setNewsletterSaved] = useState(false);
 
   const goToLogin = useCallback(() => {
     window.location.href = `/${locale}/account/login/`;
   }, [locale]);
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("confirmed") === "1") {
+      setJustConfirmed(true);
+      // Drop the flag so a refresh doesn't replay a message about something
+      // that happened minutes ago.
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -82,7 +95,11 @@ export function AccountClient({ locale }: { locale: Locale }) {
       credentials: "same-origin",
       body: JSON.stringify({ subscribed: next }),
     }).catch(() => null);
-    if (res?.ok) setSubscribed(next);
+    if (res?.ok) {
+      setSubscribed(next);
+      setNewsletterSaved(true);
+      window.setTimeout(() => setNewsletterSaved(false), 4000);
+    }
     setSavingNewsletter(false);
   }
 
@@ -108,6 +125,22 @@ export function AccountClient({ locale }: { locale: Locale }) {
         </h1>
         <p className="mt-2 text-sm text-stone-600">{email}</p>
       </div>
+
+      {justConfirmed && (
+        <div className="mt-10 flex items-start gap-3 border border-earth-400 bg-earth-50 px-5 py-4">
+          <span aria-hidden="true" className="font-display text-lg leading-none text-earth-700">✓</span>
+          <div>
+            <p className="text-sm font-semibold text-forest-950">
+              {es ? "Tu cuenta está lista" : "Your account is ready"}
+            </p>
+            <p className="mt-1 text-sm text-stone-600">
+              {es
+                ? "Email confirmado. A partir de ahora entras con tu email y contraseña."
+                : "Email confirmed. From now on you sign in with your email and password."}
+            </p>
+          </div>
+        </div>
+      )}
 
       <section className="mt-12 border-t border-stone-200 pt-10">
         <h2 className="font-display text-xl font-bold text-forest-950">
@@ -188,6 +221,17 @@ export function AccountClient({ locale }: { locale: Locale }) {
                 ? "No estás suscrito."
                 : "You're not subscribed."}
           </p>
+          {newsletterSaved && (
+            <p className="mt-3 text-sm text-earth-700" role="status">
+              ✓ {subscribed
+                ? es
+                  ? "Listo, te hemos suscrito."
+                  : "Done — you're subscribed."
+                : es
+                  ? "Listo, ya no recibirás más correos."
+                  : "Done — you won't get any more emails."}
+            </p>
+          )}
           <button
             type="button"
             onClick={() => toggleNewsletter(!subscribed)}
