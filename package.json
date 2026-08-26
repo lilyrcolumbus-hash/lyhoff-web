@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/fetch-products.mjs",
     "dev": "next dev",
     "prebuild": "node scripts/fetch-products.mjs",
     "build": "next build && node scripts/postbuild.mjs",
