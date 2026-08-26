@@ -23,6 +23,7 @@ create table if not exists public.products (
   how_to_use    jsonb not null,       -- { en, es }
   reviews       jsonb not null default '[]', -- [{ text: { en, es }, author, location }]
   gift          jsonb,                -- { en, es } | null
+  sort_order    integer not null default 0, -- display order; lower shows first
   updated_at    timestamptz not null default now()
 );
 

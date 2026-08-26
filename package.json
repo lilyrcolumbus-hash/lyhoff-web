@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/fetch-products.mjs",
     "build": "next build && node scripts/postbuild.mjs",
     "preview": "npx serve out"
   },
