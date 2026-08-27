@@ -91,6 +91,7 @@ export const site: SiteConfig = {
       "700": "#3a4756",
     },
     clay: {
+      "50": "#f7edea",
       "500": "#a3634c",
       "600": "#8a4f3d",
     },

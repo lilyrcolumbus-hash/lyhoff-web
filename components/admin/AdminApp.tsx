@@ -10,6 +10,7 @@ import { CustomersSection } from "./CustomersSection";
 import { BrandSection } from "./BrandSection";
 import { HomeSection } from "./HomeSection";
 import { ComingSection } from "./ComingSection";
+import { PublishBar } from "./PublishBar";
 
 export type SectionId =
   | "inicio"
@@ -185,6 +186,7 @@ export function AdminApp() {
       </aside>
 
       <main className="min-w-0 px-4 py-6 sm:px-6">
+        <PublishBar />
         <h1 className="mb-5 font-display text-xl font-bold text-forest-950">{current?.label}</h1>
 
         {section === "inicio" && <HomeSection onGo={setSection} />}

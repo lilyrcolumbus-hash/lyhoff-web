@@ -1,0 +1,48 @@
+# Rebuilds the site and deploys it.
+#
+# Two triggers on purpose:
+#   push          — code changes, the ordinary developer path
+#   repository_dispatch — the Publish button in /admin, via POST /api/admin/publish
+#
+# The build reads the catalogue out of Supabase (scripts/fetch-products.mjs) and
+# freezes it into the bundle, so the deployed pages and the price Stripe charges
+# come from one snapshot. That is why publishing is a rebuild rather than a
+# database write taking effect immediately.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  repository_dispatch:
+    types: [publish]
+  workflow_dispatch:
+
+# A second publish while one is running should supersede it, not queue behind
+# it — the newest content is the only one anybody wants deployed.
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Fails loudly if the catalogue comes back empty rather than publishing
+      # a store with nothing in it — see scripts/fetch-products.mjs.
+      - run: npm run build
+
+      - name: Deploy to Cloudflare
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

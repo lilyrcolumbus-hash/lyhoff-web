@@ -40,6 +40,7 @@ interface Env {
   STRIPE_SECRET_KEY?: string;
   RESEND_API_KEY?: string;
   STRIPE_WEBHOOK_SECRET?: string;
+  GITHUB_TOKEN?: string;
 }
 
 const WELCOME_CODE = "WELCOME10";
@@ -1163,6 +1164,77 @@ async function handleAdminCollection(request: Request, env: Env): Promise<Respon
   return jsonWithCookies({ ok: true, row: rows[0] }, session.setCookies);
 }
 
+// The Publish button.
+//
+// Content edits land in Supabase immediately, but the site is static: the pages
+// only change when they are rebuilt. This asks GitHub Actions to do that
+// rebuild, which reads the catalogue at build time and freezes it into the
+// bundle — the reason a customer can never be shown one price and charged
+// another.
+const GITHUB_REPO = "lilyrcolumbus-hash/lyhoff-web";
+
+async function handleAdminPublish(request: Request, env: Env): Promise<Response> {
+  const { session, isAdmin } = await getAdminSession(request, env);
+  if (!session.user) return jsonWithCookies({ error: "unauthorized" }, session.setCookies, 401);
+  if (!isAdmin) return jsonWithCookies({ error: "not_admin" }, session.setCookies, 403);
+
+  if (!env.GITHUB_TOKEN) {
+    return jsonWithCookies({ error: "not_configured" }, session.setCookies, 503);
+  }
+
+  const headers = {
+    Authorization: `Bearer ${env.GITHUB_TOKEN}`,
+    Accept: "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28",
+    "User-Agent": "lyhoff-admin",
+  };
+
+  if (request.method === "GET") {
+    // Whether a build is running, and how the last one went. Without this the
+    // button is a leap of faith: you press it and watch nothing happen for two
+    // minutes.
+    const res = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO}/actions/runs?per_page=1&event=repository_dispatch`,
+      { headers },
+    );
+    if (!res.ok) {
+      console.error("publish status failed", res.status, await res.text().catch(() => ""));
+      return jsonWithCookies({ error: "status_failed" }, session.setCookies, 502);
+    }
+    const data = (await res.json()) as {
+      workflow_runs?: { status: string; conclusion: string | null; created_at: string; html_url: string }[];
+    };
+    const run = data.workflow_runs?.[0];
+    return jsonWithCookies(
+      {
+        running: run ? run.status !== "completed" : false,
+        conclusion: run?.conclusion ?? null,
+        startedAt: run?.created_at ?? null,
+        url: run?.html_url ?? null,
+      },
+      session.setCookies,
+    );
+  }
+
+  const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/dispatches`, {
+    method: "POST",
+    headers: { ...headers, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      event_type: "publish",
+      client_payload: { by: session.user.email },
+    }),
+  });
+
+  // GitHub answers a successful dispatch with 204 and no body.
+  if (res.status !== 204) {
+    const detail = await res.text().catch(() => "");
+    console.error("publish dispatch failed", res.status, detail);
+    return jsonWithCookies({ error: "dispatch_failed", status: res.status }, session.setCookies, 502);
+  }
+
+  return jsonWithCookies({ ok: true }, session.setCookies);
+}
+
 // ---------------------------------------------------------------------------
 // Stripe webhook → our own `orders` table.
 //
@@ -1369,6 +1441,12 @@ export default {
     if (url.pathname === "/api/admin/me") {
       if (request.method !== "GET") return new Response("Method Not Allowed", { status: 405 });
       return handleAdminMe(request, env);
+    }
+    if (url.pathname === "/api/admin/publish") {
+      if (request.method === "GET" || request.method === "POST") {
+        return handleAdminPublish(request, env);
+      }
+      return new Response("Method Not Allowed", { status: 405 });
     }
     if (url.pathname === "/api/admin/collection") {
       if (request.method === "GET" || request.method === "PATCH") {
