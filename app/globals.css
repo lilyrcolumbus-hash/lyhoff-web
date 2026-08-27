@@ -1,27 +1,19 @@
 @import "tailwindcss";
 
-/*
-  LYHOFF brand palette — "Sage Silenciosa" (2026-07-16): a Japanese-minimalist /
-  MUJI-inspired direction. Muted, low-saturation sage replaces the old vivid
-  olive-green; kraft/terracotta replaces the old bright amber. Kept as the same
-  `forest`/`earth`/`cream` token names on purpose — every component already
-  reads these, so this single file is the whole re-skin, no component edits.
-  - Forest → muted sage-charcoal (was vivid olive-green)
-  - Earth  → muted kraft/terracotta (was bright amber)
-  - Cream  → near-white, lightened further 2026-07-16 for the "MUJI + Apple glass" pass below
-*/
+/* The brand palette lives in site.config.ts. scripts/generate-theme.mjs writes
+   it between the markers below on every build — edit the config, never this
+   block. Written inline rather than @import'd because Tailwind v4 only reads
+   @theme from the entry stylesheet; imported, the whole palette is silently
+   dropped and every colour utility stops generating.
+   No colour is named anywhere else, which is what lets another site re-skin
+   everything by editing one file. */
+/* THEME:START — generated from site.config.ts, do not edit by hand */
 @theme {
   --font-display: var(--font-zen-kaku), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
-  /* Dark neutrals — headings, dark surfaces, buttons. The deep end (600-950)
-     reads as near-black, not as a colour, which is the point: only the accent
-     is allowed to look green.
-     The mid tones used to be a SECOND, different green (#6b6f5e sage), which
-     showed up on input focus rings, hover borders and the hand-drawn leaf
-     marks. Two unrelated greens doing separate jobs isn't a system — these now
-     mirror the accent scale exactly, so the whole site has one green identity
-     in four weights and nothing else competes with it. */
+  --color-cream: #fbfaf7;
+  --color-ink: #2b2a25;
   --color-forest-50: #f7f5f0;
   --color-forest-100: #eae8de;
   --color-forest-200: #d4d1c0;
@@ -33,41 +25,21 @@
   --color-forest-800: #363830;
   --color-forest-900: #2b2a25;
   --color-forest-950: #1c1b17;
-
-  /* Accent — the owner's pick, replacing the old kraft #b08968.
-     #93906d is light enough that it can't carry small text on cream (~3.1:1),
-     so the darker siblings exist for that: -600/-700 are what type uses, while
-     -500 is for fills, badges and borders where it's a background, not a word.
-     Same reason buttons on -500 take near-black text instead of white. */
   --color-earth-50: #f4f3ec;
   --color-earth-300: #bfbca4;
   --color-earth-400: #a8a488;
   --color-earth-500: #93906d;
   --color-earth-600: #7a7757;
   --color-earth-700: #5f5d42;
-
-  /* Second accent — a muted indigo, the counterweight to the olive.
-     The olive carries the brand and the garden: wordmark, promo codes, the
-     hand-drawn botanical marks. This one carries the functional half — focus
-     rings, interactive edges, the precision/lab side of the story. Splitting
-     them by JOB is what keeps two accents from competing: they never appear
-     doing the same thing. Olive and indigo are also a settled pairing
-     (matcha and ai), which is the same Japanese-minimal direction as the type. */
   --color-indigo-300: #9aa6b2;
   --color-indigo-400: #7a8899;
   --color-indigo-500: #5f6f80;
-  --color-indigo-600: #4a5a6b;  /* 6.9:1 on cream */
+  --color-indigo-600: #4a5a6b;
   --color-indigo-700: #3a4756;
-
-  /* Errors need to read as "something went wrong" at a glance. With the accent
-     scale now green, reusing it for failures would say the opposite. Muted
-     terracotta, not a signal red — still inside the brand's earthy range. */
   --color-clay-500: #a3634c;
   --color-clay-600: #8a4f3d;
-
-  --color-cream: #fbfaf7;
-  --color-ink: #2b2a25;
 }
+/* THEME:END */
 
 :root {
   --background: var(--color-cream);
