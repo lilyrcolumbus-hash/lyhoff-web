@@ -964,6 +964,206 @@ async function handleAccountNewsletter(request: Request, env: Env): Promise<Resp
 }
 
 // ---------------------------------------------------------------------------
+// Admin API — the owner editing her own catalogue.
+//
+// Every call runs through here rather than the browser talking to Supabase
+// directly, because the session lives in an HttpOnly cookie the page can't
+// read. That is the point: no admin token is ever exposed to JavaScript, so an
+// XSS on the site can't be turned into "rewrite every price".
+//
+// Authorisation is NOT decided in this file. Each request is forwarded with the
+// caller's OWN access token, and Postgres' row level security decides — the
+// `admins` table plus is_admin(). If the check here were ever wrong, the
+// database still refuses. See supabase/products.sql.
+// ---------------------------------------------------------------------------
+
+/** Resolves the caller's session and whether Postgres considers them an admin. */
+async function getAdminSession(
+  request: Request,
+  env: Env,
+): Promise<{ session: Session; isAdmin: boolean; config: { url: string; key: string } | null }> {
+  const config = supabaseConfig(env);
+  const session = await getSession(request, env);
+  if (!config || !session.user || !session.accessToken) {
+    return { session, isAdmin: false, config };
+  }
+
+  const res = await fetch(`${config.url}/rest/v1/rpc/is_admin`, {
+    method: "POST",
+    headers: {
+      apikey: config.key,
+      Authorization: `Bearer ${session.accessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: "{}",
+  });
+
+  if (!res.ok) {
+    console.error("is_admin rpc failed", res.status, await res.text().catch(() => ""));
+    return { session, isAdmin: false, config };
+  }
+
+  return { session, isAdmin: (await res.json()) === true, config };
+}
+
+async function handleAdminMe(request: Request, env: Env): Promise<Response> {
+  const { session, isAdmin } = await getAdminSession(request, env);
+  if (!session.user) return jsonWithCookies({ error: "unauthorized" }, session.setCookies, 401);
+  // A signed-in customer who wanders onto /admin is told plainly, not shown a
+  // broken editor.
+  if (!isAdmin) {
+    return jsonWithCookies({ error: "not_admin", email: session.user.email }, session.setCookies, 403);
+  }
+  return jsonWithCookies({ email: session.user.email, isAdmin: true }, session.setCookies);
+}
+
+/**
+ * Generic admin collections.
+ *
+ * One pair of endpoints serves every table the panel edits, described by the
+ * map below rather than by hand-written routes. That is what makes this
+ * reusable: another site adds an entry here and the panel can already read and
+ * write it — no new Worker code, no new form.
+ *
+ * `editable` is an allowlist, never a denylist. A column absent from it cannot
+ * be written from the panel at any price — which is how a product's slug (its
+ * URL, already circulating on Pinterest) and its variant grouping stay out of
+ * reach of a casual edit.
+ */
+interface AdminCollection {
+  table: string;
+  /** Column used to address a single row on write. */
+  key: string;
+  order: string;
+  editable: string[];
+}
+
+const ADMIN_COLLECTIONS: Record<string, AdminCollection> = {
+  products: {
+    table: "products",
+    key: "slug",
+    order: "position.asc,slug.asc",
+    editable: [
+      "name",
+      "tagline",
+      "description",
+      "ingredients",
+      "benefits",
+      "how_to_use",
+      "gift",
+      "badge",
+      "reviews",
+      "price",
+      "size",
+      "category",
+      "active",
+      "position",
+    ],
+  },
+  orders: {
+    table: "orders",
+    key: "id",
+    order: "created_at.desc",
+    editable: ["tracking_number", "tracking_url", "shipped_at"],
+  },
+  reviews: {
+    table: "review_submissions",
+    key: "id",
+    order: "created_at.desc",
+    editable: ["approved"],
+  },
+  subscribers: {
+    table: "subscribers",
+    key: "id",
+    order: "created_at.desc",
+    editable: ["unsubscribed_at"],
+  },
+};
+
+async function handleAdminCollection(request: Request, env: Env): Promise<Response> {
+  const { session, isAdmin, config } = await getAdminSession(request, env);
+  if (!config) return json({ error: "not_configured" }, 503);
+  if (!session.user || !session.accessToken) {
+    return jsonWithCookies({ error: "unauthorized" }, session.setCookies, 401);
+  }
+  if (!isAdmin) return jsonWithCookies({ error: "not_admin" }, session.setCookies, 403);
+
+  const auth = { apikey: config.key, Authorization: `Bearer ${session.accessToken}` };
+
+  if (request.method === "GET") {
+    const name = new URL(request.url).searchParams.get("name") ?? "";
+    const collection = ADMIN_COLLECTIONS[name];
+    if (!collection) return jsonWithCookies({ error: "unknown_collection" }, session.setCookies, 400);
+
+    const res = await fetch(
+      `${config.url}/rest/v1/${collection.table}?select=*&order=${collection.order}&limit=500`,
+      { headers: auth },
+    );
+    if (!res.ok) {
+      console.error("admin collection read failed", name, res.status, await res.text().catch(() => ""));
+      return jsonWithCookies({ error: "fetch_failed" }, session.setCookies, 502);
+    }
+    return jsonWithCookies({ rows: await res.json() }, session.setCookies);
+  }
+
+  let name = "";
+  let id = "";
+  let patch: Record<string, unknown> = {};
+  try {
+    const body = (await request.json()) as { name?: string; id?: string; patch?: Record<string, unknown> };
+    name = body.name ?? "";
+    id = String(body.id ?? "");
+    patch = body.patch ?? {};
+  } catch {
+    return jsonWithCookies({ error: "invalid_body" }, session.setCookies, 400);
+  }
+
+  const collection = ADMIN_COLLECTIONS[name];
+  if (!collection) return jsonWithCookies({ error: "unknown_collection" }, session.setCookies, 400);
+  if (!id) return jsonWithCookies({ error: "missing_id" }, session.setCookies, 400);
+
+  const rejected = Object.keys(patch).filter((field) => !collection.editable.includes(field));
+  if (rejected.length > 0) {
+    return jsonWithCookies({ error: "field_not_editable", fields: rejected }, session.setCookies, 400);
+  }
+  if (Object.keys(patch).length === 0) {
+    return jsonWithCookies({ error: "empty_patch" }, session.setCookies, 400);
+  }
+
+  // Price is the one field where a typo costs real money.
+  if ("price" in patch) {
+    const price = Number(patch.price);
+    if (!Number.isFinite(price) || price < 0 || price > 10000) {
+      return jsonWithCookies({ error: "invalid_price" }, session.setCookies, 400);
+    }
+    patch.price = price;
+  }
+
+  const res = await fetch(
+    `${config.url}/rest/v1/${collection.table}?${collection.key}=eq.${encodeURIComponent(id)}`,
+    {
+      method: "PATCH",
+      headers: { ...auth, "Content-Type": "application/json", Prefer: "return=representation" },
+      body: JSON.stringify(patch),
+    },
+  );
+
+  if (!res.ok) {
+    console.error("admin collection write failed", name, res.status, await res.text().catch(() => ""));
+    return jsonWithCookies({ error: "save_failed" }, session.setCookies, 502);
+  }
+
+  const rows = (await res.json()) as unknown[];
+  // Row level security answers a blocked write with an empty set rather than an
+  // error, so "changed nothing" has to count as a failure.
+  if (rows.length === 0) {
+    return jsonWithCookies({ error: "not_found_or_forbidden" }, session.setCookies, 404);
+  }
+
+  return jsonWithCookies({ ok: true, row: rows[0] }, session.setCookies);
+}
+
+// ---------------------------------------------------------------------------
 // Stripe webhook → our own `orders` table.
 //
 // Every completed Checkout Session gets stored in Supabase so order history
@@ -1165,6 +1365,16 @@ export default {
         return new Response("Method Not Allowed", { status: 405 });
       }
       return handleReviews(request, env);
+    }
+    if (url.pathname === "/api/admin/me") {
+      if (request.method !== "GET") return new Response("Method Not Allowed", { status: 405 });
+      return handleAdminMe(request, env);
+    }
+    if (url.pathname === "/api/admin/collection") {
+      if (request.method === "GET" || request.method === "PATCH") {
+        return handleAdminCollection(request, env);
+      }
+      return new Response("Method Not Allowed", { status: 405 });
     }
     if (url.pathname === "/api/auth/confirm") {
       if (request.method !== "GET") return new Response("Method Not Allowed", { status: 405 });
