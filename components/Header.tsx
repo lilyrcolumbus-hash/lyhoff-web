@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { otherLocale, t, type Locale } from "@/lib/i18n";
+import { headerLinks, navHref } from "@/lib/navigation";
 import { useCartStore } from "@/lib/cart-store";
 import { productsByCategory, type ProductCategory } from "@/lib/products";
 
@@ -15,6 +16,9 @@ const ALL_SHOP_CATEGORIES: { key: ProductCategory; label: { en: string; es: stri
   { key: "hoff", label: { en: "HOFF — Health", es: "HOFF — Salud" } },
 ];
 const SHOP_CATEGORIES = ALL_SHOP_CATEGORIES.filter((c) => productsByCategory(c.key).length > 0);
+
+// Arranged in the panel, defaulting to what was hardcoded here before.
+const LINKS = headerLinks();
 
 function CartButton() {
   const { count, openCart } = useCartStore();
@@ -183,18 +187,15 @@ export function Header({ locale }: { locale: Locale }) {
               )}
             </AnimatePresence>
           </div>
-          <Link href={`/${locale}/topics/`} className="hover:text-forest-900 transition-colors">
-            {dict.navTopics}
-          </Link>
-          <Link href={`/${locale}/ingredients/`} className="hover:text-forest-900 transition-colors">
-            {locale === "en" ? "Ingredients" : "Ingredientes"}
-          </Link>
-          <Link href={`/${locale}/about/`} className="hover:text-forest-900 transition-colors">
-            {dict.navAbout}
-          </Link>
-          <Link href={`/${locale}/account/`} className="hover:text-forest-900 transition-colors">
-            {locale === "en" ? "Account" : "Cuenta"}
-          </Link>
+          {LINKS.map((link) => (
+            <Link
+              key={link.path}
+              href={navHref(link, locale)}
+              className="hover:text-forest-900 transition-colors"
+            >
+              {link.label[locale]}
+            </Link>
+          ))}
           <Link
             href={swapped}
             className="text-xs uppercase tracking-widest text-stone-500 hover:text-forest-900 transition-colors"
@@ -237,18 +238,11 @@ export function Header({ locale }: { locale: Locale }) {
                 {cat.label[locale]}
               </Link>
             ))}
-            <Link href={`/${locale}/topics/`} onClick={() => setOpen(false)}>
-              {dict.navTopics}
-            </Link>
-            <Link href={`/${locale}/ingredients/`} onClick={() => setOpen(false)}>
-              {locale === "en" ? "Ingredients" : "Ingredientes"}
-            </Link>
-            <Link href={`/${locale}/about/`} onClick={() => setOpen(false)}>
-              {dict.navAbout}
-            </Link>
-            <Link href={`/${locale}/account/`} onClick={() => setOpen(false)}>
-              {locale === "en" ? "Account" : "Cuenta"}
-            </Link>
+            {LINKS.map((link) => (
+              <Link key={link.path} href={navHref(link, locale)} onClick={() => setOpen(false)}>
+                {link.label[locale]}
+              </Link>
+            ))}
             <Link
               href={swapped}
               className="text-xs uppercase tracking-widest text-stone-500"

@@ -11,6 +11,7 @@ import { BrandSection } from "./BrandSection";
 import { ContentSection } from "./ContentSection";
 import { DiscountsSection } from "./DiscountsSection";
 import { HomeSection } from "./HomeSection";
+import { NavigationSection } from "./NavigationSection";
 import { PreferencesSection } from "./PreferencesSection";
 import { ComingSection } from "./ComingSection";
 import { PublishBar } from "./PublishBar";
@@ -206,13 +207,7 @@ export function AdminApp() {
           />
         )}
         {section === "content" && <ContentSection />}
-        {section === "navigation" && (
-          <ComingSection
-            title="Navigation"
-            what="What appears in the header and footer, and in what order."
-            why="Depends on content being in the database — a menu is text with links attached."
-          />
-        )}
+        {section === "navigation" && <NavigationSection />}
         {section === "discounts" && <DiscountsSection />}
         {section === "preferences" && <PreferencesSection />}
       </main>
