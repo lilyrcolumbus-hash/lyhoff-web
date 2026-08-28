@@ -37,9 +37,14 @@ export async function generateMetadata({
   const product = getProduct(slug);
   if (!product) return {};
 
+  // Set per product in the panel when the product's own name and description
+  // are not what should appear in a search result; otherwise they are.
+  const seoTitle = product.seo?.title?.[locale]?.trim() || product.name[locale];
+  const seoDescription = product.seo?.description?.[locale]?.trim() || product.description[locale];
+
   return {
-    title: product.name[locale],
-    description: product.description[locale],
+    title: seoTitle,
+    description: seoDescription,
     alternates: {
       canonical: `/${locale}/products/${slug}/`,
       languages: {
@@ -49,8 +54,8 @@ export async function generateMetadata({
     },
     openGraph: {
       type: "website",
-      title: product.name[locale],
-      description: product.description[locale],
+      title: seoTitle,
+      description: seoDescription,
       url: `${SITE_URL}/${locale}/products/${slug}/`,
       siteName: SITE_NAME,
       locale: locale === "en" ? "en_US" : "es_ES",
@@ -63,8 +68,8 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: product.name[locale],
-      description: product.description[locale],
+      title: seoTitle,
+      description: seoDescription,
       images: [absolutePhotoUrl(getProductImageUrl(slug, product.image).url, SITE_URL)],
     },
   };

@@ -34,6 +34,7 @@ interface Product {
   stock: number | null;
   active: boolean;
   photos: string[];
+  seo: { title?: Bilingual; description?: Bilingual } | null;
 }
 
 const EMPTY: Bilingual = { en: "", es: "" };
@@ -499,6 +500,28 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
                           className={inputClass}
                           value={variant.size ?? ""}
                           onChange={(event) => setVariant(variant.slug, { size: event.target.value })}
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-5 border-t border-stone-200 pt-4">
+                        <p className="-mb-2 text-[11.5px] text-stone-500">
+                          Search results and shared links. Leave both empty and the name and
+                          description above are used, which is usually right.
+                        </p>
+                        <BilingualField
+                          title="Search title"
+                          value={variant.seo?.title ?? EMPTY}
+                          onChange={(title) =>
+                            setVariant(variant.slug, { seo: { ...(variant.seo ?? {}), title } })
+                          }
+                        />
+                        <BilingualField
+                          title="Search description"
+                          multiline
+                          value={variant.seo?.description ?? EMPTY}
+                          onChange={(description) =>
+                            setVariant(variant.slug, { seo: { ...(variant.seo ?? {}), description } })
+                          }
                         />
                       </div>
                     </div>

@@ -45,6 +45,12 @@ export interface Product {
    * the value here is a snapshot from the last publish.
    */
   stock?: number;
+  /**
+   * Overrides for the search-result title and the description under it. Absent
+   * for most products, which is correct: the product's own name and description
+   * are usually exactly what should appear there.
+   */
+  seo?: { title?: { en: string; es: string }; description?: { en: string; es: string } };
 }
 
 export const SCENT_OPTIONS = ["Unscented", "Peppermint", "Vanilla"];

@@ -1097,6 +1097,11 @@ interface AdminCollection {
    * grouping are settable exactly once, at birth, and unwritable forever after.
    */
   creatable?: string[];
+  /**
+   * What the key may look like. A product's key is its URL, so it is held to a
+   * far narrower shape than a row keyed on an id Stripe generated.
+   */
+  keyPattern?: RegExp;
 }
 
 const ADMIN_COLLECTIONS: Record<string, AdminCollection> = {
@@ -1139,12 +1144,20 @@ const ADMIN_COLLECTIONS: Record<string, AdminCollection> = {
       "position",
       "stock",
     ],
+    keyPattern: /^[a-z0-9]+(-[a-z0-9]+)*$/,
   },
   orders: {
     table: "orders",
     key: "id",
     order: "created_at.desc",
     editable: ["tracking_number", "tracking_url", "shipped_at"],
+  },
+  order_notes: {
+    table: "order_notes",
+    key: "order_id",
+    order: "updated_at.desc",
+    editable: ["note"],
+    creatable: ["order_id", "note"],
   },
   reviews: {
     table: "review_submissions",
@@ -1201,11 +1214,12 @@ async function createRow(
     return jsonWithCookies({ error: "field_not_creatable", fields: rejected }, session.setCookies, 400);
   }
 
-  // The slug is the product's URL for the rest of its life. Anything outside
-  // this shape would either break the static export's file paths or produce a
-  // link nobody can type.
-  const slug = String(row[collection.key] ?? "");
-  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug) || slug.length > 80) {
+  // A product's key is its URL for the rest of its life, so it is held to a
+  // shape that survives a static export and that a person can type. Rows keyed
+  // on an identifier someone else generated only have to be sane.
+  const id = String(row[collection.key] ?? "");
+  const pattern = collection.keyPattern ?? /^[A-Za-z0-9_-]+$/;
+  if (!pattern.test(id) || id.length > 200) {
     return jsonWithCookies({ error: "invalid_slug" }, session.setCookies, 400);
   }
 
@@ -1606,7 +1620,11 @@ async function handleStripeWebhook(request: Request, env: Env): Promise<Response
   const session = (event.data?.object ?? {}) as {
     id?: string;
     customer_email?: string | null;
-    customer_details?: { email?: string | null } | null;
+    customer_details?: { email?: string | null; name?: string | null } | null;
+    shipping_details?: { name?: string | null; address?: Record<string, string | null> | null } | null;
+    collected_information?: {
+      shipping_details?: { name?: string | null; address?: Record<string, string | null> | null } | null;
+    } | null;
     client_reference_id?: string | null;
     amount_total?: number | null;
     currency?: string | null;
@@ -1625,6 +1643,8 @@ async function handleStripeWebhook(request: Request, env: Env): Promise<Response
   const url = env.SUPABASE_URL || DEFAULT_SUPABASE_URL;
   const key = env.SUPABASE_ANON_KEY || DEFAULT_SUPABASE_ANON_KEY;
   if (!url || !key || key.startsWith("__")) return json({ error: "not_configured" }, 503);
+
+  const shipping = session.collected_information?.shipping_details ?? session.shipping_details ?? null;
 
   const res = await fetch(`${url}/rest/v1/orders`, {
     method: "POST",
@@ -1645,6 +1665,12 @@ async function handleStripeWebhook(request: Request, env: Env): Promise<Response
       currency: session.currency ?? "usd",
       items: await fetchSessionLineItems(id, env),
       locale: session.locale === "es" ? "es" : "en",
+      // Stripe moved shipping onto collected_information; older API versions put
+      // it at the top level. Read both so an upgrade cannot quietly stop
+      // recording the address an order has to be posted to.
+      customer_name:
+        shipping?.name ?? session.customer_details?.name ?? null,
+      shipping_address: shipping?.address ?? null,
     }),
   });
 
