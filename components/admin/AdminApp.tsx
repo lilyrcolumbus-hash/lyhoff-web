@@ -8,7 +8,9 @@ import { OrdersSection } from "./OrdersSection";
 import { ReviewsSection } from "./ReviewsSection";
 import { CustomersSection } from "./CustomersSection";
 import { BrandSection } from "./BrandSection";
+import { DiscountsSection } from "./DiscountsSection";
 import { HomeSection } from "./HomeSection";
+import { PreferencesSection } from "./PreferencesSection";
 import { ComingSection } from "./ComingSection";
 import { PublishBar } from "./PublishBar";
 
@@ -216,20 +218,8 @@ export function AdminApp() {
             why="Depends on content being in the database — a menu is text with links attached."
           />
         )}
-        {section === "discounts" && (
-          <ComingSection
-            title="Discounts"
-            what="See and create codes like WELCOME10 and THANKYOU15."
-            why="Coupons live in Stripe, not in this database — Stripe is what stops the same customer redeeming a code twice. Showing them here needs a read-only Stripe key."
-          />
-        )}
-        {section === "preferences" && (
-          <ComingSection
-            title="Preferences"
-            what="Shipping rate, categories, business details, redirects."
-            why="Each is small on its own; they land together once the rest is settled."
-          />
-        )}
+        {section === "discounts" && <DiscountsSection />}
+        {section === "preferences" && <PreferencesSection />}
       </main>
     </div>
   );

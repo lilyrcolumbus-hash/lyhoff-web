@@ -1,3 +1,5 @@
+import { shipping } from "@/lib/settings";
+
 // Shared with worker.ts (Stripe checkout) — keep both in sync.
 // Free shipping disabled for now (owner decision, 2026-07-15) — flat rate on every order.
 export const FREE_SHIPPING_THRESHOLD_CENTS: number | null = null;
@@ -9,4 +11,7 @@ export const FREE_SHIPPING_THRESHOLD_CENTS: number | null = null;
 // undercharges. Shown to the customer as a generic 2-5 business day estimate, no carrier/service
 // name — real underlying services span USPS Ground Advantage (2-5 days) and Priority Mail
 // (1-3 days), both of which fall inside that window.
-export const FLAT_SHIPPING_CENTS = 999;
+// Editable from the panel (Settings → Preferences) and frozen at build time,
+// so the rate a page was rendered with is the rate checkout charges. The
+// number below is only the fallback for a site with no settings row.
+export const FLAT_SHIPPING_CENTS = shipping.flatCents;

@@ -28,3 +28,8 @@ create policy "admins manage order notes"
 -- and description are used, which is the right default — so this is opt-in.
 alter table public.products
   add column if not exists seo jsonb;
+
+-- A policy says which rows a role may see; a grant says whether the role may
+-- touch the table at all. A new table has neither, and missing the grant fails
+-- with "permission denied" even where the policy would have allowed it.
+grant select, insert, update, delete on public.order_notes to authenticated;

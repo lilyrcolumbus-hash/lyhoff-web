@@ -32,6 +32,7 @@
 
 import { getProduct } from "./lib/products";
 import { FLAT_SHIPPING_CENTS } from "./lib/shipping";
+import { shipping as shippingSettings } from "./lib/settings";
 
 interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
@@ -392,7 +393,7 @@ async function handleCheckout(request: Request, env: Env): Promise<Response> {
     metadata: {
       items: [...wanted.entries()].map(([slug, quantity]) => `${slug}:${quantity}`).join(",").slice(0, 500),
     },
-    shipping_address_collection: { allowed_countries: ["US"] },
+    shipping_address_collection: { allowed_countries: shippingSettings.countries },
     shipping_options: [
       {
         shipping_rate_data: {
@@ -400,8 +401,8 @@ async function handleCheckout(request: Request, env: Env): Promise<Response> {
           fixed_amount: { amount: FLAT_SHIPPING_CENTS, currency: "usd" },
           display_name: locale === "es" ? "Envío estándar" : "Standard shipping",
           delivery_estimate: {
-            minimum: { unit: "business_day", value: 2 },
-            maximum: { unit: "business_day", value: 5 },
+            minimum: { unit: "business_day", value: shippingSettings.minDays },
+            maximum: { unit: "business_day", value: shippingSettings.maxDays },
           },
         },
       },
@@ -1152,6 +1153,12 @@ const ADMIN_COLLECTIONS: Record<string, AdminCollection> = {
     order: "created_at.desc",
     editable: ["tracking_number", "tracking_url", "shipped_at"],
   },
+  settings: {
+    table: "site_settings",
+    key: "key",
+    order: "key.asc",
+    editable: ["value"],
+  },
   order_notes: {
     table: "order_notes",
     key: "order_id",
@@ -1417,6 +1424,128 @@ async function handleAdminPhoto(request: Request, env: Env): Promise<Response> {
   }
 
   return jsonWithCookies({ ok: true, path }, session.setCookies);
+}
+
+/**
+ * Discount codes.
+ *
+ * Coupons stay in Stripe — Stripe is what stops the same customer redeeming a
+ * code twice, and duplicating that here would mean two systems disagreeing
+ * about who has already used what. This screen reads and writes Stripe's own
+ * objects with the key the Worker already holds, so there is no second key to
+ * ask for and no copy of the truth to keep in step.
+ *
+ * Deactivating rather than deleting is deliberate: a deleted code loses the
+ * record of what was redeemed under it.
+ */
+async function handleAdminDiscounts(request: Request, env: Env): Promise<Response> {
+  const { session, isAdmin } = await getAdminSession(request, env);
+  if (!session.user) return jsonWithCookies({ error: "unauthorized" }, session.setCookies, 401);
+  if (!isAdmin) return jsonWithCookies({ error: "not_admin" }, session.setCookies, 403);
+  if (!env.STRIPE_SECRET_KEY) return jsonWithCookies({ error: "not_configured" }, session.setCookies, 503);
+
+  const auth = { Authorization: `Basic ${btoa(`${env.STRIPE_SECRET_KEY}:`)}` };
+  const form = { ...auth, "Content-Type": "application/x-www-form-urlencoded" };
+
+  if (request.method === "GET") {
+    const res = await fetch(
+      "https://api.stripe.com/v1/promotion_codes?limit=100&expand[]=data.coupon",
+      { headers: auth },
+    );
+    if (!res.ok) {
+      console.error("stripe promotion_codes list failed", res.status, await res.text().catch(() => ""));
+      return jsonWithCookies({ error: "stripe_failed" }, session.setCookies, 502);
+    }
+    const data = (await res.json()) as {
+      data?: {
+        id: string;
+        code: string;
+        active: boolean;
+        times_redeemed: number;
+        max_redemptions: number | null;
+        restrictions?: { first_time_transaction?: boolean };
+        coupon?: { percent_off: number | null; amount_off: number | null; duration: string };
+      }[];
+    };
+    return jsonWithCookies(
+      {
+        codes: (data.data ?? []).map((row) => ({
+          id: row.id,
+          code: row.code,
+          active: row.active,
+          redeemed: row.times_redeemed,
+          maxRedemptions: row.max_redemptions,
+          firstOrderOnly: row.restrictions?.first_time_transaction ?? false,
+          percentOff: row.coupon?.percent_off ?? null,
+          amountOff: row.coupon?.amount_off ?? null,
+        })),
+      },
+      session.setCookies,
+    );
+  }
+
+  let body: { id?: string; active?: boolean; code?: string; percentOff?: number; firstOrderOnly?: boolean };
+  try {
+    body = (await request.json()) as typeof body;
+  } catch {
+    return jsonWithCookies({ error: "invalid_body" }, session.setCookies, 400);
+  }
+
+  if (request.method === "PATCH") {
+    if (!body.id) return jsonWithCookies({ error: "missing_id" }, session.setCookies, 400);
+    const res = await fetch(`https://api.stripe.com/v1/promotion_codes/${encodeURIComponent(body.id)}`, {
+      method: "POST",
+      headers: form,
+      body: `active=${body.active ? "true" : "false"}`,
+    });
+    if (!res.ok) {
+      console.error("stripe promotion_code update failed", res.status, await res.text().catch(() => ""));
+      return jsonWithCookies({ error: "stripe_failed" }, session.setCookies, 502);
+    }
+    return jsonWithCookies({ ok: true }, session.setCookies);
+  }
+
+  // Create. A code is two Stripe objects: the coupon holds the discount, the
+  // promotion code is the text a customer types. One of each, made together.
+  const code = String(body.code ?? "").trim().toUpperCase();
+  const percent = Number(body.percentOff);
+  if (!/^[A-Z0-9]{3,32}$/.test(code)) {
+    return jsonWithCookies({ error: "invalid_code" }, session.setCookies, 400);
+  }
+  if (!Number.isFinite(percent) || percent <= 0 || percent > 100) {
+    return jsonWithCookies({ error: "invalid_percent" }, session.setCookies, 400);
+  }
+
+  const coupon = await fetch("https://api.stripe.com/v1/coupons", {
+    method: "POST",
+    headers: form,
+    body: `percent_off=${percent}&duration=once&name=${encodeURIComponent(code)}`,
+  });
+  if (!coupon.ok) {
+    console.error("stripe coupon create failed", coupon.status, await coupon.text().catch(() => ""));
+    return jsonWithCookies({ error: "stripe_failed" }, session.setCookies, 502);
+  }
+  const { id: couponId } = (await coupon.json()) as { id: string };
+
+  const params = new URLSearchParams({ coupon: couponId, code });
+  if (body.firstOrderOnly) params.set("restrictions[first_time_transaction]", "true");
+
+  const promo = await fetch("https://api.stripe.com/v1/promotion_codes", {
+    method: "POST",
+    headers: form,
+    body: params.toString(),
+  });
+  if (!promo.ok) {
+    const detail = await promo.text().catch(() => "");
+    console.error("stripe promotion_code create failed", promo.status, detail);
+    return jsonWithCookies(
+      { error: detail.includes("already exists") ? "code_taken" : "stripe_failed" },
+      session.setCookies,
+      promo.status === 400 ? 400 : 502,
+    );
+  }
+
+  return jsonWithCookies({ ok: true }, session.setCookies);
 }
 
 // The Publish button.
@@ -1733,6 +1862,12 @@ export default {
     if (url.pathname === "/api/admin/publish") {
       if (request.method === "GET" || request.method === "POST") {
         return handleAdminPublish(request, env);
+      }
+      return new Response("Method Not Allowed", { status: 405 });
+    }
+    if (url.pathname === "/api/admin/discounts") {
+      if (request.method === "GET" || request.method === "POST" || request.method === "PATCH") {
+        return handleAdminDiscounts(request, env);
       }
       return new Response("Method Not Allowed", { status: 405 });
     }

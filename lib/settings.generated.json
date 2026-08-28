@@ -1,0 +1,17 @@
+{
+  "shipping": {
+    "maxDays": 5,
+    "minDays": 2,
+    "countries": [
+      "US"
+    ],
+    "flatCents": 999
+  },
+  "business": {
+    "email": "lyhoffllc.info@gmail.com",
+    "legalName": "LYHOFF LLC"
+  },
+  "palette": {},
+  "navigation": {},
+  "content": {}
+}
