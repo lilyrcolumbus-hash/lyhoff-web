@@ -8,6 +8,7 @@ import { OrdersSection } from "./OrdersSection";
 import { ReviewsSection } from "./ReviewsSection";
 import { CustomersSection } from "./CustomersSection";
 import { BrandSection } from "./BrandSection";
+import { ContentSection } from "./ContentSection";
 import { DiscountsSection } from "./DiscountsSection";
 import { HomeSection } from "./HomeSection";
 import { PreferencesSection } from "./PreferencesSection";
@@ -204,13 +205,7 @@ export function AdminApp() {
             why="Needs a pages table and a block renderer on the public site. The next large piece after Publish."
           />
         )}
-        {section === "content" && (
-          <ComingSection
-            title="Content"
-            what="The ~200 strings the storefront is written in: navigation, footer, categories, buttons, messages."
-            why="They live in lib/i18n.ts today. Moving them to the database is mechanical but touches every page, so it follows Publish."
-          />
-        )}
+        {section === "content" && <ContentSection />}
         {section === "navigation" && (
           <ComingSection
             title="Navigation"

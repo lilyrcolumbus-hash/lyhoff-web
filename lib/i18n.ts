@@ -1,3 +1,5 @@
+import { contentOverrides } from "@/lib/settings";
+
 // Locales, category taxonomy and UI dictionary for the bilingual site.
 
 export const locales = ["en", "es"] as const;
@@ -209,7 +211,30 @@ export const dictionary: Record<Locale, Dict> = {
   },
 };
 
-export const t = (locale: Locale) => dictionary[locale];
+/**
+ * The dictionary, with anything reworded from the panel laid over it.
+ *
+ * Overrides are stored per key and per locale and merged at build time, so the
+ * compiled strings stay the fallback: a key she has never touched reads exactly
+ * as it always did, and an override that is blank is treated as absent rather
+ * than as an empty label.
+ */
+const merged: Record<Locale, Dict> = {
+  en: { ...dictionary.en },
+  es: { ...dictionary.es },
+};
+
+for (const [key, translations] of Object.entries(contentOverrides)) {
+  if (!(key in dictionary.en)) continue;
+  for (const locale of locales) {
+    const value = translations?.[locale];
+    if (typeof value === "string" && value.trim() !== "") {
+      merged[locale][key as keyof Dict] = value;
+    }
+  }
+}
+
+export const t = (locale: Locale) => merged[locale];
 
 // Single source of truth for the production URL (used for SEO/canonical/sitemap).
 // Currently the Cloudflare Workers Static Assets URL; swap to the custom domain

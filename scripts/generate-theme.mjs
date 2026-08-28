@@ -54,6 +54,26 @@ for (const raw of paletteMatch[1].split("\n")) {
 
 if (lines.length === 0) throw new Error("generate-theme: palette parsed but produced no colours");
 
+// Colours the owner has changed from the panel win over the compiled ones.
+// Only tokens that already exist are replaced — a stray key cannot invent a
+// variable no component reads, and a malformed value is ignored rather than
+// emitted, because a broken colour here would ship site-wide.
+let overrides = {};
+try {
+  overrides = JSON.parse(readFileSync(join(root, "lib", "settings.generated.json"), "utf8")).palette ?? {};
+} catch {
+  overrides = {};
+}
+
+let overridden = 0;
+for (const [token, value] of Object.entries(overrides)) {
+  if (typeof value !== "string" || !/^#[0-9a-fA-F]{3,8}$/.test(value)) continue;
+  const index = lines.findIndex((line) => line.startsWith(`  --color-${token}:`));
+  if (index === -1) continue;
+  lines[index] = `  --color-${token}: ${value};`;
+  overridden += 1;
+}
+
 const fonts = source.match(/fonts:\s*\{([\s\S]*?)\},/);
 const display = fonts?.[1].match(/display:\s*"([^"]+)"/)?.[1];
 const body = fonts?.[1].match(/body:\s*"([^"]+)"/)?.[1];
@@ -77,4 +97,7 @@ writeFileSync(
   globalsPath,
   globals.slice(0, start) + block + globals.slice(end + "/* THEME:END */".length),
 );
-console.log(`generate-theme: wrote ${lines.length} colour tokens into app/globals.css`);
+console.log(
+  `generate-theme: wrote ${lines.length} colour tokens into app/globals.css` +
+    (overridden > 0 ? ` (${overridden} from the panel)` : ""),
+);
