@@ -197,7 +197,7 @@ redirect. Route the link through your own domain and verify the token
 server-side, which also lets you set the session cookie and land the customer
 already signed in.
 
-### Two more that cost real time here
+### The ones that cost real time here
 
 - **Cloudflare's asset router answers browser navigation requests itself.** A
   path under `/api` works perfectly from `fetch()` and returns the 404 page when
@@ -207,6 +207,21 @@ already signed in.
   hides this completely.
 - **Cloudflare serves the previous deploy for a few seconds** after
   `wrangler deploy`. Retry before diagnosing.
+- **A credential added as a plain Variable instead of a Secret works exactly
+  once.** Both live on the same dashboard screen and look interchangeable. They
+  are not: `wrangler deploy` sends the full variable set from `wrangler.jsonc`,
+  so any plain variable the config does not declare is dropped on the next
+  deploy — while secrets are managed separately and survive. A token stored as
+  a variable therefore publishes successfully, and that very publish erases it;
+  the next attempt answers 503 with nothing having changed. Confirm with
+  `wrangler secret list` (the name appears) and `wrangler versions view <id>`
+  (the name is *absent* from the plaintext bindings). Being unable to read the
+  value back is the signal it was stored correctly.
+- **wrangler-action installs its own wrangler unless you pin it.** It picks a
+  3.x, which cannot read `wrangler.jsonc`; with no config it finds no entry
+  point and fails with `Missing entry-point` before ever touching your
+  Cloudflare credentials — so it reads like a broken token. Set
+  `wranglerVersion` in the action and keep it in step with `devDependencies`.
 
 ---
 
