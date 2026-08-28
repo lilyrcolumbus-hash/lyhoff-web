@@ -6,14 +6,17 @@ import { inputClass, labelClass } from "./ui";
 export type Bilingual = { en: string; es: string };
 
 /**
- * Spanish is the field you write; English sits under it as its translation.
+ * English is the field you write; Spanish sits under it as its translation.
  *
- * Not two equal columns: the owner writes in Spanish and was right that being
- * asked to fill two boxes reads like doing the job twice. The English is still
- * shown — the store stores real text in both languages rather than translating
- * in the browser, because a machine translation done at view time reads badly
- * and Google won't index it — but it is presented as output, collapsed until
- * there is a reason to look at it.
+ * Not two equal columns — being asked to fill two boxes reads like doing the
+ * job twice. English leads because the panel, the site's default locale and
+ * everything else built here is English; leading with Spanish while every
+ * label around it was English is what made this screen look half-translated.
+ *
+ * The store still holds real text in both languages rather than translating in
+ * the browser: a machine translation done at view time reads badly and Google
+ * won't index it. The second language is output, collapsed until there is a
+ * reason to look at it.
  */
 export function BilingualField({
   title,
@@ -28,43 +31,43 @@ export function BilingualField({
   multiline?: boolean;
   hint?: string;
 }) {
-  const [showEnglish, setShowEnglish] = useState(false);
+  const [showSpanish, setShowSpanish] = useState(false);
   const Control = multiline ? "textarea" : "input";
   const english = value?.en ?? "";
   const spanish = value?.es ?? "";
   // Worth surfacing without being asked: an empty translation is a page that
-  // ships blank to English-speaking customers.
-  const missing = spanish.trim().length > 0 && english.trim().length === 0;
+  // ships blank to Spanish-speaking customers.
+  const missing = english.trim().length > 0 && spanish.trim().length === 0;
 
   return (
     <div className="flex flex-col gap-1.5">
       <span className={labelClass}>{title}</span>
       <Control
         className={`${inputClass} ${multiline ? "min-h-[78px] resize-y leading-relaxed" : ""}`}
-        value={spanish}
+        value={english}
         onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-          onChange({ ...value, es: event.target.value })
+          onChange({ ...value, en: event.target.value })
         }
       />
       {hint && <span className="text-[11.5px] text-stone-500">{hint}</span>}
 
       <button
         type="button"
-        onClick={() => setShowEnglish((v) => !v)}
+        onClick={() => setShowSpanish((v) => !v)}
         className="self-start text-[11.5px] text-stone-500 underline underline-offset-2 hover:text-forest-950"
       >
-        {showEnglish ? "Hide" : "Show"} English version
+        {showSpanish ? "Hide" : "Show"} Spanish version
         {missing && <span className="ml-1.5 font-semibold text-clay-600">· missing</span>}
       </button>
 
-      {showEnglish && (
+      {showSpanish && (
         <div className="flex flex-col gap-1 border-l-2 border-stone-200 pl-3">
-          <span className="text-[9.5px] font-bold tracking-[0.14em] text-stone-400">ENGLISH</span>
+          <span className="text-[9.5px] font-bold tracking-[0.14em] text-stone-400">SPANISH</span>
           <Control
             className={`${inputClass} ${multiline ? "min-h-[78px] resize-y leading-relaxed" : ""}`}
-            value={english}
+            value={spanish}
             onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-              onChange({ ...value, en: event.target.value })
+              onChange({ ...value, es: event.target.value })
             }
           />
         </div>
