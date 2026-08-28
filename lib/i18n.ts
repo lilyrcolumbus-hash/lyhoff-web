@@ -99,7 +99,11 @@ type Dict = {
   cartCheckout: string;
   cartCheckingOut: string;
   cartError: string;
+  cartSoldOut: string;
   addToBag: string;
+  soldOut: string;
+  lastOne: string;
+  onlyLeft: string;
   viewCart: string;
   freeShippingUnlocked: string;
 };
@@ -146,7 +150,11 @@ export const dictionary: Record<Locale, Dict> = {
     cartCheckout: "Checkout",
     cartCheckingOut: "Redirecting to checkout…",
     cartError: "Something went wrong. Please try again.",
+    cartSoldOut: "Something in your bag just sold out. Remove it and try again.",
     addToBag: "Add to bag",
+    soldOut: "Sold out",
+    lastOne: "Last one",
+    onlyLeft: "Only {n} left",
     viewCart: "View bag",
     freeShippingUnlocked: "🎉 You've unlocked free shipping!",
   },
@@ -191,7 +199,11 @@ export const dictionary: Record<Locale, Dict> = {
     cartCheckout: "Pagar",
     cartCheckingOut: "Redirigiendo al pago…",
     cartError: "Algo salió mal. Inténtalo de nuevo.",
+    cartSoldOut: "Algo de tu bolsa acaba de agotarse. Quítalo e inténtalo de nuevo.",
     addToBag: "Añadir a la bolsa",
+    soldOut: "Agotado",
+    lastOne: "Queda una",
+    onlyLeft: "Quedan {n}",
     viewCart: "Ver bolsa",
     freeShippingUnlocked: "🎉 ¡Desbloqueaste envío gratis!",
   },

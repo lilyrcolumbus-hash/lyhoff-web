@@ -27,6 +27,7 @@ export function ProductCard({
   const description = product.description[locale];
   const badge = product.badge?.[locale];
   const dict = t(locale);
+  const soldOut = product.stock === 0;
   const { addItem, openCart } = useCartStore();
 
   function onAddToBag() {
@@ -64,6 +65,13 @@ export function ProductCard({
           {isPlaceholderImage && (
             <span className="absolute top-3 left-3 bg-earth-600 text-cream text-[10px] font-semibold uppercase tracking-widest px-3 py-1">
               {locale === "en" ? "Photo needed" : "Foto pendiente"}
+            </span>
+          )}
+          {soldOut && (
+            <span className="absolute inset-0 flex items-center justify-center bg-cream/70">
+              <span className="bg-forest-950 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-widest text-cream">
+                {dict.soldOut}
+              </span>
             </span>
           )}
           {product.gift && (
@@ -118,9 +126,10 @@ export function ProductCard({
           <button
             type="button"
             onClick={onAddToBag}
-            className="inline-flex items-center gap-2 rounded-sm bg-forest-950 px-5 py-2.5 text-xs font-semibold text-cream transition hover:bg-forest-800 active:scale-95"
+            disabled={soldOut}
+            className="inline-flex items-center gap-2 rounded-sm bg-forest-950 px-5 py-2.5 text-xs font-semibold text-cream transition hover:bg-forest-800 active:scale-95 disabled:pointer-events-none disabled:bg-stone-300"
           >
-            {dict.addToBag}
+            {soldOut ? dict.soldOut : dict.addToBag}
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
               <path d="M2 5h8l-.7 5.2a1 1 0 0 1-1 .8H3.7a1 1 0 0 1-1-.8L2 5z" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M4 5V3.5a2 2 0 0 1 4 0V5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/>

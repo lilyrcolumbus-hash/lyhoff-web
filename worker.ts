@@ -276,6 +276,37 @@ async function resolvePromotionCodeId(code: string, env: Env): Promise<string | 
   }
 }
 
+/**
+ * Which of these the shop cannot currently supply.
+ *
+ * A product with a null stock is not tracked and always sells — which is every
+ * product until she puts a number on one, so this is inert by default. Any
+ * problem reaching the database returns "everything is fine": refusing real
+ * money because a read timed out is the worse failure of the two.
+ */
+async function findOutOfStock(wanted: Map<string, number>, env: Env): Promise<string[]> {
+  if (wanted.size === 0) return [];
+  const url = env.SUPABASE_URL || DEFAULT_SUPABASE_URL;
+  const key = env.SUPABASE_ANON_KEY || DEFAULT_SUPABASE_ANON_KEY;
+  if (!url || !key || key.startsWith("__")) return [];
+
+  const list = [...wanted.keys()].map((slug) => `"${slug}"`).join(",");
+  const res = await fetch(
+    `${url}/rest/v1/products?select=slug,stock&slug=in.(${encodeURIComponent(list)})`,
+    { headers: { apikey: key, Authorization: `Bearer ${key}` } },
+  ).catch(() => null);
+
+  if (!res?.ok) {
+    console.error("stock check failed", res?.status);
+    return [];
+  }
+
+  const rows = (await res.json().catch(() => [])) as { slug: string; stock: number | null }[];
+  return rows
+    .filter((row) => row.stock !== null && row.stock < (wanted.get(row.slug) ?? 0))
+    .map((row) => row.slug);
+}
+
 async function handleCheckout(request: Request, env: Env): Promise<Response> {
   if (!env.STRIPE_SECRET_KEY) return json({ error: "not_configured" }, 503);
 
@@ -319,6 +350,20 @@ async function handleCheckout(request: Request, env: Env): Promise<Response> {
 
   if (lineItems.length === 0) return json({ error: "empty_cart" }, 400);
 
+  // Availability is the one thing that cannot come from the build-time bundle:
+  // a snapshot taken at the last publish would happily sell the last jar twice.
+  // Price still comes from the bundle — this reads stock and nothing else, so
+  // the guarantee that shown price equals charged price is untouched.
+  const wanted = new Map<string, number>();
+  for (const item of items) {
+    const product = item.slug ? getProduct(item.slug) : undefined;
+    const quantity = Math.floor(item.quantity ?? 0);
+    if (product && quantity > 0) wanted.set(product.slug, (wanted.get(product.slug) ?? 0) + quantity);
+  }
+
+  const shortfall = await findOutOfStock(wanted, env);
+  if (shortfall.length > 0) return json({ error: "out_of_stock", slugs: shortfall }, 409);
+
   const origin = request.headers.get("origin") || new URL(request.url).origin;
 
   // Pre-apply WELCOME10 when the customer already has it (from the welcome
@@ -338,6 +383,13 @@ async function handleCheckout(request: Request, env: Env): Promise<Response> {
     success_url: `${origin}/${locale}/checkout/success/?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${origin}/${locale}/checkout/cancel/`,
     line_items: lineItems,
+    // Stripe's own line items carry names, not slugs, so the webhook has no way
+    // back to the catalogue row it needs to count down. Carrying the slugs here
+    // is what makes stock work. Capped at Stripe's 500-character metadata limit;
+    // a cart long enough to hit it loses the tail rather than the whole order.
+    metadata: {
+      items: [...wanted.entries()].map(([slug, quantity]) => `${slug}:${quantity}`).join(",").slice(0, 500),
+    },
     shipping_address_collection: { allowed_countries: ["US"] },
     shipping_options: [
       {
@@ -1066,6 +1118,7 @@ const ADMIN_COLLECTIONS: Record<string, AdminCollection> = {
       "active",
       "position",
       "photos",
+      "stock",
     ],
     creatable: [
       "slug",
@@ -1082,6 +1135,7 @@ const ADMIN_COLLECTIONS: Record<string, AdminCollection> = {
       "scent",
       "scent_group",
       "position",
+      "stock",
     ],
   },
   orders: {
@@ -1555,6 +1609,7 @@ async function handleStripeWebhook(request: Request, env: Env): Promise<Response
     amount_total?: number | null;
     currency?: string | null;
     locale?: string | null;
+    metadata?: Record<string, string> | null;
   };
 
   const id = session.id;
@@ -1590,6 +1645,23 @@ async function handleStripeWebhook(request: Request, env: Env): Promise<Response
       locale: session.locale === "es" ? "es" : "en",
     }),
   });
+
+  // Count the stock down for what was actually bought. Deliberately after the
+  // order is stored and never allowed to fail the webhook: a 500 here makes
+  // Stripe retry, and a retried decrement would take the same units off twice.
+  // A number that drifts low is fixable in the panel; a lost order is not.
+  if (res.ok || res.status === 409) {
+    for (const entry of (session.metadata?.items ?? "").split(",")) {
+      const [slug, count] = entry.split(":");
+      const quantity = Number(count);
+      if (!slug || !Number.isInteger(quantity) || quantity <= 0) continue;
+      await fetch(`${url}/rest/v1/rpc/decrement_stock`, {
+        method: "POST",
+        headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ p_slug: slug, p_quantity: quantity }),
+      }).catch((error) => console.error("stock decrement failed", slug, error));
+    }
+  }
 
   // Stripe retries on any non-2xx, so a duplicate delivery of an order we
   // already stored (409 on the primary key) is a success, not a failure.

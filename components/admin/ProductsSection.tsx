@@ -31,6 +31,7 @@ interface Product {
   variant_group: string | null;
   scent_group: string | null;
   price: number;
+  stock: number | null;
   active: boolean;
   photos: string[];
 }
@@ -384,7 +385,7 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
             <h3 className="font-display text-[13.5px] font-bold text-forest-950">
               {multi ? "Variants" : "Price and availability"}
             </h3>
-            <Note>+ $9.99 shipping at checkout</Note>
+            <Note>Price, then units in stock. Leave stock blank to not count it.</Note>
           </div>
 
           <div className="divide-y divide-stone-200">
@@ -412,6 +413,24 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
                         onChange={(event) =>
                           setVariant(variant.slug, { price: event.target.value as unknown as number })
                         }
+                      />
+                    </span>
+
+                    <span className="flex shrink-0 flex-col">
+                      <input
+                        className={`${inputClass} w-24 py-1.5 text-[13px] tabular-nums`}
+                        inputMode="numeric"
+                        aria-label={`Units in stock, ${variantLabel(variant)}`}
+                        placeholder="Untracked"
+                        value={variant.stock ?? ""}
+                        onChange={(event) => {
+                          const raw = event.target.value.trim();
+                          // Blank means "don't count this one" — the state every
+                          // product is in until she decides to track it.
+                          setVariant(variant.slug, {
+                            stock: raw === "" ? null : Math.max(0, Math.floor(Number(raw) || 0)),
+                          });
+                        }}
                       />
                     </span>
 
@@ -505,7 +524,9 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
           </div>
 
           <p className="border-t border-stone-200 px-4 py-2.5 text-[11.5px] text-stone-500">
-            Turning a variant off doesn't delete it — it stops showing in the store.
+            Turning a variant off doesn't delete it — it stops showing in the store. Stock counts
+            itself down as orders come in. Checkout refuses to oversell immediately; the "sold out"
+            label on the shop appears at the next publish.
           </p>
         </Card>
       </div>

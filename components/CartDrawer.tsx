@@ -12,7 +12,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
   const dict = t(locale);
   const { items, isOpen, closeCart, removeItem, updateQty, total } = useCartStore();
   const [checkingOut, setCheckingOut] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<null | "generic" | "out_of_stock">(null);
 
   // The cart store's persist middleware is skipHydration'd (see lib/cart-store.ts) —
   // rehydrate once, here, since this component is always mounted (in the root layout).
@@ -21,12 +21,14 @@ export function CartDrawer({ locale }: { locale: Locale }) {
   }, []);
 
   async function onCheckout() {
-    setError(false);
+    setError(null);
     setCheckingOut(true);
     try {
       await startCheckout(items, locale);
-    } catch {
-      setError(true);
+    } catch (caught) {
+      // Stock is checked live at checkout, so a cart can be refused here for a
+      // reason that is worth naming rather than blaming on the site.
+      setError(caught instanceof Error && caught.message === "out_of_stock" ? "out_of_stock" : "generic");
       setCheckingOut(false);
     }
   }
@@ -138,7 +140,11 @@ export function CartDrawer({ locale }: { locale: Locale }) {
             >
               {checkingOut ? dict.cartCheckingOut : dict.cartCheckout}
             </button>
-            {error && <p className="mt-3 text-xs text-clay-600">{dict.cartError}</p>}
+            {error && (
+              <p className="mt-3 text-xs text-clay-600">
+                {error === "out_of_stock" ? dict.cartSoldOut : dict.cartError}
+              </p>
+            )}
           </div>
         )}
           </motion.div>

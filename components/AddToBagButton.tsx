@@ -11,6 +11,7 @@ export function AddToBagButton({
   size,
   image,
   locale,
+  stock,
 }: {
   slug: string;
   name: string;
@@ -18,14 +19,29 @@ export function AddToBagButton({
   size: string;
   image: string;
   locale: Locale;
+  /** Units on hand. Undefined means the product is not stock tracked. */
+  stock?: number;
 }) {
   const dict = t(locale);
   const { addItem, openCart } = useCartStore();
   const [qty, setQty] = useState(1);
 
+  const soldOut = stock === 0;
+  // Cap the stepper at what actually exists, so nobody assembles a cart that
+  // checkout is only going to refuse.
+  const max = stock ?? Infinity;
+
   function onAdd() {
     addItem({ slug, name, price, size, image }, qty);
     openCart();
+  }
+
+  if (soldOut) {
+    return (
+      <span className="inline-flex items-center rounded-sm border border-stone-300 px-7 py-3.5 text-sm font-semibold text-stone-500">
+        {dict.soldOut}
+      </span>
+    );
   }
 
   return (
@@ -42,7 +58,7 @@ export function AddToBagButton({
         <span className="w-4 text-center text-sm text-stone-600">{qty}</span>
         <button
           type="button"
-          onClick={() => setQty((q) => q + 1)}
+          onClick={() => setQty((q) => Math.min(max, q + 1))}
           className="h-5 w-5 text-sm text-forest-950"
           aria-label="+"
         >

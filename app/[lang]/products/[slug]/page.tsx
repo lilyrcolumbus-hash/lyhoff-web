@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { isLocale, locales, SITE_NAME, SITE_URL, type Locale } from "@/lib/i18n";
+import { isLocale, locales, SITE_NAME, SITE_URL, t, type Locale } from "@/lib/i18n";
 import {
   dedupeVariants,
   getProduct,
@@ -250,8 +250,17 @@ export default async function ProductDetailPage({
               size={product.size}
               image={gallery[0]}
               locale={locale}
+              stock={product.stock}
             />
           </div>
+
+          {product.stock !== undefined && product.stock > 0 && product.stock <= 5 && (
+            <p className="mt-3 text-right text-xs font-semibold text-clay-600">
+              {product.stock === 1
+                ? t(locale).lastOne
+                : t(locale).onlyLeft.replace("{n}", String(product.stock))}
+            </p>
+          )}
 
           <TrustBadges locale={locale} theme="light" className="mt-6 sm:grid-cols-2 gap-6" />
 

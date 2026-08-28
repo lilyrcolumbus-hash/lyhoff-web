@@ -39,6 +39,12 @@ export interface Product {
    * is a path in the product-photos bucket — see lib/product-images.ts.
    */
   photos?: string[];
+  /**
+   * Units on hand. Absent means the product is not stock tracked and always
+   * sells; 0 means sold out. Checkout re-reads this live before taking money —
+   * the value here is a snapshot from the last publish.
+   */
+  stock?: number;
 }
 
 export const SCENT_OPTIONS = ["Unscented", "Peppermint", "Vanilla"];
