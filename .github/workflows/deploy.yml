@@ -41,8 +41,14 @@ jobs:
       # a store with nothing in it — see scripts/fetch-products.mjs.
       - run: npm run build
 
+      # wranglerVersion is pinned on purpose. Left to itself the action installs
+      # a wrangler 3.x, which cannot read wrangler.jsonc — it finds no config, so
+      # no "main", and the deploy dies with "Missing entry-point". Keep this in
+      # step with the wrangler in devDependencies so CI and a laptop deploy the
+      # same way.
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
+          wranglerVersion: "4.127.0"
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
