@@ -1153,6 +1153,14 @@ const ADMIN_COLLECTIONS: Record<string, AdminCollection> = {
     order: "created_at.desc",
     editable: ["tracking_number", "tracking_url", "shipped_at"],
   },
+  pages: {
+    table: "pages",
+    key: "slug",
+    order: "position.asc,slug.asc",
+    editable: ["title", "blocks", "seo", "active", "position"],
+    creatable: ["slug", "title", "blocks", "active", "position"],
+    keyPattern: /^[a-z0-9]+(-[a-z0-9]+)*$/,
+  },
   settings: {
     table: "site_settings",
     key: "key",

@@ -12,6 +12,7 @@ import { ContentSection } from "./ContentSection";
 import { DiscountsSection } from "./DiscountsSection";
 import { HomeSection } from "./HomeSection";
 import { NavigationSection } from "./NavigationSection";
+import { PagesSection } from "./PagesSection";
 import { PreferencesSection } from "./PreferencesSection";
 import { ComingSection } from "./ComingSection";
 import { PublishBar } from "./PublishBar";
@@ -199,13 +200,7 @@ export function AdminApp() {
         {section === "reviews" && <ReviewsSection reportCount={reportCount} />}
         {section === "customers" && <CustomersSection reportCount={reportCount} />}
         {section === "brand" && <BrandSection />}
-        {section === "pages" && (
-          <ComingSection
-            title="Pages"
-            what="Create new pages and compose them from blocks: full-bleed video, product grid, text with photo, FAQ."
-            why="Needs a pages table and a block renderer on the public site. The next large piece after Publish."
-          />
-        )}
+        {section === "pages" && <PagesSection reportCount={reportCount} />}
         {section === "content" && <ContentSection />}
         {section === "navigation" && <NavigationSection />}
         {section === "discounts" && <DiscountsSection />}

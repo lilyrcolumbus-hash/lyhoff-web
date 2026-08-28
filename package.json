@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/fetch-settings.mjs && node scripts/generate-theme.mjs && node scripts/fetch-products.mjs && next build && node scripts/postbuild.mjs",
+    "build": "node scripts/fetch-settings.mjs && node scripts/generate-theme.mjs && node scripts/fetch-products.mjs && node scripts/fetch-pages.mjs && next build && node scripts/postbuild.mjs",
     "preview": "npx serve out"
   },
   "dependencies": {
