@@ -164,10 +164,31 @@ Two details that are easy to get wrong:
 - **Send only changed fields.** A whole-row write stamps over anything edited
   elsewhere since the page loaded.
 
+### Variants are one product
+
+The catalogue stores one row per sellable variant — its own slug, price, size,
+scent and photos — because that is what checkout, the cart and the storefront
+URLs are keyed on. The panel does **not** show that shape. It groups rows by
+`variant_group` and presents one product with a variant table inside, which is
+what an owner means by a product.
+
+Which fields are shared and which belong to a variant is a question about the
+data, not a matter of taste. Here tagline, how-to-use and the gift are byte
+identical across every variant, while name, description and price genuinely
+differ per scent and per size — so the first three are edited once for the whole
+product and written to every row, and the rest are edited per variant. Check the
+same thing before choosing on another catalogue.
+
+Saving sends one request per changed variant, not one per field, and stops at
+the first refusal — then reloads, so a half-applied edit is never left on screen
+looking like it is still pending.
+
 ### Editing bilingual content
 
-Fields are Spanish-first with the English collapsed beneath, and a marker when a
-translation is missing. Two equal columns read as doing the job twice.
+Fields lead with English and collapse the Spanish beneath, with a marker when a
+translation is missing. Two equal columns read as doing the job twice, and
+leading with the second language while every label around it is English makes
+the screen look half-translated.
 
 The store keeps **real text in both languages** rather than translating in the
 browser: a machine translation performed at view time reads badly and search
