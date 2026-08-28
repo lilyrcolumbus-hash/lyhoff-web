@@ -39,9 +39,9 @@ export function HomeSection({ onGo }: { onGo: (section: SectionId) => void }) {
 
   // Ordered by what needs a decision, not by what looks impressive.
   const tiles: { label: string; value: string; hint?: string; go?: SectionId }[] = [
-    { label: "Orders to ship", value: String(stats.unshipped), hint: "no tracking number yet", go: "pedidos" },
-    { label: "Reviews to review", value: String(stats.pending), hint: "waiting on your decision", go: "resenas" },
-    { label: "Products live", value: String(stats.live), hint: `${stats.hidden} hidden`, go: "productos" },
+    { label: "Orders to ship", value: String(stats.unshipped), hint: "no tracking number yet", go: "orders" },
+    { label: "Reviews to review", value: String(stats.pending), hint: "waiting on your decision", go: "reviews" },
+    { label: "Products live", value: String(stats.live), hint: `${stats.hidden} hidden`, go: "products" },
     { label: "Sold", value: money(stats.revenue), hint: `${stats.orders} orders in total` },
   ];
 

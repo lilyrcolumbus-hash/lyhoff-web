@@ -27,7 +27,7 @@ export function OrdersSection({ reportCount }: { reportCount: (key: string, n: n
   const load = useCallback(async () => {
     const data = await readCollection<Order>("orders");
     setRows(data ?? []);
-    if (data) reportCount("pedidos", data.length);
+    if (data) reportCount("orders", data.length);
   }, [reportCount]);
 
   useEffect(() => {

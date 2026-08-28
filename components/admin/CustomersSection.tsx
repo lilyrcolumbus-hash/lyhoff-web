@@ -18,7 +18,7 @@ export function CustomersSection({ reportCount }: { reportCount: (key: string, n
   const load = useCallback(async () => {
     const data = await readCollection<Subscriber>("subscribers");
     setRows(data ?? []);
-    if (data) reportCount("clientes", data.filter((s) => !s.unsubscribed_at).length);
+    if (data) reportCount("customers", data.filter((s) => !s.unsubscribed_at).length);
   }, [reportCount]);
 
   useEffect(() => {

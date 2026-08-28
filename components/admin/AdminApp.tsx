@@ -13,17 +13,17 @@ import { ComingSection } from "./ComingSection";
 import { PublishBar } from "./PublishBar";
 
 export type SectionId =
-  | "inicio"
-  | "pedidos"
-  | "productos"
-  | "clientes"
-  | "resenas"
-  | "contenido"
-  | "paginas"
-  | "navegacion"
-  | "marca"
-  | "descuentos"
-  | "ajustes";
+  | "home"
+  | "orders"
+  | "products"
+  | "customers"
+  | "reviews"
+  | "content"
+  | "pages"
+  | "navigation"
+  | "brand"
+  | "discounts"
+  | "preferences";
 
 // Ordered the way a shop owner works, which is also roughly Shopify's order:
 // what happened today, then what to ship, then what you sell, then who bought,
@@ -32,27 +32,27 @@ const NAV: { group: string; items: { id: SectionId; label: string }[] }[] = [
   {
     group: "Store",
     items: [
-      { id: "inicio", label: "Home" },
-      { id: "pedidos", label: "Orders" },
-      { id: "productos", label: "Products" },
-      { id: "clientes", label: "Customers" },
-      { id: "resenas", label: "Reviews" },
+      { id: "home", label: "Home" },
+      { id: "orders", label: "Orders" },
+      { id: "products", label: "Products" },
+      { id: "customers", label: "Customers" },
+      { id: "reviews", label: "Reviews" },
     ],
   },
   {
     group: "Online store",
     items: [
-      { id: "paginas", label: "Pages" },
-      { id: "contenido", label: "Content" },
-      { id: "navegacion", label: "Navigation" },
-      { id: "marca", label: "Brand & style" },
+      { id: "pages", label: "Pages" },
+      { id: "content", label: "Content" },
+      { id: "navigation", label: "Navigation" },
+      { id: "brand", label: "Brand & style" },
     ],
   },
   {
     group: "Settings",
     items: [
-      { id: "descuentos", label: "Discounts" },
-      { id: "ajustes", label: "Preferences" },
+      { id: "discounts", label: "Discounts" },
+      { id: "preferences", label: "Preferences" },
     ],
   },
 ];
@@ -62,7 +62,7 @@ type Gate = "checking" | "anonymous" | "notAdmin" | "ready";
 export function AdminApp() {
   const [gate, setGate] = useState<Gate>("checking");
   const [email, setEmail] = useState("");
-  const [section, setSection] = useState<SectionId>("inicio");
+  const [section, setSection] = useState<SectionId>("home");
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -189,41 +189,41 @@ export function AdminApp() {
         <PublishBar />
         <h1 className="mb-5 font-display text-xl font-bold text-forest-950">{current?.label}</h1>
 
-        {section === "inicio" && <HomeSection onGo={setSection} />}
-        {section === "productos" && <ProductsSection reportCount={reportCount} />}
-        {section === "pedidos" && <OrdersSection reportCount={reportCount} />}
-        {section === "resenas" && <ReviewsSection reportCount={reportCount} />}
-        {section === "clientes" && <CustomersSection reportCount={reportCount} />}
-        {section === "marca" && <BrandSection />}
-        {section === "paginas" && (
+        {section === "home" && <HomeSection onGo={setSection} />}
+        {section === "products" && <ProductsSection reportCount={reportCount} />}
+        {section === "orders" && <OrdersSection reportCount={reportCount} />}
+        {section === "reviews" && <ReviewsSection reportCount={reportCount} />}
+        {section === "customers" && <CustomersSection reportCount={reportCount} />}
+        {section === "brand" && <BrandSection />}
+        {section === "pages" && (
           <ComingSection
             title="Pages"
             what="Create new pages and compose them from blocks: full-bleed video, product grid, text with photo, FAQ."
             why="Needs a pages table and a block renderer on the public site. The next large piece after Publish."
           />
         )}
-        {section === "contenido" && (
+        {section === "content" && (
           <ComingSection
             title="Content"
             what="The ~200 strings the storefront is written in: navigation, footer, categories, buttons, messages."
             why="They live in lib/i18n.ts today. Moving them to the database is mechanical but touches every page, so it follows Publish."
           />
         )}
-        {section === "navegacion" && (
+        {section === "navigation" && (
           <ComingSection
             title="Navigation"
             what="What appears in the header and footer, and in what order."
             why="Depends on content being in the database — a menu is text with links attached."
           />
         )}
-        {section === "descuentos" && (
+        {section === "discounts" && (
           <ComingSection
             title="Discounts"
             what="See and create codes like WELCOME10 and THANKYOU15."
             why="Coupons live in Stripe, not in this database — Stripe is what stops the same customer redeeming a code twice. Showing them here needs a read-only Stripe key."
           />
         )}
-        {section === "ajustes" && (
+        {section === "preferences" && (
           <ComingSection
             title="Preferences"
             what="Shipping rate, categories, business details, redirects."

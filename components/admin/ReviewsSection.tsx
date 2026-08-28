@@ -22,7 +22,7 @@ export function ReviewsSection({ reportCount }: { reportCount: (key: string, n: 
     const data = await readCollection<Review>("reviews");
     setRows(data ?? []);
     // The count that matters in the sidebar is what still needs a decision.
-    if (data) reportCount("resenas", data.filter((r) => !r.approved).length);
+    if (data) reportCount("reviews", data.filter((r) => !r.approved).length);
   }, [reportCount]);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export function ReviewsSection({ reportCount }: { reportCount: (key: string, n: 
     if (result.ok) {
       const saved = result.row as Review;
       setRows((list) => (list ?? []).map((r) => (r.id === saved.id ? saved : r)));
-      reportCount("resenas", (rows ?? []).filter((r) => (r.id === id ? !approved : !r.approved)).length);
+      reportCount("reviews", (rows ?? []).filter((r) => (r.id === id ? !approved : !r.approved)).length);
     }
     setBusy(null);
   }
