@@ -41,6 +41,8 @@ interface Env {
   RESEND_API_KEY?: string;
   STRIPE_WEBHOOK_SECRET?: string;
   GITHUB_TOKEN?: string;
+  /** Proves to Postgres that a stock decrement came from this Worker. */
+  STOCK_TOKEN?: string;
 }
 
 const WELCOME_CODE = "WELCOME10";
@@ -1658,7 +1660,10 @@ async function handleStripeWebhook(request: Request, env: Env): Promise<Response
       await fetch(`${url}/rest/v1/rpc/decrement_stock`, {
         method: "POST",
         headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ p_slug: slug, p_quantity: quantity }),
+        // The anon key is public, so the function will not act on it alone —
+        // this token is what tells Postgres the caller is this Worker and not a
+        // stranger walking the catalogue down to zero.
+        body: JSON.stringify({ p_token: env.STOCK_TOKEN ?? "", p_slug: slug, p_quantity: quantity }),
       }).catch((error) => console.error("stock decrement failed", slug, error));
     }
   }
