@@ -1037,6 +1037,12 @@ interface AdminCollection {
   key: string;
   order: string;
   editable: string[];
+  /**
+   * Columns accepted when creating a row, if creation is allowed at all.
+   * Deliberately separate from `editable`: a product's slug and its variant
+   * grouping are settable exactly once, at birth, and unwritable forever after.
+   */
+  creatable?: string[];
 }
 
 const ADMIN_COLLECTIONS: Record<string, AdminCollection> = {
@@ -1061,6 +1067,22 @@ const ADMIN_COLLECTIONS: Record<string, AdminCollection> = {
       "position",
       "photos",
     ],
+    creatable: [
+      "slug",
+      "category",
+      "name",
+      "tagline",
+      "description",
+      "how_to_use",
+      "gift",
+      "price",
+      "size",
+      "active",
+      "variant_group",
+      "scent",
+      "scent_group",
+      "position",
+    ],
   },
   orders: {
     table: "orders",
@@ -1081,6 +1103,83 @@ const ADMIN_COLLECTIONS: Record<string, AdminCollection> = {
     editable: ["unsubscribed_at"],
   },
 };
+
+/** Price is the one field where a typo costs real money. */
+function normalisePrice(value: unknown): number | null {
+  const price = Number(value);
+  if (!Number.isFinite(price) || price < 0 || price > 10000) return null;
+  return price;
+}
+
+/**
+ * Create a row.
+ *
+ * Split out from the edit path because the rules genuinely differ: creation
+ * accepts the columns that identify a row — slug, variant grouping — precisely
+ * because they can never be changed afterwards. A product URL is settled once,
+ * when nobody has linked to it yet.
+ */
+async function createRow(
+  request: Request,
+  session: Session,
+  config: { url: string; key: string },
+  auth: Record<string, string>,
+): Promise<Response> {
+  let name = "";
+  let row: Record<string, unknown> = {};
+  try {
+    const body = (await request.json()) as { name?: string; row?: Record<string, unknown> };
+    name = body.name ?? "";
+    row = body.row ?? {};
+  } catch {
+    return jsonWithCookies({ error: "invalid_body" }, session.setCookies, 400);
+  }
+
+  const collection = ADMIN_COLLECTIONS[name];
+  if (!collection?.creatable) {
+    return jsonWithCookies({ error: "create_not_allowed" }, session.setCookies, 400);
+  }
+
+  const rejected = Object.keys(row).filter((field) => !collection.creatable!.includes(field));
+  if (rejected.length > 0) {
+    return jsonWithCookies({ error: "field_not_creatable", fields: rejected }, session.setCookies, 400);
+  }
+
+  // The slug is the product's URL for the rest of its life. Anything outside
+  // this shape would either break the static export's file paths or produce a
+  // link nobody can type.
+  const slug = String(row[collection.key] ?? "");
+  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug) || slug.length > 80) {
+    return jsonWithCookies({ error: "invalid_slug" }, session.setCookies, 400);
+  }
+
+  if ("price" in row) {
+    const price = normalisePrice(row.price);
+    if (price === null) return jsonWithCookies({ error: "invalid_price" }, session.setCookies, 400);
+    row.price = price;
+  }
+
+  const res = await fetch(`${config.url}/rest/v1/${collection.table}`, {
+    method: "POST",
+    headers: { ...auth, "Content-Type": "application/json", Prefer: "return=representation" },
+    body: JSON.stringify(row),
+  });
+
+  if (res.status === 409) {
+    return jsonWithCookies({ error: "slug_taken" }, session.setCookies, 409);
+  }
+  if (!res.ok) {
+    console.error("admin create failed", name, res.status, await res.text().catch(() => ""));
+    return jsonWithCookies({ error: "create_failed" }, session.setCookies, 502);
+  }
+
+  const rows = (await res.json()) as unknown[];
+  // Row level security answers a blocked write with an empty set, not an error.
+  if (rows.length === 0) {
+    return jsonWithCookies({ error: "forbidden" }, session.setCookies, 403);
+  }
+  return jsonWithCookies({ ok: true, row: rows[0] }, session.setCookies);
+}
 
 async function handleAdminCollection(request: Request, env: Env): Promise<Response> {
   const { session, isAdmin, config } = await getAdminSession(request, env);
@@ -1108,6 +1207,8 @@ async function handleAdminCollection(request: Request, env: Env): Promise<Respon
     return jsonWithCookies({ rows: await res.json() }, session.setCookies);
   }
 
+  if (request.method === "POST") return createRow(request, session, config, auth);
+
   let name = "";
   let id = "";
   let patch: Record<string, unknown> = {};
@@ -1132,12 +1233,9 @@ async function handleAdminCollection(request: Request, env: Env): Promise<Respon
     return jsonWithCookies({ error: "empty_patch" }, session.setCookies, 400);
   }
 
-  // Price is the one field where a typo costs real money.
   if ("price" in patch) {
-    const price = Number(patch.price);
-    if (!Number.isFinite(price) || price < 0 || price > 10000) {
-      return jsonWithCookies({ error: "invalid_price" }, session.setCookies, 400);
-    }
+    const price = normalisePrice(patch.price);
+    if (price === null) return jsonWithCookies({ error: "invalid_price" }, session.setCookies, 400);
     patch.price = price;
   }
 
@@ -1542,7 +1640,7 @@ export default {
       return new Response("Method Not Allowed", { status: 405 });
     }
     if (url.pathname === "/api/admin/collection") {
-      if (request.method === "GET" || request.method === "PATCH") {
+      if (request.method === "GET" || request.method === "PATCH" || request.method === "POST") {
         return handleAdminCollection(request, env);
       }
       return new Response("Method Not Allowed", { status: 405 });

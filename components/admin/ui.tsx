@@ -101,3 +101,18 @@ export async function patchRow(
   const body = (await res.json().catch(() => ({}))) as { row?: unknown; error?: string };
   return res.ok ? { ok: true, row: body.row } : { ok: false, error: body.error };
 }
+
+export async function createRow(
+  name: string,
+  row: Record<string, unknown>,
+): Promise<{ ok: boolean; row?: unknown; error?: string }> {
+  const res = await fetch("/api/admin/collection", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "same-origin",
+    body: JSON.stringify({ name, row }),
+  }).catch(() => null);
+  if (!res) return { ok: false, error: "network" };
+  const body = (await res.json().catch(() => ({}))) as { row?: unknown; error?: string };
+  return res.ok ? { ok: true, row: body.row } : { ok: false, error: body.error };
+}

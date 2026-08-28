@@ -2,8 +2,21 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { BilingualField, type Bilingual } from "./BilingualField";
+import { NewProduct, slugify } from "./NewProduct";
 import { PhotoManager, isUploaded, photoSrc } from "./PhotoManager";
-import { Button, Card, Empty, Note, Pill, inputClass, labelClass, patchRow, price, readCollection } from "./ui";
+import {
+  Button,
+  Card,
+  Empty,
+  Note,
+  Pill,
+  createRow,
+  inputClass,
+  labelClass,
+  patchRow,
+  price,
+  readCollection,
+} from "./ui";
 
 interface Product {
   slug: string;
@@ -16,6 +29,7 @@ interface Product {
   size: string | null;
   scent: string | null;
   variant_group: string | null;
+  scent_group: string | null;
   price: number;
   active: boolean;
   photos: string[];
@@ -89,6 +103,8 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
   const [expanded, setExpanded] = useState<{ slug: string; tab: "text" | "photos" } | null>(null);
   const [saving, setSaving] = useState(false);
   const [query, setQuery] = useState("");
+  const [creating, setCreating] = useState(false);
+  const [addingVariant, setAddingVariant] = useState(false);
   const [message, setMessage] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
 
   const load = useCallback(async () => {
@@ -112,6 +128,7 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
     setOpenId(group.id);
     setDraft(structuredClone(group.variants));
     setExpanded(null);
+    setAddingVariant(false);
     setMessage(null);
     // The editor takes over the whole pane, so this is a different screen now —
     // start it at the top rather than wherever the list happened to be scrolled.
@@ -140,6 +157,64 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
     setDraft((current) => (current ?? []).map((v) => (v.slug === slug ? { ...v, ...patch } : v)));
   }
 
+  /**
+   * A new variant inherits everything the product shares and differs only in
+   * what makes it a variant. Copying rather than linking keeps one row per
+   * sellable thing, which is what the cart, Stripe and the URLs are keyed on.
+   */
+  async function addVariant(size: string, scent: string, priceValue: string) {
+    if (!draft || saving) return;
+    const parent = draft[0];
+    const group = parent.variant_group ?? parent.slug;
+    const suffix = slugify([size, scent].filter(Boolean).join("-"));
+    const slug = slugify(`${group}-${suffix}`);
+
+    if (draft.some((v) => v.slug === slug)) {
+      setMessage({ kind: "error", text: "That size and scent already exist." });
+      return;
+    }
+
+    setSaving(true);
+    setMessage(null);
+
+    // Scent siblings are the rows that share a size, so the new row joins the
+    // group of whichever variant is already that size.
+    const sameSize = draft.find((v) => v.size === size);
+
+    const result = await createRow("products", {
+      slug,
+      category: parent.category,
+      name: { en: parent.name.en, es: parent.name.es },
+      tagline: parent.tagline,
+      description: parent.description,
+      how_to_use: parent.how_to_use ?? { en: "", es: "" },
+      gift: parent.gift,
+      size,
+      price: Number(priceValue) || 0,
+      active: false,
+      variant_group: group,
+      scent: scent || null,
+      scent_group: scent ? (sameSize?.scent_group ?? sameSize?.slug ?? slug) : null,
+    });
+
+    if (!result.ok) {
+      setMessage({
+        kind: "error",
+        text: result.error === "slug_taken" ? "That variant already exists." : "Couldn't add it.",
+      });
+      setSaving(false);
+      return;
+    }
+
+    const created = result.row as Product;
+    setRows((list) => [...(list ?? []), created]);
+    setDraft((current) => [...(current ?? []), created]);
+    setAddingVariant(false);
+    setExpanded({ slug: created.slug, tab: "text" });
+    setMessage({ kind: "ok", text: "Variant added, hidden until you turn it on." });
+    setSaving(false);
+  }
+
   async function save() {
     if (!draft || !original || saving) return;
     setSaving(true);
@@ -155,7 +230,9 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
 
       const patch: Record<string, unknown> = {};
       for (const [key, value] of Object.entries(variant)) {
-        if (key === "slug" || key === "variant_group" || key === "scent") continue;
+        // Identity, not content: these are set once at creation and are not in
+        // the server's editable allowlist, so sending them would fail the write.
+        if (key === "slug" || key === "variant_group" || key === "scent" || key === "scent_group") continue;
         if (JSON.stringify(value) !== JSON.stringify(before[key as keyof Product])) patch[key] = value;
       }
       if (Object.keys(patch).length === 0) continue;
@@ -215,7 +292,28 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
   }, [groups, query]);
 
   if (rows === null) return <Empty>Loading products…</Empty>;
-  if (rows.length === 0) return <Empty>No products.</Empty>;
+
+  // Offered rather than hardcoded, so this screen works on a catalogue that
+  // isn't LYHOFF's.
+  const categories = [...new Set(rows.map((r) => r.category))].sort();
+
+  if (creating) {
+    return (
+      <NewProduct
+        categories={categories}
+        onCancel={() => setCreating(false)}
+        onCreated={async (slug) => {
+          setCreating(false);
+          const data = await readCollection<Product>("products");
+          if (!data) return;
+          setRows(data);
+          reportCount("products", toGroups(data).length);
+          const group = toGroups(data).find((g) => g.variants.some((v) => v.slug === slug));
+          if (group) open(group);
+        }}
+      />
+    );
+  }
 
   // ── The editor, once a product is open ────────────────────────────────────
   // It replaces the list rather than sitting beside it. Side by side only fits
@@ -391,6 +489,21 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
             })}
           </div>
 
+          <div className="border-t border-stone-200 px-4 py-3">
+            {addingVariant ? (
+              <VariantForm
+                sizes={[...new Set(draft.map((v) => v.size ?? ""))].filter(Boolean)}
+                onCancel={() => setAddingVariant(false)}
+                onAdd={addVariant}
+                busy={saving}
+              />
+            ) : (
+              <Button variant="quiet" onClick={() => setAddingVariant(true)}>
+                Add variant
+              </Button>
+            )}
+          </div>
+
           <p className="border-t border-stone-200 px-4 py-2.5 text-[11.5px] text-stone-500">
             Turning a variant off doesn't delete it — it stops showing in the store.
           </p>
@@ -402,16 +515,21 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
   // ── The list ──────────────────────────────────────────────────────────────
   return (
     <div className="flex flex-col gap-3">
-      <input
-        className={inputClass}
-        placeholder="Search products"
-        value={query}
-        onChange={(event) => setQuery(event.target.value)}
-      />
+      <div className="flex gap-3">
+        <input
+          className={inputClass}
+          placeholder="Search products"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+        />
+        <Button onClick={() => setCreating(true)}>Add product</Button>
+      </div>
 
       <Card className="divide-y divide-stone-200">
         {filtered.length === 0 ? (
-          <div className="px-4 py-6 text-center text-[13px] text-stone-500">Nothing matches that search.</div>
+          <div className="px-4 py-6 text-center text-[13px] text-stone-500">
+            {rows.length === 0 ? "No products yet." : "Nothing matches that search."}
+          </div>
         ) : (
           filtered.map((group) => {
             const live = group.variants.filter((v) => v.active).length;
@@ -454,6 +572,71 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
           })
         )}
       </Card>
+    </div>
+  );
+}
+
+/** Only what makes a variant a variant: everything else is inherited. */
+function VariantForm({
+  sizes,
+  onAdd,
+  onCancel,
+  busy,
+}: {
+  sizes: string[];
+  onAdd: (size: string, scent: string, price: string) => void;
+  onCancel: () => void;
+  busy: boolean;
+}) {
+  const [size, setSize] = useState(sizes[0] ?? "");
+  const [scent, setScent] = useState("");
+  const [value, setValue] = useState("");
+
+  return (
+    <div className="flex flex-wrap items-end gap-3">
+      <label className="flex flex-col gap-1">
+        <span className={labelClass}>Size</span>
+        <input
+          className={`${inputClass} w-32 py-1.5 text-[13px]`}
+          list="variant-sizes"
+          value={size}
+          onChange={(event) => setSize(event.target.value)}
+        />
+        <datalist id="variant-sizes">
+          {sizes.map((option) => (
+            <option key={option} value={option} />
+          ))}
+        </datalist>
+      </label>
+      <label className="flex flex-col gap-1">
+        <span className={labelClass}>Scent</span>
+        <input
+          className={`${inputClass} w-32 py-1.5 text-[13px]`}
+          value={scent}
+          onChange={(event) => setScent(event.target.value)}
+          placeholder="Optional"
+        />
+      </label>
+      <label className="flex flex-col gap-1">
+        <span className={labelClass}>Price</span>
+        <span className="flex">
+          <span className="border border-r-0 border-stone-300 bg-stone-50 px-2 py-1.5 text-[13px] text-stone-500">
+            $
+          </span>
+          <input
+            className={`${inputClass} w-24 border-l-0 py-1.5 text-[13px] tabular-nums`}
+            inputMode="decimal"
+            value={value}
+            onChange={(event) => setValue(event.target.value)}
+          />
+        </span>
+      </label>
+      <Button onClick={() => onAdd(size.trim(), scent.trim(), value)} disabled={busy || !size.trim()}>
+        {busy ? "Adding…" : "Add"}
+      </Button>
+      <Button variant="quiet" onClick={onCancel} disabled={busy}>
+        Cancel
+      </Button>
     </div>
   );
 }
