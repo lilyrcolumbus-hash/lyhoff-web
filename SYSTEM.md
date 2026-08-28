@@ -93,6 +93,10 @@ public by design, and RLS — not secrecy — is what protects the data.
 | `review_submissions` | reviews awaiting approval | insert | — | read + approve |
 | `subscribers` | mailing list | insert | own row | read |
 | `admins` | who may administer | — | — | — ² |
+| `pages` | pages composed from blocks | read | read | full |
+| `site_settings` | shipping, business, palette, wording, nav | read | read | full |
+| `order_notes` | notes about an order | — | — | full |
+| `service_tokens` | one shared secret, for the webhook | — | — | — ² |
 
 ¹ The Stripe webhook writes with the anon key. It can insert, never read.
 ² No policy at all, which is the most closed a table can be. Only `is_admin()`,
@@ -109,6 +113,18 @@ as $$ select exists (select 1 from public.admins where user_id = auth.uid()); $$
 caller can point `public` at a schema of their own and have the function resolve
 `admins` to a table they control. Supabase's own linter catches this — run
 `get_advisors` after every migration.
+
+**A policy is not a grant.** A policy decides which rows a role may see; a
+grant decides whether the role may touch the table at all, and a new table has
+neither. Miss the grant and every read fails with `permission denied` even
+though the policy would have allowed it. Every `create table` here needs a
+matching `grant`.
+
+**Column privileges cannot hide a column from an admin.** The obvious way to
+keep a private note off a customer's own order row is `revoke select (notes)`
+— which also locks out the admin, because the admin reads orders as an ordinary
+`authenticated` user. Their power comes from a policy, not a different role. A
+column only some people may read belongs in its own table.
 
 **Never write a policy as `to authenticated using (true)`.** That reads as "only
 me" right up until the day the site gains customer accounts, at which point
@@ -139,16 +155,26 @@ data.
 
 ```ts
 const ADMIN_COLLECTIONS = {
-  products: { table: "products", key: "slug", order: "position.asc", editable: [...] },
-  orders:   { table: "orders",   key: "id",   order: "created_at.desc",
-              editable: ["tracking_number", "tracking_url", "shipped_at"] },
-  reviews:  { table: "review_submissions", key: "id", editable: ["approved"] },
+  products:    { table: "products", key: "slug", editable: [...], creatable: [...],
+                 keyPattern: /^[a-z0-9]+(-[a-z0-9]+)*$/ },
+  pages:       { table: "pages", key: "slug", editable: [...], creatable: [...] },
+  settings:    { table: "site_settings", key: "key", editable: ["value"] },
+  orders:      { table: "orders", key: "id",
+                 editable: ["tracking_number", "tracking_url", "shipped_at"] },
+  order_notes: { table: "order_notes", key: "order_id", editable: ["note"],
+                 creatable: ["order_id", "note"] },
+  reviews:     { table: "review_submissions", key: "id", editable: ["approved"] },
 };
 ```
 
-`GET /api/admin/collection?name=…` and `PATCH /api/admin/collection` serve all of
-them. Adding a collection on another site is an entry in this map — no route, no
-new form.
+`GET`, `PATCH` and `POST /api/admin/collection` serve all of them. Adding a
+collection on another site is an entry in this map — no route, no new form.
+
+**`creatable` is a second, different allowlist.** Creation accepts the columns
+that identify a row — a product's slug, its variant grouping — precisely because
+they can never be changed afterwards. A URL is settled once, while nobody has
+linked to it yet. Anything in `creatable` and absent from `editable` is
+write-once by construction.
 
 **`editable` is an allowlist, never a denylist.** A column absent from it cannot
 be written at any price. That is how a product's `slug` — its URL, already
@@ -195,6 +221,51 @@ browser: a machine translation performed at view time reads badly and search
 engines do not index it, which would throw away the whole advantage of being
 bilingual. Auto-translation belongs at save time, writing a real value the owner
 can then correct.
+
+### Photos
+
+One ordered list per product. An entry starting with `/` is a file committed to
+the repo; anything else is a path in a public storage bucket, uploaded through
+the Worker with the caller's own token. Both shapes share one array, which is
+what let this site put an existing 163MB of committed photos under the panel's
+control without moving a byte.
+
+Removing a photo only takes it out of the list — the file is deleted after the
+row saves, so discarding an edit cannot destroy a photo.
+
+### Stock
+
+`stock` is `NULL` by default, meaning untracked and always sellable, so the
+column changes nothing until a number goes in it. Availability is the **one**
+thing checkout reads live: a snapshot from the last publish would happily sell
+the last jar twice. Price still comes from the bundle, so §1's guarantee holds.
+
+The Stripe webhook counts stock down, and it only has the anon key — the same
+key that ships in the site's own JavaScript. **Anything the webhook can call,
+a stranger can call.** So the decrement is a `SECURITY DEFINER` function that
+does nothing without a shared token, kept in `service_tokens` (RLS on, no
+policies) and given to the Worker as a secret. Ungated, it is a public endpoint
+for walking a shop to zero.
+
+The decrement never fails the webhook: a non-2xx makes Stripe retry, and a
+retried decrement takes the same units off twice. A count that drifts low is
+fixable in the panel; a lost order is not.
+
+### Pages
+
+Composed from a fixed set of block types, never a code editor — see §7. Only
+published pages are fetched at build time: a draft on a CDN is public however
+unlinked it is. An unknown block type renders as nothing rather than throwing,
+so a page saved by a newer panel than the deployed site loses one section
+instead of the whole page.
+
+### Settings
+
+One key/value table behind shipping, business details, palette, navigation and
+the storefront's wording. Separate rows, so two screens edited at once cannot
+overwrite each other. Every key falls back to what the code compiles in, which
+is what keeps a fresh clone working before any of this is seeded — and what
+makes an override worth storing only when it actually differs.
 
 ---
 
@@ -255,6 +326,8 @@ already signed in.
 | Coupons and redemption limits | **Stripe** | Stripe is what stops one customer redeeming a code twice |
 | Cards, PCI scope | **Stripe** | never touches this system |
 | Order history | this database, via webhook | so it survives, and can be queried |
+| Shipping address | this database, via webhook | a label written from a page that might not load is not a system |
+| Refunds and invoices | **Stripe** | it holds the card, the dispute evidence and the audit trail |
 
 Checkout builds line items with inline `price_data` — there are no Stripe
 Product objects to keep in sync. **The price set in the admin is the price Stripe
@@ -279,6 +352,9 @@ charges**, at the next publish. Nothing to reconcile, by design.
 site.config.ts               the one file a new site edits
 scripts/generate-theme.mjs   palette → CSS variables, at build time
 scripts/fetch-products.mjs   catalogue → lib/products.generated.json, at build time
+scripts/fetch-settings.mjs   settings  → lib/settings.generated.json, at build time
+scripts/fetch-pages.mjs      pages     → lib/pages.generated.json, at build time
+components/PageBlocks.tsx    renders a composed page
 worker.ts                    every API route: checkout, auth, webhook, admin
 app/admin/                   the panel's route and root layout
 components/admin/            the panel; ui.tsx holds the shared shell
