@@ -12,7 +12,7 @@ import {
   SCENT_LABELS,
   translateSize,
 } from "@/lib/products";
-import { getProductImageUrl, getProductImageUrls } from "@/lib/product-images";
+import { absolutePhotoUrl, getProductImageUrl, getProductImageUrls } from "@/lib/product-images";
 import { ProductCard } from "@/components/ProductCard";
 import { TrustBadges } from "@/components/TrustBadges";
 import { AddToBagButton } from "@/components/AddToBagButton";
@@ -58,14 +58,14 @@ export async function generateMetadata({
       // Pinterest or a chat is showing a person the product. Overrides the
       // site-wide app/opengraph-image.tsx for these pages only.
       images: [
-        { url: `${SITE_URL}${getProductImageUrl(slug, product.image).url}`, alt: product.name[locale] },
+        { url: absolutePhotoUrl(getProductImageUrl(slug, product.image).url, SITE_URL), alt: product.name[locale] },
       ],
     },
     twitter: {
       card: "summary_large_image",
       title: product.name[locale],
       description: product.description[locale],
-      images: [`${SITE_URL}${getProductImageUrl(slug, product.image).url}`],
+      images: [absolutePhotoUrl(getProductImageUrl(slug, product.image).url, SITE_URL)],
     },
   };
 }

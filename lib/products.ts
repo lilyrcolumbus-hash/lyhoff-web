@@ -33,6 +33,12 @@ export interface Product {
   reviews?: { text: { en: string; es: string }; author: string; location: string }[];
   /** Free physical gift included with purchase — shown as a standalone highlighted callout, not buried in benefits. */
   gift?: { en: string; es: string };
+  /**
+   * The gallery, in the order the owner arranged it in the panel; first is the
+   * main photo. An entry starting with "/" is a file in the repo, anything else
+   * is a path in the product-photos bucket — see lib/product-images.ts.
+   */
+  photos?: string[];
 }
 
 export const SCENT_OPTIONS = ["Unscented", "Peppermint", "Vanilla"];

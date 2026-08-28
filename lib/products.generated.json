@@ -67,7 +67,18 @@
     "gift": {
       "en": "Free jade facial roller",
       "es": "Rodillo de jade de regalo"
-    }
+    },
+    "photos": [
+      "/images/products/tallow-cream-2oz/MAIN.png",
+      "/images/products/tallow-cream-2oz/2.png",
+      "/images/products/tallow-cream-2oz/22.png",
+      "/images/products/tallow-cream-2oz/3.png",
+      "/images/products/tallow-cream-2oz/4.png",
+      "/images/products/tallow-cream-2oz/5.png",
+      "/images/products/tallow-cream-2oz/6.png",
+      "/images/products/tallow-cream-2oz/7.png",
+      "/images/products/tallow-cream-2oz/8.png"
+    ]
   },
   {
     "slug": "tallow-cream-2oz-peppermint",
@@ -137,7 +148,18 @@
     "gift": {
       "en": "Free jade facial roller",
       "es": "Rodillo de jade de regalo"
-    }
+    },
+    "photos": [
+      "/images/products/tallow-cream-2oz-peppermint/MAIN.png",
+      "/images/products/tallow-cream-2oz-peppermint/2-model.png",
+      "/images/products/tallow-cream-2oz-peppermint/22-concerns.png",
+      "/images/products/tallow-cream-2oz-peppermint/3-benefits.png",
+      "/images/products/tallow-cream-2oz-peppermint/4-lifestyle.png",
+      "/images/products/tallow-cream-2oz-peppermint/5-farm.png",
+      "/images/products/tallow-cream-2oz-peppermint/6-ingredients.png",
+      "/images/products/tallow-cream-2oz-peppermint/7-howto.png",
+      "/images/products/tallow-cream-2oz-peppermint/8-whipped.png"
+    ]
   },
   {
     "slug": "tallow-cream-2oz-vanilla",
@@ -207,7 +229,8 @@
     "gift": {
       "en": "Free jade facial roller",
       "es": "Rodillo de jade de regalo"
-    }
+    },
+    "photos": []
   },
   {
     "slug": "tallow-cream-1oz",
@@ -273,7 +296,8 @@
     "gift": {
       "en": "Free jade facial roller",
       "es": "Rodillo de jade de regalo"
-    }
+    },
+    "photos": []
   },
   {
     "slug": "tallow-cream-1oz-peppermint",
@@ -343,7 +367,8 @@
     "gift": {
       "en": "Free jade facial roller",
       "es": "Rodillo de jade de regalo"
-    }
+    },
+    "photos": []
   },
   {
     "slug": "tallow-cream-1oz-vanilla",
@@ -413,7 +438,8 @@
     "gift": {
       "en": "Free jade facial roller",
       "es": "Rodillo de jade de regalo"
-    }
+    },
+    "photos": []
   },
   {
     "slug": "comfrey-salve-2oz",
@@ -487,6 +513,16 @@
         "author": "Luna",
         "location": "Ord, NE"
       }
+    ],
+    "photos": [
+      "/images/products/comfrey-salve-2oz/1-1.png",
+      "/images/products/comfrey-salve-2oz/2-2.png",
+      "/images/products/comfrey-salve-2oz/3.png",
+      "/images/products/comfrey-salve-2oz/66.png",
+      "/images/products/comfrey-salve-2oz/image.png",
+      "/images/products/comfrey-salve-2oz/openart-image_IPN7DShS_1782389179100_raw.png",
+      "/images/products/comfrey-salve-2oz/openart-image_PVRxss_l_1782389368163_raw.png",
+      "/images/products/comfrey-salve-2oz/openart-image_X7Q890py_1782389915835_raw.jpg"
     ]
   },
   {
@@ -557,6 +593,17 @@
         "author": "Cheyenne",
         "location": "Jackson Township, MO"
       }
+    ],
+    "photos": [
+      "/images/products/comfrey-salve-2oz-peppermint/MAIN.png",
+      "/images/products/comfrey-salve-2oz-peppermint/10-jar-closed.png",
+      "/images/products/comfrey-salve-2oz-peppermint/2-ingredients.png",
+      "/images/products/comfrey-salve-2oz-peppermint/3-comparison.png",
+      "/images/products/comfrey-salve-2oz-peppermint/4-natural.png",
+      "/images/products/comfrey-salve-2oz-peppermint/6-swirl-top.png",
+      "/images/products/comfrey-salve-2oz-peppermint/7-benefits.png",
+      "/images/products/comfrey-salve-2oz-peppermint/8-lifestyle.png",
+      "/images/products/comfrey-salve-2oz-peppermint/9-usa.png"
     ]
   },
   {
@@ -627,6 +674,17 @@
         "author": "Cheyenne",
         "location": "Jackson Township, MO"
       }
+    ],
+    "photos": [
+      "/images/products/comfrey-salve-2oz-vanilla/MAIN.png",
+      "/images/products/comfrey-salve-2oz-vanilla/10-jar-closed.png",
+      "/images/products/comfrey-salve-2oz-vanilla/2-ingredients.png",
+      "/images/products/comfrey-salve-2oz-vanilla/3-comparison.png",
+      "/images/products/comfrey-salve-2oz-vanilla/4-natural.png",
+      "/images/products/comfrey-salve-2oz-vanilla/6-swirl-top.png",
+      "/images/products/comfrey-salve-2oz-vanilla/7-benefits.png",
+      "/images/products/comfrey-salve-2oz-vanilla/8-lifestyle.png",
+      "/images/products/comfrey-salve-2oz-vanilla/9-usa.png"
     ]
   },
   {
@@ -701,7 +759,8 @@
         "author": "Luna",
         "location": "Ord, NE"
       }
-    ]
+    ],
+    "photos": []
   },
   {
     "slug": "comfrey-salve-1oz-peppermint",
@@ -771,7 +830,8 @@
         "author": "Cheyenne",
         "location": "Jackson Township, MO"
       }
-    ]
+    ],
+    "photos": []
   },
   {
     "slug": "comfrey-salve-1oz-vanilla",
@@ -841,7 +901,8 @@
         "author": "Cheyenne",
         "location": "Jackson Township, MO"
       }
-    ]
+    ],
+    "photos": []
   },
   {
     "slug": "hair-growth-oil",
@@ -903,7 +964,19 @@
     "gift": {
       "en": "Free silicone scalp massager + black satin bonnet",
       "es": "Masajeador de silicona + gorro de satén negro de regalo"
-    }
+    },
+    "photos": [
+      "/images/products/hair-growth-oil/1-1.png",
+      "/images/products/hair-growth-oil/10.png",
+      "/images/products/hair-growth-oil/2.png",
+      "/images/products/hair-growth-oil/3.png",
+      "/images/products/hair-growth-oil/4.png",
+      "/images/products/hair-growth-oil/5.png",
+      "/images/products/hair-growth-oil/6.png",
+      "/images/products/hair-growth-oil/7.png",
+      "/images/products/hair-growth-oil/8.png",
+      "/images/products/hair-growth-oil/9.png"
+    ]
   },
   {
     "slug": "sea-salt-spray-her",
@@ -958,7 +1031,18 @@
       "en": "Spray into damp or dry hair from mid-length to ends. Scrunch or twist for texture. Reapply as needed.",
       "es": "Rocía sobre cabello húmedo o seco, desde el medio hasta las puntas. Enrosca o presiona para dar textura. Reaplica si es necesario."
     },
-    "reviews": []
+    "reviews": [],
+    "photos": [
+      "/images/products/sea-salt-spray-her/1.png",
+      "/images/products/sea-salt-spray-her/2.png",
+      "/images/products/sea-salt-spray-her/3.png",
+      "/images/products/sea-salt-spray-her/4.png",
+      "/images/products/sea-salt-spray-her/5.png",
+      "/images/products/sea-salt-spray-her/6.png",
+      "/images/products/sea-salt-spray-her/7.png",
+      "/images/products/sea-salt-spray-her/8.png",
+      "/images/products/sea-salt-spray-her/9.png"
+    ]
   },
   {
     "slug": "sea-salt-spray-him",
@@ -1013,7 +1097,18 @@
       "en": "Spray into damp or dry hair from mid-length to ends. Scrunch or twist for texture. Reapply as needed.",
       "es": "Rocía sobre cabello húmedo o seco, desde el medio hasta las puntas. Enrosca o presiona para dar textura. Reaplica si es necesario."
     },
-    "reviews": []
+    "reviews": [],
+    "photos": [
+      "/images/products/sea-salt-spray-him/1MAIN.png",
+      "/images/products/sea-salt-spray-him/2.png",
+      "/images/products/sea-salt-spray-him/3.png",
+      "/images/products/sea-salt-spray-him/4.png",
+      "/images/products/sea-salt-spray-him/5.png",
+      "/images/products/sea-salt-spray-him/6.png",
+      "/images/products/sea-salt-spray-him/7.png",
+      "/images/products/sea-salt-spray-him/8.png",
+      "/images/products/sea-salt-spray-him/9.png"
+    ]
   },
   {
     "slug": "hummingbird-nectar",
@@ -1088,6 +1183,19 @@
         "author": "River",
         "location": "Bend, OR"
       }
+    ],
+    "photos": [
+      "/images/products/hummingbird-nectar/hummingbird-nectar-powder-4-pack-8-oz-each.png",
+      "/images/products/hummingbird-nectar/hummingbird-nectar-powder-8-oz-back-label-ingredients-directions.png",
+      "/images/products/hummingbird-nectar/hummingbird-nectar-powder-8-oz-just-add-water-feeder-bird.png",
+      "/images/products/hummingbird-nectar/hummingbird-nectar-powder-8-oz-lifestyle-hummingbirds-flowers.png",
+      "/images/products/hummingbird-nectar/hummingbird-nectar-powder-classroom-kids-instructions-8-cups-water.png",
+      "/images/products/hummingbird-nectar/hummingbird-nectar-powder-comparison-theirs-vs-ours.png",
+      "/images/products/hummingbird-nectar/hummingbird-nectar-powder-dissolves-instantly-in-water-8-oz.png",
+      "/images/products/hummingbird-nectar/hummingbird-nectar-powder-lifestyle-feeder-man-holding.png",
+      "/images/products/hummingbird-nectar/hummingbird-nectar-powder-mix-1-bag-8-cups-water-ready-to-use.png",
+      "/images/products/hummingbird-nectar/hummingbird-nectar-powder-open-pouch-top-view.png",
+      "/images/products/hummingbird-nectar/hummingbird-nectar-powder-pouring-into-64-oz-pitcher-kitchen.png"
     ]
   },
   {
@@ -1163,6 +1271,18 @@
         "author": "Mason",
         "location": "Seymour, IN"
       }
+    ],
+    "photos": [
+      "/images/products/methylene-blue/Main.png",
+      "/images/products/methylene-blue/10.png",
+      "/images/products/methylene-blue/2.png",
+      "/images/products/methylene-blue/3.png",
+      "/images/products/methylene-blue/4.png",
+      "/images/products/methylene-blue/5.png",
+      "/images/products/methylene-blue/6.png",
+      "/images/products/methylene-blue/7.png",
+      "/images/products/methylene-blue/8.png",
+      "/images/products/methylene-blue/9.png"
     ]
   }
 ]

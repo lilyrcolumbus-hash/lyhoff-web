@@ -1059,6 +1059,7 @@ const ADMIN_COLLECTIONS: Record<string, AdminCollection> = {
       "category",
       "active",
       "position",
+      "photos",
     ],
   },
   orders: {
@@ -1162,6 +1163,92 @@ async function handleAdminCollection(request: Request, env: Env): Promise<Respon
   }
 
   return jsonWithCookies({ ok: true, row: rows[0] }, session.setCookies);
+}
+
+/**
+ * Photo upload.
+ *
+ * The browser never holds a Supabase token — the session is an HttpOnly cookie —
+ * so the file comes here and this forwards it to storage with the caller's own
+ * access token. The bucket's policies then decide, exactly like every other
+ * admin write: authorisation is Postgres, not this Worker.
+ *
+ * Only the file lands here. The panel adds the returned path to the product's
+ * `photos` list through the ordinary collection endpoint, so ordering and
+ * removal stay one mechanism instead of two.
+ */
+const PHOTO_BUCKET = "product-photos";
+const PHOTO_TYPES: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/avif": "avif",
+};
+const PHOTO_MAX_BYTES = 10 * 1024 * 1024;
+
+async function handleAdminPhoto(request: Request, env: Env): Promise<Response> {
+  const { session, isAdmin, config } = await getAdminSession(request, env);
+  if (!config) return json({ error: "not_configured" }, 503);
+  if (!session.user || !session.accessToken) {
+    return jsonWithCookies({ error: "unauthorized" }, session.setCookies, 401);
+  }
+  if (!isAdmin) return jsonWithCookies({ error: "not_admin" }, session.setCookies, 403);
+
+  const auth = { apikey: config.key, Authorization: `Bearer ${session.accessToken}` };
+
+  if (request.method === "DELETE") {
+    const path = new URL(request.url).searchParams.get("path") ?? "";
+    // A path is only ever one this Worker minted. Refusing anything else keeps a
+    // crafted request from reaching for another object in the bucket.
+    if (!/^[a-z0-9-]+\/[0-9]+-[a-z0-9]+\.[a-z]+$/.test(path)) {
+      return jsonWithCookies({ error: "invalid_path" }, session.setCookies, 400);
+    }
+    const res = await fetch(`${config.url}/storage/v1/object/${PHOTO_BUCKET}/${path}`, {
+      method: "DELETE",
+      headers: auth,
+    });
+    if (!res.ok && res.status !== 404) {
+      console.error("photo delete failed", res.status, await res.text().catch(() => ""));
+      return jsonWithCookies({ error: "delete_failed" }, session.setCookies, 502);
+    }
+    return jsonWithCookies({ ok: true }, session.setCookies);
+  }
+
+  let form: FormData;
+  try {
+    form = await request.formData();
+  } catch {
+    return jsonWithCookies({ error: "invalid_body" }, session.setCookies, 400);
+  }
+
+  const slug = String(form.get("slug") ?? "");
+  const file = form.get("file");
+  if (!/^[a-z0-9-]+$/.test(slug)) return jsonWithCookies({ error: "invalid_slug" }, session.setCookies, 400);
+  if (!(file instanceof File)) return jsonWithCookies({ error: "missing_file" }, session.setCookies, 400);
+
+  const ext = PHOTO_TYPES[file.type];
+  if (!ext) return jsonWithCookies({ error: "unsupported_type" }, session.setCookies, 400);
+  if (file.size > PHOTO_MAX_BYTES) return jsonWithCookies({ error: "too_large" }, session.setCookies, 400);
+
+  // The name is generated, never taken from the upload: a filename is attacker
+  // controlled text, and a stable random name also means re-uploading a photo
+  // can never overwrite a different one that happens to share a name.
+  const path = `${slug}/${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${ext}`;
+
+  const res = await fetch(`${config.url}/storage/v1/object/${PHOTO_BUCKET}/${path}`, {
+    method: "POST",
+    headers: { ...auth, "Content-Type": file.type, "Cache-Control": "public, max-age=31536000, immutable" },
+    // Buffered rather than streamed: capped at 10 MB above, and a stream body
+    // needs a length Supabase's storage API will not always accept without.
+    body: await file.arrayBuffer(),
+  });
+
+  if (!res.ok) {
+    console.error("photo upload failed", res.status, await res.text().catch(() => ""));
+    return jsonWithCookies({ error: "upload_failed" }, session.setCookies, 502);
+  }
+
+  return jsonWithCookies({ ok: true, path }, session.setCookies);
 }
 
 // The Publish button.
@@ -1445,6 +1532,12 @@ export default {
     if (url.pathname === "/api/admin/publish") {
       if (request.method === "GET" || request.method === "POST") {
         return handleAdminPublish(request, env);
+      }
+      return new Response("Method Not Allowed", { status: 405 });
+    }
+    if (url.pathname === "/api/admin/photo") {
+      if (request.method === "POST" || request.method === "DELETE") {
+        return handleAdminPhoto(request, env);
       }
       return new Response("Method Not Allowed", { status: 405 });
     }

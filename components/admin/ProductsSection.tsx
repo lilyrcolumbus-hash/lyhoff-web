@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { BilingualField, type Bilingual } from "./BilingualField";
+import { PhotoManager, isUploaded, photoSrc } from "./PhotoManager";
 import { Button, Card, Empty, Note, Pill, inputClass, labelClass, patchRow, price, readCollection } from "./ui";
 
 interface Product {
@@ -17,6 +18,7 @@ interface Product {
   variant_group: string | null;
   price: number;
   active: boolean;
+  photos: string[];
 }
 
 const EMPTY: Bilingual = { en: "", es: "" };
@@ -84,7 +86,7 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
   const [rows, setRows] = useState<Product[] | null>(null);
   const [openId, setOpenId] = useState<string | null>(null);
   const [draft, setDraft] = useState<Product[] | null>(null);
-  const [expanded, setExpanded] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState<{ slug: string; tab: "text" | "photos" } | null>(null);
   const [saving, setSaving] = useState(false);
   const [query, setQuery] = useState("");
   const [message, setMessage] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
@@ -174,6 +176,20 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
         return;
       }
       saved.push(result.row as Product);
+
+      // Only now that the row is written do the removed files go. Doing it when
+      // the ✕ was clicked would destroy a photo that Discard was about to bring
+      // back. Failures here are silent on purpose: the photo is already off the
+      // product, and an orphan in the bucket is not worth an error in her face.
+      const dropped = (before.photos ?? []).filter(
+        (entry) => isUploaded(entry) && !(variant.photos ?? []).includes(entry),
+      );
+      for (const entry of dropped) {
+        await fetch(`/api/admin/photo?path=${encodeURIComponent(entry)}`, {
+          method: "DELETE",
+          credentials: "same-origin",
+        }).catch(() => null);
+      }
     }
 
     if (saved.length > 0) {
@@ -275,7 +291,7 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
 
           <div className="divide-y divide-stone-200">
             {draft.map((variant) => {
-              const isOpen = expanded === variant.slug;
+              const openTab = expanded?.slug === variant.slug ? expanded.tab : null;
               return (
                 <div key={variant.slug}>
                   <div className="flex flex-wrap items-center gap-3 px-4 py-3">
@@ -311,16 +327,43 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
                       Visible
                     </label>
 
-                    <button
-                      type="button"
-                      onClick={() => setExpanded(isOpen ? null : variant.slug)}
-                      className="shrink-0 text-[12px] text-stone-500 underline underline-offset-2 hover:text-forest-950"
-                    >
-                      {isOpen ? "Hide text" : "Text"}
-                    </button>
+                    <span className="flex shrink-0 items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setExpanded(openTab === "photos" ? null : { slug: variant.slug, tab: "photos" })
+                        }
+                        className={`text-[12px] underline underline-offset-2 hover:text-forest-950 ${
+                          openTab === "photos" ? "font-semibold text-forest-950" : "text-stone-500"
+                        }`}
+                      >
+                        Photos ({(variant.photos ?? []).length})
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setExpanded(openTab === "text" ? null : { slug: variant.slug, tab: "text" })
+                        }
+                        className={`text-[12px] underline underline-offset-2 hover:text-forest-950 ${
+                          openTab === "text" ? "font-semibold text-forest-950" : "text-stone-500"
+                        }`}
+                      >
+                        Text
+                      </button>
+                    </span>
                   </div>
 
-                  {isOpen && (
+                  {openTab === "photos" && (
+                    <div className="border-t border-stone-200 bg-stone-50/60 px-4 py-4">
+                      <PhotoManager
+                        slug={variant.slug}
+                        photos={variant.photos ?? []}
+                        onChange={(photos) => setVariant(variant.slug, { photos })}
+                      />
+                    </div>
+                  )}
+
+                  {openTab === "text" && (
                     <div className="flex flex-col gap-5 border-t border-stone-200 bg-stone-50/60 px-4 py-4">
                       <BilingualField
                         title="Name"
@@ -372,6 +415,8 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
         ) : (
           filtered.map((group) => {
             const live = group.variants.filter((v) => v.active).length;
+            // Whichever variant is actually on sale is the one worth showing.
+            const thumb = (group.variants.find((v) => v.active) ?? group.variants[0]).photos?.[0];
             return (
               <button
                 key={group.id}
@@ -379,6 +424,17 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
                 onClick={() => open(group)}
                 className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-stone-50"
               >
+                {thumb ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={photoSrc(thumb)}
+                    alt=""
+                    loading="lazy"
+                    className="h-10 w-10 shrink-0 border border-stone-200 bg-stone-50 object-cover"
+                  />
+                ) : (
+                  <span className="h-10 w-10 shrink-0 border border-dashed border-stone-300" />
+                )}
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[13.5px] font-medium text-forest-950">{group.name}</span>
                   <span className="block text-[11.5px] text-stone-500">
