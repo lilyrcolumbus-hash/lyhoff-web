@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { isLocale, t, type Locale } from "@/lib/i18n";
 import { dedupeVariants, productsByCategory } from "@/lib/products";
 import { getProductImageUrl } from "@/lib/product-images";
+import { shopCategories } from "@/lib/categories";
 import { ProductCard } from "@/components/ProductCard";
 import { FullBleedVideo } from "@/components/FullBleedVideo";
 import { QuizBanner } from "@/components/QuizBanner";
@@ -33,37 +34,16 @@ export default async function ProductsPage({
   if (!isLocale(lang)) notFound();
   const locale: Locale = lang;
 
-  const bodycare = dedupeVariants(productsByCategory("bodycare"));
-  const hair = dedupeVariants(productsByCategory("hair"));
-  const home = dedupeVariants(productsByCategory("home"));
-  const hoff = dedupeVariants(productsByCategory("hoff"));
-
-  const sections = [
-    {
-      key: "bodycare",
-      title: { en: "Skin & Body", es: "Piel y Cuerpo" },
-      sub: { en: "Small-batch tallow skincare, formulated and tested on ourselves.", es: "Skincare de sebo elaborado en pequeños lotes, formulado y probado en nosotros." },
-      products: bodycare,
-    },
-    {
-      key: "hair",
-      title: { en: "Hair Care", es: "Cuidado Capilar" },
-      sub: { en: "Chemical-free hair treatments that work with your scalp, not against it.", es: "Tratamientos capilares sin químicos que trabajan con tu cuero cabelludo." },
-      products: hair,
-    },
-    {
-      key: "home",
-      title: { en: "Home & Garden", es: "Hogar y Jardín" },
-      sub: { en: "Natural solutions for your garden and outdoor space.", es: "Soluciones naturales para tu jardín y exterior." },
-      products: home,
-    },
-    {
-      key: "hoff",
-      title: { en: "HOFF — Health", es: "HOFF — Salud" },
-      sub: { en: "Pharmaceutical grade supplements and precision formulas.", es: "Suplementos grado farmacéutico y fórmulas de precisión." },
-      products: hoff,
-    },
-  ].filter((s) => s.products.length > 0);
+  // Built from the shared category list rather than four hand-written blocks,
+  // so a category she adds shows up here on its own.
+  const sections = shopCategories()
+    .map(({ key, content }) => ({
+      key,
+      title: content.title,
+      sub: content.sub,
+      products: dedupeVariants(productsByCategory(key)),
+    }))
+    .filter((section) => section.products.length > 0);
 
   const uniqueProductCount = sections.reduce((sum, s) => sum + s.products.length, 0);
 

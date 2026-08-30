@@ -32,5 +32,8 @@ export const business = {
 /** Storefront wording overridden per key, per locale. Empty for most sites. */
 export const contentOverrides = (stored.content ?? {}) as Record<string, Record<string, string>>;
 
+/** Shop categories she has renamed, reordered or added. */
+export const categoryOverrides = (stored.categories ?? {}) as Record<string, unknown>;
+
 /** Header and footer links, when the owner has arranged her own. */
 export const navigationOverrides = (stored.navigation ?? {}) as Record<string, unknown>;

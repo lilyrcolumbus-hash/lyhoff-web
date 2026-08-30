@@ -5,7 +5,12 @@ import generated from "./products.generated.json";
 // (worker.ts's FLAT_SHIPPING_CENTS) subtracted out, so product price + shipping at checkout
 // equals what used to be the standalone product price. If FLAT_SHIPPING_CENTS ever changes,
 // these need re-adjusting to match.
-export type ProductCategory = "bodycare" | "hair" | "home" | "hoff";
+/**
+ * Categories are data now, not a fixed union — she can add a line from the
+ * panel, and a type that has to be edited in code to allow that would defeat
+ * the point. What each one is called and says lives in lib/categories.ts.
+ */
+export type ProductCategory = string;
 
 export interface Product {
   asin: string;

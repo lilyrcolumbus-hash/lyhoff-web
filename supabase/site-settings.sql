@@ -35,5 +35,6 @@ insert into public.site_settings (key, value) values
   ('business', '{"email": "you@example.com", "legalName": "Your Company LLC"}'::jsonb),
   ('palette', '{}'::jsonb),
   ('navigation', '{}'::jsonb),
-  ('content', '{}'::jsonb)
+  ('content', '{}'::jsonb),
+  ('categories', '{}'::jsonb)
 on conflict (key) do nothing;

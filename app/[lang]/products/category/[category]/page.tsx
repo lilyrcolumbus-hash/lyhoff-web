@@ -13,78 +13,17 @@ import { ProductCard } from "@/components/ProductCard";
 import { TrustBadges } from "@/components/TrustBadges";
 import { StockVideo } from "@/components/StockVideo";
 import { Newsletter } from "@/components/Newsletter";
+import { shopCategories } from "@/lib/categories";
 
-const CATEGORIES: ProductCategory[] = ["bodycare", "hair", "home", "hoff"];
-
-const CONTENT: Record<
-  ProductCategory,
-  {
-    title: { en: string; es: string };
-    headline: { en: string; es: string };
-    sub: { en: string; es: string };
-    why: { en: string; es: string };
-    video: string;
-  }
-> = {
-  bodycare: {
-    title: { en: "Skin & Body", es: "Piel y Cuerpo" },
-    headline: { en: "Skin that heals, not just moisturizes.", es: "Piel que sana, no solo hidrata." },
-    sub: {
-      en: "Small-batch tallow skincare, formulated and tested on ourselves.",
-      es: "Skincare de sebo elaborado en pequeños lotes, formulado y probado en nosotros.",
-    },
-    why: {
-      en: "Grass-fed tallow is remarkably close to your skin's own lipids — it absorbs instead of sitting on top, with none of the synthetic emulsifiers most store creams rely on to fake that feeling.",
-      es: "El sebo grass-fed es notablemente similar a los lípidos naturales de tu piel — se absorbe en vez de quedarse encima, sin los emulsificantes sintéticos que usan la mayoría de las cremas para simular esa sensación.",
-    },
-    video: "/videos/mixing.mp4",
-  },
-  hair: {
-    title: { en: "Hair Care", es: "Cuidado Capilar" },
-    headline: { en: "Hair care that works with your scalp, not against it.", es: "Cuidado capilar que trabaja con tu cuero cabelludo, no en su contra." },
-    sub: {
-      en: "Chemical-free hair treatments that work with your scalp, not against it.",
-      es: "Tratamientos capilares sin químicos que trabajan con tu cuero cabelludo.",
-    },
-    why: {
-      en: "Most drugstore hair products are built around sulfates and silicones that coat the problem instead of solving it. Ours are built around what actually feeds a healthy scalp.",
-      es: "La mayoría de los productos capilares de tienda están hechos con sulfatos y siliconas que cubren el problema en vez de resolverlo. Los nuestros están hechos con lo que realmente nutre un cuero cabelludo sano.",
-    },
-    video: "/videos/herbs.mp4",
-  },
-  home: {
-    title: { en: "Home & Garden", es: "Hogar y Jardín" },
-    headline: { en: "Simple, safe solutions for your garden and home.", es: "Soluciones simples y seguras para tu jardín y tu hogar." },
-    sub: {
-      en: "Natural solutions for your garden and outdoor space.",
-      es: "Soluciones naturales para tu jardín y exterior.",
-    },
-    why: {
-      en: "Anything we put in the garden ends up near the people, pets, and pollinators we care about — so it starts the same way everything else here does: no synthetic chemicals, full stop.",
-      es: "Todo lo que ponemos en el jardín termina cerca de las personas, mascotas y polinizadores que nos importan — así que empieza igual que todo lo demás acá: sin químicos sintéticos, punto.",
-    },
-    video: "/videos/soil.mp4",
-  },
-  hoff: {
-    title: { en: "HOFF — Health", es: "HOFF — Salud" },
-    headline: { en: "Precision-grade formulas for people who read labels.", es: "Fórmulas de precisión para quienes leen las etiquetas." },
-    sub: {
-      en: "Pharmaceutical grade supplements and precision formulas.",
-      es: "Suplementos grado farmacéutico y fórmulas de precisión.",
-    },
-    why: {
-      en: "HOFF is our separate line for people who want to know exactly what's in what they take — sourced carefully, dosed precisely, nothing hidden behind a proprietary blend.",
-      es: "HOFF es nuestra línea aparte para quienes quieren saber exactamente qué contiene lo que toman — con abastecimiento cuidadoso, dosis precisas, nada oculto detrás de una mezcla \"propietaria\".",
-    },
-    video: "/videos/bottling.mp4",
-  },
-};
+// One definition, shared with the header and the shop page — see lib/categories.ts.
+const CATEGORIES = shopCategories();
+const CONTENT = Object.fromEntries(CATEGORIES.map((c) => [c.key, c.content]));
 
 export function generateStaticParams() {
   return locales.flatMap((lang) =>
-    CATEGORIES.filter((c) => productsByCategory(c).length > 0).map((category) => ({
+    CATEGORIES.filter((c) => productsByCategory(c.key).length > 0).map(({ key }) => ({
       lang,
-      category,
+      category: key,
     })),
   );
 }
@@ -122,9 +61,9 @@ export default async function ProductCategoryPage({
   if (!isLocale(lang)) notFound();
   const locale: Locale = lang;
 
-  if (!CATEGORIES.includes(category as ProductCategory)) notFound();
-  const cat = category as ProductCategory;
-  const c = CONTENT[cat];
+  const c = CONTENT[category];
+  if (!c) notFound();
+  const cat = category;
 
   const products = dedupeVariants(productsByCategory(cat));
   if (products.length === 0) notFound();

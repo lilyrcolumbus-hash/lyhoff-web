@@ -6,15 +6,14 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { otherLocale, t, type Locale } from "@/lib/i18n";
 import { headerLinks, navHref } from "@/lib/navigation";
+import { shopCategories } from "@/lib/categories";
 import { useCartStore } from "@/lib/cart-store";
 import { productsByCategory, type ProductCategory } from "@/lib/products";
 
-const ALL_SHOP_CATEGORIES: { key: ProductCategory; label: { en: string; es: string } }[] = [
-  { key: "bodycare", label: { en: "Skin & Body", es: "Piel y Cuerpo" } },
-  { key: "hair", label: { en: "Hair Care", es: "Cuidado Capilar" } },
-  { key: "home", label: { en: "Home & Garden", es: "Hogar y Jardín" } },
-  { key: "hoff", label: { en: "HOFF — Health", es: "HOFF — Salud" } },
-];
+// Sourced from one place — see lib/categories.ts. A category with nothing in it
+// removes its own link, which is why this menu is never editable by hand.
+const ALL_SHOP_CATEGORIES = shopCategories().map((c) => ({ key: c.key, label: c.content.title }));
+
 const SHOP_CATEGORIES = ALL_SHOP_CATEGORIES.filter((c) => productsByCategory(c.key).length > 0);
 
 // Arranged in the panel, defaulting to what was hardcoded here before.
