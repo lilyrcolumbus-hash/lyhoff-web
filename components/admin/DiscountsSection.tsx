@@ -12,6 +12,8 @@ interface Code {
   firstOrderOnly: boolean;
   percentOff: number | null;
   amountOff: number | null;
+  minimumCents: number | null;
+  expiresAt: number | null;
 }
 
 const ERRORS: Record<string, string> = {
@@ -38,6 +40,9 @@ export function DiscountsSection() {
   const [code, setCode] = useState("");
   const [percent, setPercent] = useState("10");
   const [firstOrderOnly, setFirstOrderOnly] = useState(true);
+  const [minimum, setMinimum] = useState("");
+  const [limit, setLimit] = useState("");
+  const [days, setDays] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -63,7 +68,14 @@ export function DiscountsSection() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "same-origin",
-      body: JSON.stringify({ code, percentOff: Number(percent), firstOrderOnly }),
+      body: JSON.stringify({
+        code,
+        percentOff: Number(percent),
+        firstOrderOnly,
+        minimumCents: minimum.trim() ? Math.round(Number(minimum) * 100) : undefined,
+        maxRedemptions: limit.trim() ? Math.round(Number(limit)) : undefined,
+        expiresInDays: days.trim() ? Math.round(Number(days)) : undefined,
+      }),
     }).catch(() => null);
 
     const body = (await res?.json().catch(() => ({}))) as { error?: string };
@@ -73,6 +85,9 @@ export function DiscountsSection() {
       return;
     }
     setCode("");
+    setMinimum("");
+    setLimit("");
+    setDays("");
     setAdding(false);
     setBusy(false);
     await load();
@@ -126,6 +141,52 @@ export function DiscountsSection() {
             </div>
           </div>
 
+          <div className="grid gap-4 border-t border-stone-200 pt-4 sm:grid-cols-3">
+            <div className="flex flex-col gap-1.5">
+              <span className={labelClass}>Minimum order</span>
+              <div className="flex">
+                <span className="border border-r-0 border-stone-300 bg-stone-50 px-3 py-2 text-sm text-stone-500">
+                  $
+                </span>
+                <input
+                  className={`${inputClass} border-l-0`}
+                  inputMode="decimal"
+                  value={minimum}
+                  onChange={(event) => setMinimum(event.target.value)}
+                  placeholder="Any"
+                />
+              </div>
+              <Note>Before shipping. Leave empty for no minimum.</Note>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <span className={labelClass}>Times it can be used</span>
+              <input
+                className={inputClass}
+                inputMode="numeric"
+                value={limit}
+                onChange={(event) => setLimit(event.target.value)}
+                placeholder="Unlimited"
+              />
+              <Note>Across everyone, not per person.</Note>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <span className={labelClass}>Expires in</span>
+              <div className="flex">
+                <input
+                  className={`${inputClass} border-r-0`}
+                  inputMode="numeric"
+                  value={days}
+                  onChange={(event) => setDays(event.target.value)}
+                  placeholder="Never"
+                />
+                <span className="border border-l-0 border-stone-300 bg-stone-50 px-3 py-2 text-sm text-stone-500">
+                  days
+                </span>
+              </div>
+              <Note>A deadline is what makes a code get used.</Note>
+            </div>
+          </div>
+
           <label className="flex items-start justify-between gap-4 border-t border-stone-200 pt-4">
             <span>
               <span className={labelClass}>First order only</span>
@@ -172,6 +233,11 @@ export function DiscountsSection() {
                 <span className="block text-[11.5px] text-stone-500">
                   {row.percentOff ? `${row.percentOff}% off` : `$${((row.amountOff ?? 0) / 100).toFixed(2)} off`}
                   {row.firstOrderOnly && " · first order only"}
+                  {row.minimumCents ? ` · over $${(row.minimumCents / 100).toFixed(2)}` : ""}
+                  {row.maxRedemptions ? ` · ${row.maxRedemptions} max` : ""}
+                  {row.expiresAt
+                    ? ` · ${row.expiresAt * 1000 < Date.now() ? "expired" : `until ${new Date(row.expiresAt * 1000).toLocaleDateString()}`}`
+                    : ""}
                 </span>
               </span>
               <span className="shrink-0 text-[12.5px] tabular-nums text-stone-600">

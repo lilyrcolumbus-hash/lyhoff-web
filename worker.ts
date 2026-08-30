@@ -1597,7 +1597,8 @@ async function handleAdminDiscounts(request: Request, env: Env): Promise<Respons
         active: boolean;
         times_redeemed: number;
         max_redemptions: number | null;
-        restrictions?: { first_time_transaction?: boolean };
+        expires_at: number | null;
+        restrictions?: { first_time_transaction?: boolean; minimum_amount?: number | null };
         coupon?: { percent_off: number | null; amount_off: number | null; duration: string };
       }[];
     };
@@ -1610,6 +1611,8 @@ async function handleAdminDiscounts(request: Request, env: Env): Promise<Respons
           redeemed: row.times_redeemed,
           maxRedemptions: row.max_redemptions,
           firstOrderOnly: row.restrictions?.first_time_transaction ?? false,
+          minimumCents: row.restrictions?.minimum_amount ?? null,
+          expiresAt: row.expires_at,
           percentOff: row.coupon?.percent_off ?? null,
           amountOff: row.coupon?.amount_off ?? null,
         })),
@@ -1618,7 +1621,16 @@ async function handleAdminDiscounts(request: Request, env: Env): Promise<Respons
     );
   }
 
-  let body: { id?: string; active?: boolean; code?: string; percentOff?: number; firstOrderOnly?: boolean };
+  let body: {
+    id?: string;
+    active?: boolean;
+    code?: string;
+    percentOff?: number;
+    firstOrderOnly?: boolean;
+    minimumCents?: number;
+    maxRedemptions?: number;
+    expiresInDays?: number;
+  };
   try {
     body = (await request.json()) as typeof body;
   } catch {
@@ -1663,6 +1675,23 @@ async function handleAdminDiscounts(request: Request, env: Env): Promise<Respons
 
   const params = new URLSearchParams({ coupon: couponId, code });
   if (body.firstOrderOnly) params.set("restrictions[first_time_transaction]", "true");
+
+  // Every restriction is Stripe's own, enforced at payment. Keeping them there
+  // rather than checking anything in our checkout is what makes them true even
+  // for a request that never touched our code.
+  const minimum = Number(body.minimumCents);
+  if (Number.isInteger(minimum) && minimum > 0) {
+    params.set("restrictions[minimum_amount]", String(minimum));
+    params.set("restrictions[minimum_amount_currency]", "usd");
+  }
+
+  const limit = Number(body.maxRedemptions);
+  if (Number.isInteger(limit) && limit > 0) params.set("max_redemptions", String(limit));
+
+  const days = Number(body.expiresInDays);
+  if (Number.isFinite(days) && days > 0) {
+    params.set("expires_at", String(Math.floor(Date.now() / 1000) + Math.round(days) * 86400));
+  }
 
   const promo = await fetch("https://api.stripe.com/v1/promotion_codes", {
     method: "POST",
