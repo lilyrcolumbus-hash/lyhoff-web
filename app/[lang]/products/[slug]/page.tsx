@@ -91,6 +91,11 @@ export default async function ProductDetailPage({
   const description = product.description[locale];
   const badge = product.badge?.[locale];
 
+  // A customer's review exists in the language they wrote it in. Showing it
+  // untranslated on the other language's page would mix the two, which this
+  // site never does — so it simply isn't shown there until it is translated.
+  const visibleReviews = (product.reviews ?? []).filter((r) => r.text[locale]?.trim());
+
   const localImages = getProductImageUrls(product.slug);
   const fallback = getProductImageUrl(product.slug, product.image);
   const gallery = localImages.length > 0 ? localImages : [fallback.url];
@@ -283,9 +288,9 @@ export default async function ProductDetailPage({
           <h2 className="font-display text-xs font-semibold uppercase tracking-[0.25em] text-stone-400 mb-3">
             {locale === "en" ? "Reviews" : "Reseñas"}
           </h2>
-          {product.reviews && product.reviews.length > 0 ? (
+          {visibleReviews.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-3">
-              {product.reviews.map((r, i) => (
+              {visibleReviews.map((r, i) => (
                 <blockquote key={i} className="bg-cream/60 backdrop-blur-xl border border-stone-200 p-5">
                   <p className="text-sm text-stone-700 leading-relaxed">&ldquo;{r.text[locale]}&rdquo;</p>
                   <footer className="mt-3 text-xs font-medium text-stone-400">

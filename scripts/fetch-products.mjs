@@ -62,6 +62,46 @@ if (!Array.isArray(rows) || rows.length === 0) {
 
 const products = rows.map(toProduct);
 
+// Reviews a customer submitted and she approved, merged onto their product.
+//
+// Without this the Publish button on the Reviews screen did nothing visible:
+// approving set a flag no build ever read. Curated reviews already on the
+// product row stay first — they were written for the site; these are added
+// after them.
+//
+// A review is written in one language. The other side is filled only from a
+// translation she wrote herself, and the product page skips a review with
+// nothing to say in the language being read — the site never mixes languages,
+// and a machine translation nobody checked is not an improvement on silence.
+const reviewsRes = await fetch(
+  `${SUPABASE_URL}/rest/v1/review_submissions?select=slug,author,location,text,locale,translation&approved=is.true&order=created_at.asc`,
+  { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } },
+);
+
+let approved = [];
+if (reviewsRes.ok) {
+  approved = await reviewsRes.json();
+} else if (reviewsRes.status !== 404) {
+  throw new Error(`fetch-products: reviews returned ${reviewsRes.status} ${await reviewsRes.text()}`);
+}
+
+for (const review of approved) {
+  const product = products.find((p) => p.slug === review.slug);
+  if (!product || !review.text?.trim()) continue;
+  const wrote = review.locale === "es" ? "es" : "en";
+  const other = wrote === "es" ? "en" : "es";
+  product.reviews = [
+    ...(product.reviews ?? []),
+    {
+      text: { [wrote]: review.text, [other]: review.translation?.trim() ?? "" },
+      author: review.author,
+      location: review.location ?? "",
+    },
+  ];
+}
+
+if (approved.length > 0) console.log(`fetch-products: ${approved.length} approved reviews merged`);
+
 for (const p of products) {
   if (!p.slug || !p.category || typeof p.price !== "number" || !p.name?.en || !p.name?.es) {
     throw new Error(`fetch-products: product "${p.slug ?? "(no slug)"}" is missing required fields`);

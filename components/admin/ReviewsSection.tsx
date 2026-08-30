@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Button, Card, Empty, Note, Pill, day, patchRow, readCollection } from "./ui";
+import { Button, Card, Empty, Note, Pill, day, inputClass, labelClass, patchRow, readCollection } from "./ui";
 
 interface Review {
   id: string;
@@ -10,6 +10,8 @@ interface Review {
   author: string;
   location: string | null;
   text: string;
+  locale: string | null;
+  translation: string | null;
   approved: boolean;
   created_at: string;
 }
@@ -17,10 +19,12 @@ interface Review {
 export function ReviewsSection({ reportCount }: { reportCount: (key: string, n: number) => void }) {
   const [rows, setRows] = useState<Review[] | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const [translations, setTranslations] = useState<Record<string, string>>({});
 
   const load = useCallback(async () => {
     const data = await readCollection<Review>("reviews");
     setRows(data ?? []);
+    setTranslations(Object.fromEntries((data ?? []).map((r) => [r.id, r.translation ?? ""])));
     // The count that matters in the sidebar is what still needs a decision.
     if (data) reportCount("reviews", data.filter((r) => !r.approved).length);
   }, [reportCount]);
@@ -36,6 +40,16 @@ export function ReviewsSection({ reportCount }: { reportCount: (key: string, n: 
       const saved = result.row as Review;
       setRows((list) => (list ?? []).map((r) => (r.id === saved.id ? saved : r)));
       reportCount("reviews", (rows ?? []).filter((r) => (r.id === id ? !approved : !r.approved)).length);
+    }
+    setBusy(null);
+  }
+
+  async function saveTranslation(id: string) {
+    setBusy(id);
+    const result = await patchRow("reviews", id, { translation: translations[id] ?? "" });
+    if (result.ok) {
+      const saved = result.row as Review;
+      setRows((list) => (list ?? []).map((r) => (r.id === saved.id ? saved : r)));
     }
     setBusy(null);
   }
@@ -63,6 +77,34 @@ export function ReviewsSection({ reportCount }: { reportCount: (key: string, n: 
             {review.slug ? ` · ${review.slug}` : ""}
           </p>
 
+          <div className="mt-3 flex flex-col gap-1.5 border-t border-stone-200 pt-3">
+            <span className={labelClass}>
+              {wroteIn(review) === "es" ? "In English" : "En español"}
+            </span>
+            <textarea
+              className={`${inputClass} min-h-[60px] resize-y text-[13px] leading-relaxed`}
+              value={translations[review.id] ?? ""}
+              onChange={(event) =>
+                setTranslations((current) => ({ ...current, [review.id]: event.target.value }))
+              }
+              placeholder="Translate it here, in your own words."
+            />
+            <span className="flex items-center gap-3">
+              <Button
+                variant="quiet"
+                disabled={busy === review.id || (translations[review.id] ?? "") === (review.translation ?? "")}
+                onClick={() => saveTranslation(review.id)}
+              >
+                Save translation
+              </Button>
+              <span className="text-[11.5px] text-stone-500">
+                {review.translation?.trim()
+                  ? "Shows in both languages."
+                  : `Only shows on the ${wroteIn(review) === "es" ? "Spanish" : "English"} page until this is filled.`}
+              </span>
+            </span>
+          </div>
+
           <div className="mt-3 flex gap-2 border-t border-stone-200 pt-3">
             {review.approved ? (
               <Button variant="quiet" disabled={busy === review.id} onClick={() => decide(review.id, false)}>
@@ -77,8 +119,15 @@ export function ReviewsSection({ reportCount }: { reportCount: (key: string, n: 
         </Card>
       ))}
       <Note>
-        Publishing marks a review approved. It appears on the product page at the next publish.
+        A published review appears on its product page at the next publish. A customer writes in
+        one language and this site never mixes the two, so it only appears on the other language's
+        page once you have translated it.
       </Note>
     </div>
   );
+}
+
+/** Which language the customer actually wrote in. */
+function wroteIn(review: Review): "en" | "es" {
+  return review.locale === "es" ? "es" : "en";
 }

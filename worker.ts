@@ -1178,7 +1178,7 @@ const ADMIN_COLLECTIONS: Record<string, AdminCollection> = {
     table: "review_submissions",
     key: "id",
     order: "created_at.desc",
-    editable: ["approved"],
+    editable: ["approved", "translation"],
   },
   subscribers: {
     table: "subscribers",

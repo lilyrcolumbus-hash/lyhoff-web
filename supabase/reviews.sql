@@ -35,3 +35,21 @@ create policy "anon can submit reviews"
   for insert
   to anon
   with check (true);
+
+-- A customer writes in one language; the site is bilingual and never mixes the
+-- two, so the other side is filled only from a translation the owner wrote
+-- herself. Until then the review simply doesn't appear on the other language's
+-- page — see scripts/fetch-products.mjs.
+alter table public.review_submissions
+  add column if not exists translation text;
+
+-- The site is built with the anon key, so the build must be able to read the
+-- reviews it is about to print. Only approved ones: a pending review is
+-- something nobody has agreed to publish yet and stays unreadable, while an
+-- approved one is already public — it is on the product page.
+grant select on public.review_submissions to anon;
+
+drop policy if exists "anyone can read approved reviews" on public.review_submissions;
+create policy "anyone can read approved reviews"
+  on public.review_submissions for select
+  using (approved);
