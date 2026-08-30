@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { PackingSlip } from "./PackingSlip";
 import {
   Button,
   Card,
@@ -45,6 +46,23 @@ function addressLines(address: Record<string, string | null> | null): string[] {
   ].filter((line): line is string => Boolean(line && line.trim()));
 }
 
+type Filter = "toship" | "shipped" | "week" | "all";
+
+/**
+ * What she actually looks for, in the order she looks for it.
+ *
+ * "To ship" is first and is the default, because that is the only question this
+ * screen gets asked most mornings. A general date picker would be more powerful
+ * and less useful — "this week" is the range anyone ever wants.
+ */
+const DAY = 24 * 60 * 60 * 1000;
+const FILTERS: { id: Filter; label: string; keep: (order: Order) => boolean }[] = [
+  { id: "toship", label: "To ship", keep: (order) => !order.tracking_number },
+  { id: "shipped", label: "Shipped", keep: (order) => Boolean(order.tracking_number) },
+  { id: "week", label: "Last 7 days", keep: (order) => Date.now() - Date.parse(order.created_at) < 7 * DAY },
+  { id: "all", label: "All", keep: () => true },
+];
+
 /**
  * Orders: the list is for scanning, the detail is for packing one.
  *
@@ -66,6 +84,7 @@ export function OrdersSection({ reportCount }: { reportCount: (key: string, n: n
   const [note, setNote] = useState("");
   const [saving, setSaving] = useState(false);
   const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState<Filter>("toship");
   const [message, setMessage] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
 
   const load = useCallback(async () => {
@@ -137,14 +156,17 @@ export function OrdersSection({ reportCount }: { reportCount: (key: string, n: n
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
-    if (!rows) return [];
-    if (!needle) return rows;
-    return rows.filter((order) =>
-      [order.email, order.customer_name, order.id, order.tracking_number].some((field) =>
-        field?.toLowerCase().includes(needle),
-      ),
-    );
-  }, [rows, query]);
+    const keep = FILTERS.find((option) => option.id === filter)?.keep ?? (() => true);
+    return (rows ?? [])
+      .filter(keep)
+      .filter(
+        (order) =>
+          !needle ||
+          [order.email, order.customer_name, order.id, order.tracking_number].some((field) =>
+            field?.toLowerCase().includes(needle),
+          ),
+      );
+  }, [rows, query, filter]);
 
   if (rows === null) return <Empty>Loading orders…</Empty>;
   if (rows.length === 0) {
@@ -255,6 +277,9 @@ export function OrdersSection({ reportCount }: { reportCount: (key: string, n: n
           </div>
 
           <div className="flex flex-wrap items-center gap-3 border-t border-stone-200 pt-4">
+            <Button variant="quiet" onClick={() => window.print()}>
+              Print packing slip
+            </Button>
             <a
               className="text-[12.5px] font-semibold text-indigo-700 underline underline-offset-2"
               href={`https://dashboard.stripe.com/payments?query=${encodeURIComponent(open.id)}`}
@@ -266,6 +291,8 @@ export function OrdersSection({ reportCount }: { reportCount: (key: string, n: n
             <Note>Refunds and the invoice live there — that's where the payment and its record are.</Note>
           </div>
         </Card>
+
+        <PackingSlip order={open} />
       </div>
     );
   }
@@ -273,6 +300,21 @@ export function OrdersSection({ reportCount }: { reportCount: (key: string, n: n
   // ── The list ──────────────────────────────────────────────────────────────
   return (
     <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap gap-2">
+        {FILTERS.map((option) => {
+          const count = (rows ?? []).filter(option.keep).length;
+          return (
+            <Button
+              key={option.id}
+              variant={filter === option.id ? "primary" : "quiet"}
+              onClick={() => setFilter(option.id)}
+            >
+              {option.label} ({count})
+            </Button>
+          );
+        })}
+      </div>
+
       <input
         className={inputClass}
         placeholder="Search by name, email or tracking number"
@@ -282,7 +324,9 @@ export function OrdersSection({ reportCount }: { reportCount: (key: string, n: n
 
       <Card className="divide-y divide-stone-200">
         {filtered.length === 0 ? (
-          <div className="px-4 py-6 text-center text-[13px] text-stone-500">Nothing matches that search.</div>
+          <div className="px-4 py-6 text-center text-[13px] text-stone-500">
+            {query.trim() ? "Nothing matches that search." : "Nothing here under this filter."}
+          </div>
         ) : (
           filtered.map((order) => (
             <button
