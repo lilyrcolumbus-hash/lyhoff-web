@@ -72,12 +72,13 @@ export function HomeSection({ onGo }: { onGo: (section: SectionId) => void }) {
 
       <Card className="p-5">
         <h2 className="font-display text-[15px] font-bold text-forest-950">
-          Changes don't publish themselves yet
+          Saving and publishing are two things
         </h2>
         <div className="mt-2">
           <Note>
-            What you save here is recorded in your database, but the site doesn't change until it is
-            rebuilt. Publish is the next thing being built — until then, tell me and I'll deploy it.
+            Saving records a change in your database straight away. The site itself is rebuilt only
+            when you press Publish, which takes one to three minutes — that gap is deliberate, so
+            the price a customer is reading is always the price they get charged.
           </Note>
         </div>
       </Card>

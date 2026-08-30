@@ -132,8 +132,8 @@ export function AdminApp() {
   const current = NAV.flatMap((g) => g.items).find((i) => i.id === section);
 
   return (
-    <div className="lg:grid lg:min-h-screen lg:grid-cols-[216px_1fr]">
-      <aside className="border-b border-stone-200 bg-white lg:border-b-0 lg:border-r">
+    <div className="sm:grid sm:min-h-screen sm:grid-cols-[200px_1fr] lg:grid-cols-[216px_1fr]">
+      <aside className="border-b border-stone-200 bg-white sm:border-b-0 sm:border-r">
         <div className="flex items-center gap-2.5 px-4 py-4">
           <LogoMark className="h-7 w-7 text-forest-950" textClassName="text-[9px]" />
           <span className="font-display text-[13px] text-forest-950" style={{ letterSpacing: "0.18em" }}>
@@ -142,13 +142,13 @@ export function AdminApp() {
           <button
             type="button"
             onClick={() => setMenuOpen((v) => !v)}
-            className="ml-auto text-[13px] font-medium text-stone-500 lg:hidden"
+            className="ml-auto text-[13px] font-medium text-stone-500 sm:hidden"
           >
             {menuOpen ? "Close" : "Menu"}
           </button>
         </div>
 
-        <nav className={`${menuOpen ? "block" : "hidden"} pb-4 lg:block`}>
+        <nav className={`${menuOpen ? "block" : "hidden"} pb-4 sm:block`}>
           {NAV.map((group) => (
             <div key={group.group} className="mb-4">
               <p className="px-4 pb-1.5 text-[9.5px] font-semibold uppercase tracking-[0.16em] text-stone-400">
