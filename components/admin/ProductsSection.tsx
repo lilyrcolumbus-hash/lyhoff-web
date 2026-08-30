@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { BilingualField, type Bilingual } from "./BilingualField";
+import { BilingualList } from "./BilingualList";
 import { NewProduct, slugify } from "./NewProduct";
 import { PhotoManager, isUploaded, photoSrc } from "./PhotoManager";
 import {
@@ -30,6 +31,10 @@ interface Product {
   scent: string | null;
   variant_group: string | null;
   scent_group: string | null;
+  ingredients: Bilingual[];
+  benefits: Bilingual[];
+  badge: Bilingual | null;
+  position: number | null;
   price: number;
   stock: number | null;
   active: boolean;
@@ -107,6 +112,9 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
   const [query, setQuery] = useState("");
   const [creating, setCreating] = useState(false);
   const [addingVariant, setAddingVariant] = useState(false);
+  // Non-null while she is rearranging the shop: a list of group ids in the
+  // order she wants, held apart from the rows until she saves it.
+  const [order, setOrder] = useState<string[] | null>(null);
   const [message, setMessage] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
 
   const load = useCallback(async () => {
@@ -217,6 +225,40 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
     setSaving(false);
   }
 
+  /**
+   * The order products appear in the shop.
+   *
+   * Positions are rewritten from scratch as multiples of ten rather than
+   * swapped: gaps leave room to slot something in later without touching
+   * everything, and every variant of a product gets its group's position so
+   * variants can never drift apart in the listing.
+   */
+  async function saveOrder() {
+    if (!order || !rows || saving) return;
+    setSaving(true);
+    setMessage(null);
+
+    for (const [index, id] of order.entries()) {
+      const variants = groups.find((group) => group.id === id)?.variants ?? [];
+      for (const variant of variants) {
+        const position = index * 10;
+        if (variant.position === position) continue;
+        const result = await patchRow("products", variant.slug, { position });
+        if (!result.ok) {
+          setMessage({ kind: "error", text: "Couldn't save the order." });
+          setSaving(false);
+          await load();
+          return;
+        }
+      }
+    }
+
+    setOrder(null);
+    await load();
+    setMessage({ kind: "ok", text: "Order saved — the shop follows it at the next publish." });
+    setSaving(false);
+  }
+
   async function save() {
     if (!draft || !original || saving) return;
     setSaving(true);
@@ -283,15 +325,35 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
     setSaving(false);
   }
 
+  function moveGroup(index: number, to: number) {
+    setOrder((current) => {
+      if (!current || to < 0 || to >= current.length) return current;
+      const next = [...current];
+      const [moved] = next.splice(index, 1);
+      next.splice(to, 0, moved);
+      return next;
+    });
+  }
+
+  const arranged = useMemo(() => {
+    if (!order) return groups;
+    // Anything created while she was rearranging still has to appear.
+    const known = new Set(order);
+    return [
+      ...order.map((id) => groups.find((group) => group.id === id)).filter((g) => g !== undefined),
+      ...groups.filter((group) => !known.has(group.id)),
+    ];
+  }, [groups, order]);
+
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
-    if (!needle) return groups;
-    return groups.filter((group) =>
+    if (!needle) return arranged;
+    return arranged.filter((group) =>
       [group.name, group.id, ...group.variants.flatMap((v) => [v.name?.es, v.slug, v.size, v.scent])].some(
         (field) => field?.toLowerCase().includes(needle),
       ),
     );
-  }, [groups, query]);
+  }, [arranged, query]);
 
   if (rows === null) return <Empty>Loading products…</Empty>;
 
@@ -503,6 +565,27 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
                         />
                       </div>
 
+                      <BilingualList
+                        title="Ingredients"
+                        hint="Shown as chips on the product page, in this order."
+                        items={variant.ingredients ?? []}
+                        onChange={(ingredients) => setVariant(variant.slug, { ingredients })}
+                      />
+
+                      <BilingualList
+                        title="Benefits"
+                        hint="The short bullets under the description."
+                        items={variant.benefits ?? []}
+                        onChange={(benefits) => setVariant(variant.slug, { benefits })}
+                      />
+
+                      <BilingualField
+                        title="Badge"
+                        value={variant.badge ?? EMPTY}
+                        onChange={(badge) => setVariant(variant.slug, { badge })}
+                        hint="The small label over the photo. Leave empty for none."
+                      />
+
                       <div className="flex flex-col gap-5 border-t border-stone-200 pt-4">
                         <p className="-mb-2 text-[11.5px] text-stone-500">
                           Search results and shared links. Leave both empty and the name and
@@ -559,14 +642,46 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
   // ── The list ──────────────────────────────────────────────────────────────
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex gap-3">
-        <input
-          className={inputClass}
-          placeholder="Search products"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-        />
-        <Button onClick={() => setCreating(true)}>Add product</Button>
+      <div className="flex flex-wrap gap-3">
+        {order ? (
+          <>
+            <p className="flex-1 self-center text-[12.5px] text-stone-600">
+              Drag isn't needed — use the arrows. This is the order the shop lists them in.
+            </p>
+            {message && (
+              <span className={`self-center text-[12.5px] ${message.kind === "ok" ? "text-earth-700" : "text-clay-600"}`}>
+                {message.text}
+              </span>
+            )}
+            <Button onClick={saveOrder} disabled={saving}>
+              {saving ? "Saving…" : "Save order"}
+            </Button>
+            <Button variant="quiet" onClick={() => setOrder(null)} disabled={saving}>
+              Cancel
+            </Button>
+          </>
+        ) : (
+          <>
+            <input
+              className={inputClass}
+              placeholder="Search products"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+            <Button
+              variant="quiet"
+              onClick={() => {
+                // A filtered list would make the arrows move the wrong rows —
+                // the positions written out are the positions on screen.
+                setQuery("");
+                setOrder(groups.map((group) => group.id));
+              }}
+            >
+              Reorder
+            </Button>
+            <Button onClick={() => setCreating(true)}>Add product</Button>
+          </>
+        )}
       </div>
 
       <Card className="divide-y divide-stone-200">
@@ -575,17 +690,49 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
             {rows.length === 0 ? "No products yet." : "Nothing matches that search."}
           </div>
         ) : (
-          filtered.map((group) => {
+          filtered.map((group, index) => {
             const live = group.variants.filter((v) => v.active).length;
             // Whichever variant is actually on sale is the one worth showing.
             const thumb = (group.variants.find((v) => v.active) ?? group.variants[0]).photos?.[0];
             return (
-              <button
+              <div
                 key={group.id}
-                type="button"
-                onClick={() => open(group)}
-                className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-stone-50"
+                className={`flex w-full items-center gap-3 px-4 py-3 text-left ${
+                  order ? "" : "cursor-pointer transition hover:bg-stone-50"
+                }`}
+                onClick={order ? undefined : () => open(group)}
+                role={order ? undefined : "button"}
+                tabIndex={order ? undefined : 0}
+                onKeyDown={
+                  order
+                    ? undefined
+                    : (event) => {
+                        if (event.key === "Enter" || event.key === " ") open(group);
+                      }
+                }
               >
+                {order && (
+                  <span className="flex shrink-0 flex-col">
+                    <button
+                      type="button"
+                      onClick={() => moveGroup(index, index - 1)}
+                      disabled={index === 0}
+                      aria-label="Move up"
+                      className="text-[11px] leading-tight text-stone-500 disabled:opacity-25 hover:text-forest-950"
+                    >
+                      ▲
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => moveGroup(index, index + 1)}
+                      disabled={index === filtered.length - 1}
+                      aria-label="Move down"
+                      className="text-[11px] leading-tight text-stone-500 disabled:opacity-25 hover:text-forest-950"
+                    >
+                      ▼
+                    </button>
+                  </span>
+                )}
                 {thumb ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -611,7 +758,7 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
                 <span className="w-16 shrink-0 text-right">
                   {live > 0 ? <Pill tone="live">LIVE</Pill> : <Pill tone="off">HIDDEN</Pill>}
                 </span>
-              </button>
+              </div>
             );
           })
         )}
