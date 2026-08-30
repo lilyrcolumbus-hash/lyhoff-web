@@ -1269,7 +1269,7 @@ const ADMIN_COLLECTIONS: Record<string, AdminCollection> = {
     table: "orders",
     key: "id",
     order: "created_at.desc",
-    editable: ["tracking_number", "tracking_url", "shipped_at"],
+    editable: ["tracking_number", "tracking_url", "shipped_at", "shipping_email_sent_at"],
   },
   pages: {
     table: "pages",
@@ -1751,6 +1751,255 @@ async function handleExpiredCheckout(session: Record<string, unknown>, env: Env)
   return json({ ok: true, emailed: sent });
 }
 
+/**
+ * "Your order is on its way."
+ *
+ * The tracking number already reaches the customer's account page, but almost
+ * nobody signs in to look — they write and ask, which is the message every shop
+ * gets most. Sending it unprompted is the cheapest support work there is.
+ *
+ * Deliberately no carrier name. The shop charges one flat rate and the parcel
+ * goes by whichever USPS service fits, so naming one would sometimes be wrong.
+ * The number is what a person actually needs.
+ */
+function shippedEmailHtml(locale: string, name: string, tracking: string, items: string[]): string {
+  const es = locale === "es";
+  const list = items
+    .map((line) => `<tr><td style="padding:4px 0;font-size:14px;color:#2b2a25;">${line}</td></tr>`)
+    .join("");
+  return `<!doctype html>
+<html>
+  <body style="margin:0;padding:32px 16px;background:#fbfaf7;font-family:Helvetica,Arial,sans-serif;">
+    <table role="presentation" width="100%" style="max-width:480px;margin:0 auto;">
+      <tr><td style="padding-bottom:20px;font-size:13px;letter-spacing:3px;color:#93906d;">LYHOFF</td></tr>
+      <tr><td style="padding-bottom:12px;font-size:22px;font-weight:bold;color:#1c1b17;">
+        ${es ? "Tu pedido va en camino" : "Your order is on its way"}
+      </td></tr>
+      <tr><td style="padding-bottom:20px;font-size:15px;line-height:1.6;color:#57534d;">
+        ${
+          es
+            ? `${name ? name + ", g" : "G"}racias. Lo empaquetamos y lo llevamos al correo nosotros mismos.`
+            : `${name ? name + ", t" : "T"}hank you. We packed it and took it to the post ourselves.`
+        }
+      </td></tr>
+      <tr><td style="padding-bottom:8px;font-size:11px;letter-spacing:2px;color:#79716b;">
+        ${es ? "NÚMERO DE SEGUIMIENTO" : "TRACKING NUMBER"}
+      </td></tr>
+      <tr><td style="padding-bottom:20px;">
+        <div style="border:1px solid #d6d3d1;padding:14px 16px;font-size:17px;font-weight:bold;letter-spacing:1px;color:#1c1b17;">
+          ${tracking}
+        </div>
+      </td></tr>
+      <tr><td style="padding-bottom:20px;">
+        <table role="presentation" width="100%" style="border-top:1px solid #e7e5e4;border-bottom:1px solid #e7e5e4;padding:8px 0;">
+          ${list}
+        </table>
+      </td></tr>
+      <tr><td style="font-size:12px;line-height:1.6;color:#79716b;">
+        ${
+          es
+            ? "Puedes seguirlo en usps.com. Si algo no llega bien, respóndenos a este correo."
+            : "You can follow it at usps.com. If anything arrives wrong, just reply to this email."
+        }
+      </td></tr>
+      <tr><td style="padding-top:20px;font-size:11px;color:#a8a29e;">LYHOFF LLC</td></tr>
+    </table>
+  </body>
+</html>`;
+}
+
+function shippedEmailText(locale: string, name: string, tracking: string, items: string[]): string {
+  const es = locale === "es";
+  return [
+    es ? "Tu pedido va en camino" : "Your order is on its way",
+    "",
+    es
+      ? `${name ? name + ", g" : "G"}racias. Lo empaquetamos y lo llevamos al correo nosotros mismos.`
+      : `${name ? name + ", t" : "T"}hank you. We packed it and took it to the post ourselves.`,
+    "",
+    `${es ? "Número de seguimiento" : "Tracking number"}: ${tracking}`,
+    "",
+    ...items,
+    "",
+    es
+      ? "Puedes seguirlo en usps.com. Si algo no llega bien, respóndenos a este correo."
+      : "You can follow it at usps.com. If anything arrives wrong, just reply to this email.",
+    "",
+    "LYHOFF LLC",
+  ].join("\n");
+}
+
+/**
+ * Tell one customer their order shipped.
+ *
+ * The order is read back from the database rather than trusted from the panel:
+ * the address this goes to has to be the one on the order, not one a request
+ * said to use.
+ */
+async function handleAdminNotifyShipped(request: Request, env: Env): Promise<Response> {
+  const { session, isAdmin, config } = await getAdminSession(request, env);
+  if (!config) return json({ error: "not_configured" }, 503);
+  if (!session.user || !session.accessToken) {
+    return jsonWithCookies({ error: "unauthorized" }, session.setCookies, 401);
+  }
+  if (!isAdmin) return jsonWithCookies({ error: "not_admin" }, session.setCookies, 403);
+  if (!env.RESEND_API_KEY) return jsonWithCookies({ error: "email_not_configured" }, session.setCookies, 503);
+
+  let id = "";
+  try {
+    id = String(((await request.json()) as { id?: string }).id ?? "");
+  } catch {
+    return jsonWithCookies({ error: "invalid_body" }, session.setCookies, 400);
+  }
+  if (!id) return jsonWithCookies({ error: "missing_id" }, session.setCookies, 400);
+
+  const auth = { apikey: config.key, Authorization: `Bearer ${session.accessToken}` };
+  const res = await fetch(
+    `${config.url}/rest/v1/orders?id=eq.${encodeURIComponent(id)}&select=email,customer_name,items,locale,tracking_number`,
+    { headers: auth },
+  );
+  if (!res.ok) return jsonWithCookies({ error: "fetch_failed" }, session.setCookies, 502);
+
+  const [order] = (await res.json()) as {
+    email: string;
+    customer_name: string | null;
+    items: { name: string; quantity: number }[];
+    locale: string | null;
+    tracking_number: string | null;
+  }[];
+
+  if (!order) return jsonWithCookies({ error: "not_found" }, session.setCookies, 404);
+  if (!order.tracking_number) {
+    return jsonWithCookies({ error: "no_tracking" }, session.setCookies, 400);
+  }
+
+  const locale = order.locale === "es" ? "es" : "en";
+  const name = (order.customer_name ?? "").split(" ")[0] ?? "";
+  const lines = (order.items ?? []).map((item) => `${item.quantity} × ${item.name}`);
+
+  const sent = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      from: WELCOME_FROM,
+      to: [order.email],
+      reply_to: WELCOME_REPLY_TO,
+      subject: locale === "es" ? "Tu pedido va en camino — LYHOFF" : "Your order is on its way — LYHOFF",
+      html: shippedEmailHtml(locale, name, order.tracking_number, lines),
+      text: shippedEmailText(locale, name, order.tracking_number, lines),
+    }),
+  }).catch(() => null);
+
+  if (!sent?.ok) {
+    console.error("shipped email failed", sent?.status, await sent?.text().catch(() => ""));
+    return jsonWithCookies({ error: "send_failed" }, session.setCookies, 502);
+  }
+
+  const stamped = new Date().toISOString();
+  await fetch(`${config.url}/rest/v1/orders?id=eq.${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    headers: { ...auth, "Content-Type": "application/json", Prefer: "return=minimal" },
+    body: JSON.stringify({ shipping_email_sent_at: stamped }),
+  }).catch((error) => console.error("stamp shipping email failed", error));
+
+  return jsonWithCookies({ ok: true, sentAt: stamped }, session.setCookies);
+}
+
+/**
+ * Refund an order, in full or in part.
+ *
+ * This was deliberately left in Stripe at first, and that was the wrong call for
+ * her: she asked twice, it is her shop, and walking to another dashboard to give
+ * someone their money back is exactly the dependency this panel exists to end.
+ *
+ * What the earlier caution was actually about is worth keeping, so:
+ *
+ * - The amount is read from the order in the database, never from the request.
+ *   A panel that can name its own figure is a panel that can be tricked into a
+ *   larger one.
+ * - Refunding more than is left is refused here rather than left to Stripe.
+ * - The total already refunded is recorded, so two clicks cannot give the same
+ *   money back twice.
+ *
+ * Stripe still holds the money, the dispute evidence and the audit trail. This
+ * asks it to act; it does not become a second source of truth.
+ */
+async function handleAdminRefund(request: Request, env: Env): Promise<Response> {
+  const { session, isAdmin, config } = await getAdminSession(request, env);
+  if (!config) return json({ error: "not_configured" }, 503);
+  if (!session.user || !session.accessToken) {
+    return jsonWithCookies({ error: "unauthorized" }, session.setCookies, 401);
+  }
+  if (!isAdmin) return jsonWithCookies({ error: "not_admin" }, session.setCookies, 403);
+  if (!env.STRIPE_SECRET_KEY) return jsonWithCookies({ error: "not_configured" }, session.setCookies, 503);
+
+  let id = "";
+  let requested: number | null = null;
+  try {
+    const body = (await request.json()) as { id?: string; amount?: number };
+    id = String(body.id ?? "");
+    requested = typeof body.amount === "number" ? Math.round(body.amount) : null;
+  } catch {
+    return jsonWithCookies({ error: "invalid_body" }, session.setCookies, 400);
+  }
+  if (!id) return jsonWithCookies({ error: "missing_id" }, session.setCookies, 400);
+
+  const auth = { apikey: config.key, Authorization: `Bearer ${session.accessToken}` };
+  const orderRes = await fetch(
+    `${config.url}/rest/v1/orders?id=eq.${encodeURIComponent(id)}&select=amount_total,refunded_total`,
+    { headers: auth },
+  );
+  if (!orderRes.ok) return jsonWithCookies({ error: "fetch_failed" }, session.setCookies, 502);
+
+  const [order] = (await orderRes.json()) as { amount_total: number; refunded_total: number }[];
+  if (!order) return jsonWithCookies({ error: "not_found" }, session.setCookies, 404);
+
+  const remaining = order.amount_total - (order.refunded_total ?? 0);
+  if (remaining <= 0) return jsonWithCookies({ error: "already_refunded" }, session.setCookies, 400);
+
+  const amount = requested === null ? remaining : requested;
+  if (!Number.isInteger(amount) || amount <= 0 || amount > remaining) {
+    return jsonWithCookies({ error: "invalid_amount", remaining }, session.setCookies, 400);
+  }
+
+  const stripeAuth = { Authorization: `Basic ${btoa(`${env.STRIPE_SECRET_KEY}:`)}` };
+
+  // A Checkout Session is not what gets refunded — the payment behind it is.
+  const sessionRes = await fetch(
+    `https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(id)}`,
+    { headers: stripeAuth },
+  );
+  if (!sessionRes.ok) {
+    console.error("stripe session lookup failed", sessionRes.status);
+    return jsonWithCookies({ error: "stripe_failed" }, session.setCookies, 502);
+  }
+  const { payment_intent: paymentIntent } = (await sessionRes.json()) as { payment_intent?: string | null };
+  if (!paymentIntent) return jsonWithCookies({ error: "no_payment" }, session.setCookies, 400);
+
+  const refund = await fetch("https://api.stripe.com/v1/refunds", {
+    method: "POST",
+    headers: { ...stripeAuth, "Content-Type": "application/x-www-form-urlencoded" },
+    body: `payment_intent=${encodeURIComponent(paymentIntent)}&amount=${amount}`,
+  });
+  if (!refund.ok) {
+    const detail = await refund.text().catch(() => "");
+    console.error("stripe refund failed", refund.status, detail);
+    return jsonWithCookies({ error: "stripe_failed" }, session.setCookies, 502);
+  }
+
+  // Recorded only after Stripe has actually moved the money. The other order
+  // would let a failed refund look like it happened.
+  const refunded = (order.refunded_total ?? 0) + amount;
+  const patch = await fetch(`${config.url}/rest/v1/orders?id=eq.${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    headers: { ...auth, "Content-Type": "application/json", Prefer: "return=representation" },
+    body: JSON.stringify({ refunded_total: refunded, refunded_at: new Date().toISOString() }),
+  });
+
+  const rows = patch.ok ? ((await patch.json()) as unknown[]) : [];
+  return jsonWithCookies({ ok: true, refunded, row: rows[0] ?? null }, session.setCookies);
+}
+
 // The Publish button.
 //
 // Content edits land in Supabase immediately, but the site is static: the pages
@@ -2088,6 +2337,14 @@ export default {
         return handleAdminPublish(request, env);
       }
       return new Response("Method Not Allowed", { status: 405 });
+    }
+    if (url.pathname === "/api/admin/refund") {
+      if (request.method !== "POST") return new Response("Method Not Allowed", { status: 405 });
+      return handleAdminRefund(request, env);
+    }
+    if (url.pathname === "/api/admin/notify-shipped") {
+      if (request.method !== "POST") return new Response("Method Not Allowed", { status: 405 });
+      return handleAdminNotifyShipped(request, env);
     }
     if (url.pathname === "/api/admin/discounts") {
       if (request.method === "GET" || request.method === "POST" || request.method === "PATCH") {

@@ -33,3 +33,17 @@ alter table public.products
 -- touch the table at all. A new table has neither, and missing the grant fails
 -- with "permission denied" even where the policy would have allowed it.
 grant select, insert, update, delete on public.order_notes to authenticated;
+
+-- Telling the customer their order shipped, and giving money back.
+--
+-- The tracking number already reaches their account page, but almost nobody
+-- signs in to look — they write and ask instead. Recording the send is what
+-- stops the same person being told twice when the number is edited.
+--
+-- Refunds: Stripe holds the money and the audit trail; these columns are a copy
+-- so the order screen can say what happened without a round trip, and so a
+-- second refund knows what the first already gave back.
+alter table public.orders
+  add column if not exists shipping_email_sent_at timestamptz,
+  add column if not exists refunded_total integer not null default 0,
+  add column if not exists refunded_at timestamptz;

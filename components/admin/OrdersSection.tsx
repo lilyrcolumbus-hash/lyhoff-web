@@ -28,6 +28,9 @@ interface Order {
   created_at: string;
   tracking_number: string | null;
   shipped_at: string | null;
+  shipping_email_sent_at: string | null;
+  refunded_total: number;
+  refunded_at: string | null;
 }
 
 interface OrderNote {
@@ -86,6 +89,8 @@ export function OrdersSection({ reportCount }: { reportCount: (key: string, n: n
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("toship");
   const [message, setMessage] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
+  const [refunding, setRefunding] = useState(false);
+  const [refundAmount, setRefundAmount] = useState("");
 
   const load = useCallback(async () => {
     const [orders, storedNotes] = await Promise.all([
@@ -109,6 +114,8 @@ export function OrdersSection({ reportCount }: { reportCount: (key: string, n: n
     setOpenId(order.id);
     setTracking(order.tracking_number ?? "");
     setNote(notes[order.id] ?? "");
+    setRefunding(false);
+    setRefundAmount("");
     setMessage(null);
     window.scrollTo({ top: 0 });
   }
@@ -154,6 +161,82 @@ export function OrdersSection({ reportCount }: { reportCount: (key: string, n: n
     setSaving(false);
   }
 
+  async function notifyShipped() {
+    if (!open || saving) return;
+    setSaving(true);
+    setMessage(null);
+    const res = await fetch("/api/admin/notify-shipped", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify({ id: open.id }),
+    }).catch(() => null);
+
+    const body = (await res?.json().catch(() => ({}))) as { sentAt?: string; error?: string };
+    if (!res?.ok) {
+      setMessage({
+        kind: "error",
+        text:
+          body.error === "no_tracking"
+            ? "Save a tracking number first."
+            : "The email didn't go out.",
+      });
+      setSaving(false);
+      return;
+    }
+
+    setRows((list) =>
+      (list ?? []).map((o) => (o.id === open.id ? { ...o, shipping_email_sent_at: body.sentAt ?? null } : o)),
+    );
+    setMessage({ kind: "ok", text: "Sent." });
+    setSaving(false);
+  }
+
+  /**
+   * Giving money back is the one action here that cannot be undone, so it asks
+   * twice: once by making her open the form, once by naming the exact figure in
+   * the confirmation. The amount is checked again on the server against the
+   * order — this is the courtesy, not the control.
+   */
+  async function refund(cents: number) {
+    if (!open || saving) return;
+    const label = money(cents, open.currency);
+    if (!window.confirm(`Give ${label} back to ${open.email}? This cannot be undone.`)) return;
+
+    setSaving(true);
+    setMessage(null);
+    const res = await fetch("/api/admin/refund", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify({ id: open.id, amount: cents }),
+    }).catch(() => null);
+
+    const body = (await res?.json().catch(() => ({}))) as { row?: Order; error?: string };
+    if (!res?.ok) {
+      setMessage({
+        kind: "error",
+        text:
+          body.error === "invalid_amount"
+            ? "That's more than is left on this order."
+            : body.error === "already_refunded"
+              ? "This order is already fully refunded."
+              : "Stripe refused it. Nothing was refunded.",
+      });
+      setSaving(false);
+      return;
+    }
+
+    if (body.row) {
+      const saved = body.row;
+      setRows((list) => (list ?? []).map((o) => (o.id === saved.id ? saved : o)));
+    }
+    setRefunding(false);
+    setRefundAmount("");
+    setMessage({ kind: "ok", text: `${label} refunded.` });
+    setSaving(false);
+  }
+
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
     const keep = FILTERS.find((option) => option.id === filter)?.keep ?? (() => true);
@@ -184,6 +267,7 @@ export function OrdersSection({ reportCount }: { reportCount: (key: string, n: n
   // ── One order, ready to pack ──────────────────────────────────────────────
   if (open) {
     const address = addressLines(open.shipping_address);
+    const remaining = open.amount_total - (open.refunded_total ?? 0);
     const dirty = tracking.trim() !== (open.tracking_number ?? "") || note !== (notes[open.id] ?? "");
 
     return (
@@ -209,8 +293,15 @@ export function OrdersSection({ reportCount }: { reportCount: (key: string, n: n
                 {message.text}
               </span>
             )}
-            <span className="font-display text-[17px] font-bold text-forest-950">
-              {money(open.amount_total, open.currency)}
+            <span className="flex flex-col text-right">
+              <span className="font-display text-[17px] font-bold text-forest-950">
+                {money(open.amount_total, open.currency)}
+              </span>
+              {open.refunded_total > 0 && (
+                <span className="text-[11px] text-clay-600">
+                  {money(open.refunded_total, open.currency)} refunded
+                </span>
+              )}
             </span>
             <Button onClick={save} disabled={!dirty || saving}>
               {saving ? "Saving…" : "Save"}
@@ -263,6 +354,23 @@ export function OrdersSection({ reportCount }: { reportCount: (key: string, n: n
               placeholder="Not shipped yet"
             />
             <Note>The customer sees this on their account as soon as you save it.</Note>
+
+            <span className="mt-1 flex flex-wrap items-center gap-3">
+              <Button
+                variant="quiet"
+                onClick={notifyShipped}
+                disabled={saving || !open.tracking_number || dirty}
+              >
+                {open.shipping_email_sent_at ? "Send again" : "Email the customer"}
+              </Button>
+              <span className="text-[11.5px] text-stone-500">
+                {dirty
+                  ? "Save the tracking number first."
+                  : open.shipping_email_sent_at
+                    ? `Told them on ${day(open.shipping_email_sent_at)}.`
+                    : "Almost nobody signs in to look — this is the message that stops them asking."}
+              </span>
+            </span>
           </div>
 
           <div className="flex flex-col gap-1.5 border-t border-stone-200 pt-4">
@@ -274,6 +382,61 @@ export function OrdersSection({ reportCount }: { reportCount: (key: string, n: n
               placeholder="Gift wrap, a replacement, whatever you need to remember."
             />
             <Note>Only you see this. It is stored apart from the order so it can't reach the customer.</Note>
+          </div>
+
+          <div className="flex flex-col gap-2 border-t border-stone-200 pt-4">
+            <span className={labelClass}>Refund</span>
+            {remaining <= 0 ? (
+              <Note>
+                Fully refunded{open.refunded_at ? ` on ${day(open.refunded_at)}` : ""}. Nothing left
+                to give back.
+              </Note>
+            ) : refunding ? (
+              <span className="flex flex-wrap items-center gap-3">
+                <span className="flex">
+                  <span className="border border-r-0 border-stone-300 bg-stone-50 px-2 py-1.5 text-[13px] text-stone-500">
+                    $
+                  </span>
+                  <input
+                    className={`${inputClass} w-28 border-l-0 py-1.5 text-[13px] tabular-nums`}
+                    inputMode="decimal"
+                    autoFocus
+                    value={refundAmount}
+                    onChange={(event) => setRefundAmount(event.target.value)}
+                    placeholder={(remaining / 100).toFixed(2)}
+                  />
+                </span>
+                <Button
+                  onClick={() =>
+                    refund(
+                      refundAmount.trim()
+                        ? Math.round(Number(refundAmount) * 100)
+                        : remaining,
+                    )
+                  }
+                  disabled={saving}
+                >
+                  {saving ? "Refunding…" : "Give it back"}
+                </Button>
+                <Button variant="quiet" onClick={() => setRefunding(false)} disabled={saving}>
+                  Cancel
+                </Button>
+                <span className="text-[11.5px] text-stone-500">
+                  Leave it empty for the whole {money(remaining, open.currency)}.
+                </span>
+              </span>
+            ) : (
+              <span className="flex flex-wrap items-center gap-3">
+                <Button variant="quiet" onClick={() => setRefunding(true)}>
+                  Refund this order
+                </Button>
+                <span className="text-[11.5px] text-stone-500">
+                  {open.refunded_total > 0
+                    ? `${money(open.refunded_total, open.currency)} already given back · ${money(remaining, open.currency)} left.`
+                    : "Goes back to their card through Stripe. It can't be undone."}
+                </span>
+              </span>
+            )}
           </div>
 
           <div className="flex flex-wrap items-center gap-3 border-t border-stone-200 pt-4">
@@ -288,7 +451,7 @@ export function OrdersSection({ reportCount }: { reportCount: (key: string, n: n
             >
               Open in Stripe ↗
             </a>
-            <Note>Refunds and the invoice live there — that's where the payment and its record are.</Note>
+            <Note>The invoice and the full payment history live there.</Note>
           </div>
         </Card>
 
@@ -347,7 +510,15 @@ export function OrdersSection({ reportCount }: { reportCount: (key: string, n: n
                 {money(order.amount_total, order.currency)}
               </span>
               <span className="w-28 shrink-0 text-right">
-                {order.tracking_number ? <Pill tone="live">SHIPPED</Pill> : <Pill tone="warn">TO SHIP</Pill>}
+                {order.tracking_number ? (
+                  order.shipping_email_sent_at ? (
+                    <Pill tone="live">TOLD</Pill>
+                  ) : (
+                    <Pill tone="warn">NOT TOLD</Pill>
+                  )
+                ) : (
+                  <Pill tone="warn">TO SHIP</Pill>
+                )}
               </span>
             </button>
           ))
