@@ -8,6 +8,7 @@ import { OrdersSection } from "./OrdersSection";
 import { ReviewsSection } from "./ReviewsSection";
 import { CustomersSection } from "./CustomersSection";
 import { BrandSection } from "./BrandSection";
+import { AbandonedSection } from "./AbandonedSection";
 import { ContentSection } from "./ContentSection";
 import { DiscountsSection } from "./DiscountsSection";
 import { HomeSection } from "./HomeSection";
@@ -20,6 +21,7 @@ import { PublishBar } from "./PublishBar";
 export type SectionId =
   | "home"
   | "orders"
+  | "abandoned"
   | "products"
   | "customers"
   | "reviews"
@@ -39,6 +41,7 @@ const NAV: { group: string; items: { id: SectionId; label: string }[] }[] = [
     items: [
       { id: "home", label: "Home" },
       { id: "orders", label: "Orders" },
+      { id: "abandoned", label: "Abandoned" },
       { id: "products", label: "Products" },
       { id: "customers", label: "Customers" },
       { id: "reviews", label: "Reviews" },
@@ -197,6 +200,7 @@ export function AdminApp() {
         {section === "home" && <HomeSection onGo={setSection} />}
         {section === "products" && <ProductsSection reportCount={reportCount} />}
         {section === "orders" && <OrdersSection reportCount={reportCount} />}
+        {section === "abandoned" && <AbandonedSection reportCount={reportCount} />}
         {section === "reviews" && <ReviewsSection reportCount={reportCount} />}
         {section === "customers" && <CustomersSection reportCount={reportCount} />}
         {section === "brand" && <BrandSection />}

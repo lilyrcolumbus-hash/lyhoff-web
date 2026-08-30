@@ -190,6 +190,114 @@ async function sendWelcomeEmail(email: string, locale: string, env: Env): Promis
   }
 }
 
+/**
+ * The one email a small shop should send that it isn't sending.
+ *
+ * Deliberately not a discount. Offering money off to anyone who hesitates
+ * teaches people to hesitate, and it would undercut WELCOME10 for the same
+ * customer. This is a reminder with a working link, which is what most
+ * abandoned checkouts actually need — the basket is still there.
+ */
+function abandonedEmailHtml(locale: string, url: string, items: string[]): string {
+  const es = locale === "es";
+  const list = items
+    .map(
+      (line) =>
+        `<tr><td style="padding:4px 0;font-size:14px;color:#2b2a25;">${line}</td></tr>`,
+    )
+    .join("");
+  return `<!doctype html>
+<html>
+  <body style="margin:0;padding:32px 16px;background:#fbfaf7;font-family:Helvetica,Arial,sans-serif;">
+    <table role="presentation" width="100%" style="max-width:480px;margin:0 auto;">
+      <tr><td style="padding-bottom:20px;font-size:13px;letter-spacing:3px;color:#93906d;">LYHOFF</td></tr>
+      <tr><td style="padding-bottom:12px;font-size:22px;font-weight:bold;color:#1c1b17;">
+        ${es ? "Se quedó a medias" : "You left something behind"}
+      </td></tr>
+      <tr><td style="padding-bottom:20px;font-size:15px;line-height:1.6;color:#57534d;">
+        ${
+          es
+            ? "Tu pedido sigue guardado. Puedes terminarlo donde lo dejaste."
+            : "Your order is still saved. You can pick it up right where you left off."
+        }
+      </td></tr>
+      <tr><td style="padding-bottom:20px;">
+        <table role="presentation" width="100%" style="border-top:1px solid #e7e5e4;border-bottom:1px solid #e7e5e4;padding:8px 0;">
+          ${list}
+        </table>
+      </td></tr>
+      <tr><td style="padding-bottom:24px;">
+        <a href="${url}" style="display:inline-block;background:#1c1b17;color:#fbfaf7;text-decoration:none;padding:14px 28px;font-size:14px;font-weight:bold;">
+          ${es ? "Terminar mi pedido" : "Finish my order"}
+        </a>
+      </td></tr>
+      <tr><td style="font-size:12px;line-height:1.6;color:#79716b;">
+        ${
+          es
+            ? "Si ya no lo quieres, ignora este correo. No te escribiremos otra vez por esto."
+            : "If you have changed your mind, ignore this. We won't write again about it."
+        }
+      </td></tr>
+      <tr><td style="padding-top:20px;font-size:11px;color:#a8a29e;">LYHOFF LLC</td></tr>
+    </table>
+  </body>
+</html>`;
+}
+
+function abandonedEmailText(locale: string, url: string, items: string[]): string {
+  const es = locale === "es";
+  return [
+    es ? "Se quedó a medias" : "You left something behind",
+    "",
+    es
+      ? "Tu pedido sigue guardado. Puedes terminarlo donde lo dejaste."
+      : "Your order is still saved. You can pick it up right where you left off.",
+    "",
+    ...items,
+    "",
+    es ? "Terminar mi pedido:" : "Finish my order:",
+    url,
+    "",
+    es
+      ? "Si ya no lo quieres, ignora este correo. No te escribiremos otra vez por esto."
+      : "If you have changed your mind, ignore this. We won't write again about it.",
+    "",
+    "LYHOFF LLC",
+  ].join("\n");
+}
+
+async function sendAbandonedEmail(
+  email: string,
+  locale: string,
+  url: string,
+  items: string[],
+  env: Env,
+): Promise<boolean> {
+  if (!env.RESEND_API_KEY) return false;
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: WELCOME_FROM,
+        to: [email],
+        reply_to: WELCOME_REPLY_TO,
+        subject: locale === "es" ? "Tu pedido sigue guardado — LYHOFF" : "Your order is still saved — LYHOFF",
+        html: abandonedEmailHtml(locale, url, items),
+        text: abandonedEmailText(locale, url, items),
+      }),
+    });
+    if (res.ok) return true;
+    console.error("abandoned_email_failed", res.status, await res.text().catch(() => ""));
+  } catch (err) {
+    console.error("abandoned_email_failed", err);
+  }
+  return false;
+}
+
 async function handleSubscribe(request: Request, env: Env): Promise<Response> {
   let email = "";
   let locale = "en";
@@ -378,6 +486,16 @@ async function handleCheckout(request: Request, env: Env): Promise<Response> {
 
   const params: Record<string, unknown> = {
     mode: "payment",
+    // A checkout that is started and never paid becomes a recoverable one:
+    // Stripe keeps the basket and hands back a link that puts the customer
+    // exactly where they left off, which is what the reminder email carries.
+    //
+    // Four hours rather than Stripe's default day. The reminder is worth much
+    // more the same evening than tomorrow, and four hours is far longer than
+    // any real person spends on a payment page — and if someone does come back
+    // late, Stripe's expired page offers them the recovery link anyway.
+    expires_at: Math.floor(Date.now() / 1000) + 4 * 60 * 60,
+    after_expiration: { recovery: { enabled: true, allow_promotion_codes: true } },
     // Without this, Stripe defaults to "auto" — it renders its own UI chrome (delivery
     // estimates, form labels, buttons) in the customer's BROWSER language, independent of
     // our own locale strings above, which is how "Envío estándar" and "(2-5 business days)"
@@ -1167,6 +1285,14 @@ const ADMIN_COLLECTIONS: Record<string, AdminCollection> = {
     order: "key.asc",
     editable: ["value"],
   },
+  abandoned: {
+    table: "abandoned_checkouts",
+    key: "id",
+    order: "created_at.desc",
+    // Nothing here is editable. It is a record of what happened, and the only
+    // thing that changes it is Stripe telling us the customer came back.
+    editable: [],
+  },
   order_notes: {
     table: "order_notes",
     key: "order_id",
@@ -1556,6 +1682,75 @@ async function handleAdminDiscounts(request: Request, env: Env): Promise<Respons
   return jsonWithCookies({ ok: true }, session.setCookies);
 }
 
+/**
+ * A checkout expired without being paid.
+ *
+ * Nothing about a browser's basket is tracked to make this work — Stripe
+ * already holds the line items and already mints a link that restores them, so
+ * the only thing stored here is what she needs to see it happened.
+ *
+ * The email goes out once and only where there is an address to send it to: a
+ * customer who abandoned before typing one has left us nothing, and guessing is
+ * not an option. Failures never fail the webhook, or Stripe retries and the
+ * same person gets the same reminder twice.
+ */
+async function handleExpiredCheckout(session: Record<string, unknown>, env: Env): Promise<Response> {
+  const id = typeof session.id === "string" ? session.id : "";
+  const details = session.customer_details as { email?: string | null; name?: string | null } | null;
+  const email = (details?.email ?? "").trim().toLowerCase();
+  const recovery = (session.after_expiration as { recovery?: { url?: string | null } } | null)?.recovery?.url ?? null;
+
+  if (!id || !email) return json({ ok: true, skipped: "no_email" });
+
+  const url = env.SUPABASE_URL || DEFAULT_SUPABASE_URL;
+  const key = env.SUPABASE_ANON_KEY || DEFAULT_SUPABASE_ANON_KEY;
+  if (!url || !key || key.startsWith("__")) return json({ ok: true, skipped: "not_configured" });
+
+  const locale = session.locale === "es" ? "es" : "en";
+  const items = await fetchSessionLineItems(id, env);
+  const auth = { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" };
+
+  // Claim it in the database BEFORE sending anything. Stripe retries a webhook
+  // it thinks failed, and the primary key is what makes the second delivery a
+  // no-op — send first and a slow response earns the customer two reminders.
+  const claim = await fetch(`${url}/rest/v1/abandoned_checkouts`, {
+    method: "POST",
+    headers: { ...auth, Prefer: "return=minimal" },
+    body: JSON.stringify({
+      id,
+      email,
+      customer_name: details?.name ?? null,
+      amount_total: typeof session.amount_total === "number" ? session.amount_total : 0,
+      currency: typeof session.currency === "string" ? session.currency : "usd",
+      items,
+      recovery_url: recovery,
+      locale,
+    }),
+  });
+
+  if (claim.status === 409) return json({ ok: true, skipped: "already_handled" });
+  if (!claim.ok) {
+    console.error("abandoned checkout store failed", claim.status, await claim.text().catch(() => ""));
+    // Nothing was claimed, so nothing is sent. Better a missed reminder than a
+    // duplicate one, and Stripe will not retry a 200.
+    return json({ ok: true, skipped: "store_failed" });
+  }
+
+  if (!recovery) return json({ ok: true, emailed: false });
+
+  const lines = items.map((item) => `${item.quantity} × ${item.name}`);
+  const sent = await sendAbandonedEmail(email, locale, recovery, lines, env);
+  if (sent) {
+    await fetch(`${url}/rest/v1/abandoned_checkouts?id=eq.${encodeURIComponent(id)}`, {
+      method: "PATCH",
+      headers: { ...auth, Prefer: "return=minimal" },
+      body: JSON.stringify({ emailed_at: new Date().toISOString() }),
+    }).catch((error) => console.error("mark emailed failed", error));
+  }
+
+  return json({ ok: true, emailed: sent });
+}
+
 // The Publish button.
 //
 // Content edits land in Supabase immediately, but the site is static: the pages
@@ -1750,8 +1945,14 @@ async function handleStripeWebhook(request: Request, env: Env): Promise<Response
     return json({ error: "invalid_body" }, 400);
   }
 
-  // We only subscribe to one event, but acknowledge anything else so Stripe
-  // doesn't retry an event we deliberately ignore.
+  // A checkout that was started and never paid: remind them once, with the link
+  // Stripe built that puts their basket back.
+  if (event.type === "checkout.session.expired") {
+    return handleExpiredCheckout((event.data?.object ?? {}) as Record<string, unknown>, env);
+  }
+
+  // Anything else is acknowledged so Stripe doesn't retry an event we
+  // deliberately ignore.
   if (event.type !== "checkout.session.completed") return json({ ok: true, ignored: true });
 
   const session = (event.data?.object ?? {}) as {
@@ -1810,6 +2011,21 @@ async function handleStripeWebhook(request: Request, env: Env): Promise<Response
       shipping_address: shipping?.address ?? null,
     }),
   });
+
+  // Stripe names the checkout this one grew out of when a customer came back
+  // through a recovery link. Recording it is how "did the reminder work?" has
+  // an answer instead of a guess.
+  const recoveredFrom = (event.data?.object as { recovered_from?: string | null })?.recovered_from;
+  if (recoveredFrom) {
+    await fetch(
+      `${url}/rest/v1/abandoned_checkouts?id=eq.${encodeURIComponent(recoveredFrom)}`,
+      {
+        method: "PATCH",
+        headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json", Prefer: "return=minimal" },
+        body: JSON.stringify({ recovered_at: new Date().toISOString() }),
+      },
+    ).catch((error) => console.error("mark recovered failed", error));
+  }
 
   // Count the stock down for what was actually bought. Deliberately after the
   // order is stored and never allowed to fail the webhook: a 500 here makes
