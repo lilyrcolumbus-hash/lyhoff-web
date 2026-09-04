@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>LYHOFF Whipped Tallow Cream — wrap label design variants</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+  :root{
+    --charcoal:#2B2A25;
+    --sage:#6B6F5E;
+    --kraft:#B08968;
+    --ink:#2B2A25;
+    --hair:#2B2A25;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:#e9e7e1;
+    font-family:Inter,system-ui,sans-serif;
+    color:#2B2A25;
+    padding:40px;
+  }
+  h1{font-size:15px;font-weight:600;letter-spacing:.04em;margin-bottom:4px}
+  .sub{font-size:12px;color:#6B6F5E;margin-bottom:28px;max-width:760px;line-height:1.5}
+  .variant{margin-bottom:34px}
+  .vtitle{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#6B6F5E;margin-bottom:8px}
+  .vnote{font-size:11px;color:#8a8a80;margin-top:6px;max-width:1020px;line-height:1.5}
+
+  /* full-circumference wrap: 8.5in x 1.5in  ->  120 px / in */
+  .wrap{
+    position:relative;
+    width:1020px;height:180px;
+    background:#fff;
+    border:1px solid #cfcdc6;           /* preview trim guide only, not printed */
+    display:grid;
+    grid-template-columns:306px 408px 306px;  /* left wrap | PDP 40% | info panel */
+    overflow:hidden;
+  }
+  /* PDP zone boundary — preview guide only */
+  .wrap::before,.wrap::after{
+    content:"";position:absolute;top:0;bottom:0;width:0;
+    border-left:1px dashed #c9a9a0;pointer-events:none;
+  }
+  .wrap::before{left:306px}
+  .wrap::after{left:714px}
+
+  .cell{padding:14px 16px;position:relative}
+  .pdp{padding:14px 18px;border-left:0;border-right:0}
+  .side-left{display:flex;flex-direction:column;justify-content:center}
+  .info{font-size:0}
+
+  /* type system (fixed ratios: product name ~3x brand ~5x legal) */
+  .brand{font-weight:600;letter-spacing:.32em;font-size:11px;text-transform:uppercase}
+  .pname{font-weight:300;letter-spacing:.06em;font-size:33px;line-height:.98;text-transform:uppercase}
+  .desc{font-weight:400;letter-spacing:.26em;font-size:8.5px;text-transform:uppercase;color:#6B6F5E}
+  .scent{font-weight:500;letter-spacing:.18em;font-size:10px;text-transform:uppercase}
+  .netwt{font-weight:500;letter-spacing:.1em;font-size:8.5px;text-transform:uppercase}
+  .legal{font-weight:400;font-size:7.5px;line-height:1.5;color:#2B2A25}
+  .legal b{font-weight:600;letter-spacing:.08em}
+  .tagline{font-weight:400;font-style:italic;font-size:9px;color:#6B6F5E;letter-spacing:.02em}
+
+  .accent-uns{color:var(--charcoal)}
+  .accent-pep{color:var(--sage)}
+  .accent-van{color:var(--kraft)}
+
+  .hair-h{border-top:1px solid var(--hair)}
+  .hair-v{border-left:1px solid var(--hair)}
+
+  /* open-gap accent band (LF monogram language) */
+  .band{
+    position:relative;height:3px;background:currentColor;margin:0 0 9px;
+  }
+  .band::after{
+    content:"";position:absolute;top:-1px;height:5px;background:#fff;
+    left:50%;width:74px;transform:translateX(-50%);
+  }
+</style>
+</head>
+<body>
+
+<h1>LYHOFF · Whipped Tallow Cream — full-wrap label, 5 design variants</h1>
+<p class="sub">
+  Real data from the product catalog. Format: full-circumference wrap 8.5"&nbsp;×&nbsp;1.5" (2&nbsp;oz jar,
+  ~9" circ. minus overlap). Center dashed lines mark the 40% Principal Display Panel — brand, product name,
+  descriptor and net weight live inside it; <b>ingredients, directions and manufacturer are in the information
+  panel, off the front</b>. Pure white, square corners, Inter, no icons or ornaments. Accent colour keyed to
+  scent: Unscented = charcoal, Peppermint = sage, Vanilla = kraft.
+</p>
+
+<!-- ============ VARIANT A — CENTERED COLUMN ============ -->
+<div class="variant">
+  <div class="vtitle">Variant A · Centered column</div>
+  <div class="wrap accent-uns">
+    <div class="cell side-left" style="align-items:center;text-align:center">
+      <div class="brand">LYHOFF</div>
+      <div class="tagline" style="margin-top:10px">Skin that<br>actually heals.</div>
+    </div>
+    <div class="pdp" style="display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center;gap:7px">
+      <div class="brand">LYHOFF</div>
+      <div class="pname">Whipped<br>Tallow Cream</div>
+      <div class="desc">Face + Body Moisturizer</div>
+      <div class="scent accent-uns">Unscented</div>
+      <div class="netwt" style="margin-top:2px">Net Wt 2 oz (57 g)</div>
+    </div>
+    <div class="cell hair-v" style="display:flex;flex-direction:column;justify-content:center;gap:6px">
+      <div class="legal"><b>INGREDIENTS:</b> Grass-Fed Beef Tallow, Jojoba Oil.</div>
+      <div class="legal"><b>DIRECTIONS:</b> Warm a small amount between clean palms and massage into dry skin, face or body. Best right after a shower.</div>
+      <div class="legal">Made by LYHOFF LLC · Lima, OH&nbsp;&#10216;ZIP&#10217; · lyhoff.com</div>
+    </div>
+  </div>
+  <p class="vnote">Symmetric, calmest read. PDP is a single centered stack; info panel is one running column with a hairline spine. Left wrap face repeats the wordmark + tagline.</p>
+</div>
+
+<!-- ============ VARIANT B — EDITORIAL LEFT ============ -->
+<div class="variant">
+  <div class="vtitle">Variant B · Editorial left-anchored</div>
+  <div class="wrap accent-uns">
+    <div class="cell side-left" style="align-items:flex-start">
+      <div class="tagline">Skin that actually heals.</div>
+    </div>
+    <div class="pdp" style="display:flex;flex-direction:column;justify-content:center">
+      <div class="brand">LYHOFF</div>
+      <div class="pname" style="margin:6px 0 5px">Whipped<br>Tallow Cream</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end">
+        <div>
+          <div class="desc">Face + Body Moisturizer</div>
+          <div class="scent accent-uns" style="margin-top:5px">Unscented</div>
+        </div>
+        <div class="netwt">Net Wt 2 oz (57 g)</div>
+      </div>
+    </div>
+    <div class="cell" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;align-content:center">
+      <div class="legal"><b>INGREDIENTS</b><br>Grass-Fed Beef Tallow, Jojoba Oil.</div>
+      <div class="legal"><b>DIRECTIONS</b><br>Warm between clean palms, massage into dry skin — face or body. Best right after a shower.</div>
+      <div class="legal" style="grid-column:1/-1;border-top:1px solid var(--hair);padding-top:5px">Made by LYHOFF LLC · Lima, OH&nbsp;&#10216;ZIP&#10217; · lyhoff.com</div>
+    </div>
+  </div>
+  <p class="vnote">Flush-left name, net weight pinned bottom-right of the PDP. Info panel splits into two labelled columns with a full-width manufacturer footer rule.</p>
+</div>
+
+<!-- ============ VARIANT C — SWISS RULES ============ -->
+<div class="variant">
+  <div class="vtitle">Variant C · Swiss rules + open band</div>
+  <div class="wrap accent-uns">
+    <div class="cell side-left" style="align-items:center;text-align:center">
+      <div class="brand">LYHOFF</div>
+    </div>
+    <div class="pdp" style="display:flex;flex-direction:column;justify-content:center">
+      <div class="brand" style="text-align:center">LYHOFF</div>
+      <div class="band accent-uns" style="margin-top:7px"></div>
+      <div class="pname" style="text-align:center">Whipped Tallow Cream</div>
+      <div class="desc" style="text-align:center;margin-top:6px">Face + Body Moisturizer</div>
+      <div class="hair-h" style="margin-top:8px;padding-top:6px;display:flex;justify-content:space-between;align-items:center">
+        <div class="scent accent-uns">Unscented</div>
+        <div class="netwt">Net Wt 2 oz (57 g)</div>
+      </div>
+    </div>
+    <div class="cell hair-v" style="display:flex;flex-direction:column;justify-content:center">
+      <div class="legal" style="border-bottom:1px solid var(--hair);padding-bottom:5px"><b>INGREDIENTS</b>&nbsp;&nbsp;Grass-Fed Beef Tallow, Jojoba Oil.</div>
+      <div class="legal" style="border-bottom:1px solid var(--hair);padding:5px 0"><b>DIRECTIONS</b>&nbsp;&nbsp;Warm between clean palms, massage into dry skin — face or body.</div>
+      <div class="legal" style="padding-top:5px">LYHOFF LLC · Lima, OH&nbsp;&#10216;ZIP&#10217; · lyhoff.com</div>
+    </div>
+  </div>
+  <p class="vnote">Most structured. The accent band carries an open gap centred on LYHOFF (same language as the "LF" monogram). Net weight sits on a rule in the lower band of the PDP. Info rows are hairline-separated.</p>
+</div>
+
+<!-- ============ VARIANT D — BASELINE AIR ============ -->
+<div class="variant">
+  <div class="vtitle">Variant D · Baseline air</div>
+  <div class="wrap accent-uns">
+    <div class="cell side-left" style="justify-content:flex-end">
+      <div class="brand">LYHOFF</div>
+    </div>
+    <div class="pdp" style="display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:16px">
+      <div class="brand">LYHOFF</div>
+      <div class="pname" style="margin:5px 0 6px">Whipped Tallow Cream</div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <div class="desc">Face + Body Moisturizer</div>
+        <div class="netwt">Net Wt 2 oz (57 g)</div>
+      </div>
+      <div class="scent accent-uns" style="margin-top:4px">Unscented</div>
+    </div>
+    <div class="cell" style="display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:16px;gap:5px">
+      <div class="legal" style="text-align:justify"><b>INGREDIENTS:</b> Grass-Fed Beef Tallow, Jojoba Oil. <b>DIRECTIONS:</b> Warm a small amount between clean palms and massage into clean, dry skin — face or body. Best applied right after a shower.</div>
+      <div class="legal">Made by LYHOFF LLC · Lima, OH&nbsp;&#10216;ZIP&#10217; · lyhoff.com</div>
+    </div>
+  </div>
+  <p class="vnote">Everything bottom-anchored to a shared baseline, empty top third for MUJI air. Info panel is one justified block — reads as a paragraph, not a form.</p>
+</div>
+
+<!-- ============ VARIANT E — VERTICAL SPLIT PDP ============ -->
+<div class="variant">
+  <div class="vtitle">Variant E · Vertical-split PDP</div>
+  <div class="wrap accent-uns">
+    <div class="cell side-left" style="align-items:center;text-align:center">
+      <div class="tagline">Skin that<br>actually heals.</div>
+    </div>
+    <div class="pdp" style="display:grid;grid-template-columns:1fr 1px 122px;gap:12px;align-items:center">
+      <div>
+        <div class="brand">LYHOFF</div>
+        <div class="pname" style="margin:5px 0 5px">Whipped<br>Tallow Cream</div>
+        <div class="desc">Face + Body Moisturizer</div>
+      </div>
+      <div style="background:var(--hair);height:78%;align-self:center"></div>
+      <div style="text-align:right">
+        <div class="scent accent-uns">Unscented</div>
+        <div class="netwt" style="margin-top:8px">Net Wt<br>2 oz (57 g)</div>
+      </div>
+    </div>
+    <div class="cell hair-v" style="display:flex;flex-direction:column;justify-content:center;gap:6px">
+      <div class="legal"><b>INGREDIENTS:</b> Grass-Fed Beef Tallow, Jojoba Oil.</div>
+      <div class="legal"><b>DIRECTIONS:</b> Warm between clean palms, massage into dry skin — face or body. Best right after a shower.</div>
+      <div class="legal">Made by LYHOFF LLC · Lima, OH&nbsp;&#10216;ZIP&#10217; · lyhoff.com</div>
+    </div>
+  </div>
+  <p class="vnote">PDP divided by a faint vertical hairline: identity left, scent + net weight paired hard-right. Distinct rhythm from A–D without adding any new graphic element.</p>
+</div>
+
+<!-- ============ SCENT SYSTEM (Variant C shown in 3 scents) ============ -->
+<div class="variant">
+  <div class="vtitle">Scent colour system · Variant C in all three scents</div>
+
+  <div class="wrap accent-pep" style="margin-bottom:14px">
+    <div class="cell side-left" style="align-items:center;text-align:center"><div class="brand">LYHOFF</div></div>
+    <div class="pdp" style="display:flex;flex-direction:column;justify-content:center">
+      <div class="brand" style="text-align:center">LYHOFF</div>
+      <div class="band accent-pep" style="margin-top:7px"></div>
+      <div class="pname" style="text-align:center">Whipped Tallow Cream</div>
+      <div class="desc" style="text-align:center;margin-top:6px">Face + Body Moisturizer</div>
+      <div class="hair-h" style="margin-top:8px;padding-top:6px;display:flex;justify-content:space-between;align-items:center">
+        <div class="scent accent-pep">Peppermint</div>
+        <div class="netwt">Net Wt 2 oz (57 g)</div>
+      </div>
+    </div>
+    <div class="cell hair-v" style="display:flex;flex-direction:column;justify-content:center">
+      <div class="legal" style="border-bottom:1px solid var(--hair);padding-bottom:5px"><b>INGREDIENTS</b>&nbsp;&nbsp;Grass-Fed Beef Tallow, Jojoba Oil, Mentha Piperita (Peppermint) Oil.</div>
+      <div class="legal" style="border-bottom:1px solid var(--hair);padding:5px 0"><b>DIRECTIONS</b>&nbsp;&nbsp;Warm between clean palms, massage into dry skin — face or body.</div>
+      <div class="legal" style="padding-top:5px">LYHOFF LLC · Lima, OH&nbsp;&#10216;ZIP&#10217; · lyhoff.com</div>
+    </div>
+  </div>
+
+  <div class="wrap accent-van">
+    <div class="cell side-left" style="align-items:center;text-align:center"><div class="brand">LYHOFF</div></div>
+    <div class="pdp" style="display:flex;flex-direction:column;justify-content:center">
+      <div class="brand" style="text-align:center">LYHOFF</div>
+      <div class="band accent-van" style="margin-top:7px"></div>
+      <div class="pname" style="text-align:center">Whipped Tallow Cream</div>
+      <div class="desc" style="text-align:center;margin-top:6px">Face + Body Moisturizer</div>
+      <div class="hair-h" style="margin-top:8px;padding-top:6px;display:flex;justify-content:space-between;align-items:center">
+        <div class="scent accent-van">Vanilla</div>
+        <div class="netwt">Net Wt 2 oz (57 g)</div>
+      </div>
+    </div>
+    <div class="cell hair-v" style="display:flex;flex-direction:column;justify-content:center">
+      <div class="legal" style="border-bottom:1px solid var(--hair);padding-bottom:5px"><b>INGREDIENTS</b>&nbsp;&nbsp;Grass-Fed Beef Tallow, Jojoba Oil, Vanilla.</div>
+      <div class="legal" style="border-bottom:1px solid var(--hair);padding:5px 0"><b>DIRECTIONS</b>&nbsp;&nbsp;Warm between clean palms, massage into dry skin — face or body.</div>
+      <div class="legal" style="padding-top:5px">LYHOFF LLC · Lima, OH&nbsp;&#10216;ZIP&#10217; · lyhoff.com</div>
+    </div>
+  </div>
+</div>
+
+<p class="sub" style="margin-top:8px">
+  <b>Open items:</b> ⟨ZIP⟩ — 21 CFR 701.12 needs street + city + state + ZIP; catalogue only has "Lima, OH", so the ZIP is a placeholder to fill.
+  1&nbsp;oz size = "Net Wt 1 oz (28 g)". Scented ingredient names shown in INCI form — confirm they match your compliance wording.
+  This is a screen-resolution proof; print art still needs exact physical size + bleed + CMYK.
+</p>
+
+</body>
+</html>

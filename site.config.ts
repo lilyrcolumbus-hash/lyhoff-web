@@ -84,6 +84,10 @@ export const site: SiteConfig = {
       "700": "#5f5d42",
     },
     indigo: {
+      // The palest step exists because the admin's status pills ask for a fill
+      // at this weight; without it they render hollow. Same hue and the same
+      // low saturation as the rest of the family.
+      "50": "#edf0f3",
       "300": "#9aa6b2",
       "400": "#7a8899",
       "500": "#5f6f80",
