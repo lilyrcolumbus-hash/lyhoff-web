@@ -191,6 +191,61 @@ async function sendWelcomeEmail(email: string, locale: string, env: Env): Promis
 }
 
 /**
+ * Optional, admin-controlled: ping the owner when a new review lands, so she
+ * doesn't have to keep checking the admin panel for the pending count. Opt-in
+ * (`business.notifyOnNewReview` in site_settings, off by default) rather than
+ * always-on, since not every owner wants an email per submission. Read live
+ * from Supabase rather than the frozen build settings, so flipping the toggle
+ * in the admin takes effect immediately — no publish/rebuild needed for this
+ * one check, unlike the rest of `site_settings`.
+ */
+async function sendNewReviewNotification(
+  review: { rating: number; author: string; text: string; slug: string | null },
+  env: Env,
+): Promise<void> {
+  if (!env.RESEND_API_KEY) return;
+  try {
+    const url = env.SUPABASE_URL || DEFAULT_SUPABASE_URL;
+    const key = env.SUPABASE_ANON_KEY || DEFAULT_SUPABASE_ANON_KEY;
+    if (!url || !key || key.startsWith("__")) return;
+
+    const settingsRes = await fetch(`${url}/rest/v1/site_settings?key=eq.business&select=value`, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+    });
+    if (!settingsRes.ok) return;
+    const rows = (await settingsRes.json()) as { value?: { notifyOnNewReview?: boolean; email?: string } }[];
+    const business = rows[0]?.value;
+    if (!business?.notifyOnNewReview || !business.email) return;
+
+    const stars = "★".repeat(review.rating) + "☆".repeat(5 - review.rating);
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: WELCOME_FROM,
+        to: [business.email],
+        reply_to: WELCOME_REPLY_TO,
+        subject: `New review (${stars}) — ${review.slug ?? "no product"}`,
+        text: `${stars}\n\n"${review.text}"\n\n— ${review.author}${
+          review.slug ? `, on ${review.slug}` : ""
+        }\n\nApprove it from the admin panel's Reviews section.`,
+      }),
+    });
+    if (!res.ok) {
+      const detail = await res.text().catch(() => "");
+      console.error("resend_send_failed", res.status, detail);
+    }
+  } catch (err) {
+    // Best-effort, same rule as every other transactional email here: a
+    // failed notification must never fail the customer's review submission.
+    console.error("resend_send_failed", err);
+  }
+}
+
+/**
  * The one email a small shop should send that it isn't sending.
  *
  * Deliberately not a discount. Offering money off to anyone who hesitates
@@ -610,7 +665,10 @@ async function handleReviews(request: Request, env: Env): Promise<Response> {
     }),
   });
 
-  if (res.ok) return json({ ok: true });
+  if (res.ok) {
+    await sendNewReviewNotification({ rating, author, text, slug: slug || null }, env);
+    return json({ ok: true });
+  }
   const detail = await res.text().catch(() => "");
   return json({ error: "store_failed", status: res.status, detail }, 502);
 }

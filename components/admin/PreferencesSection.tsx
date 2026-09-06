@@ -182,6 +182,18 @@ export function PreferencesSection() {
             <Note>The registered name, for the terms and privacy pages.</Note>
           </div>
         </div>
+
+        <label className="flex items-center gap-2.5 text-sm text-ink">
+          <input
+            type="checkbox"
+            checked={get("business", "notifyOnNewReview", false)}
+            onChange={(event) => set("business", "notifyOnNewReview", event.target.checked)}
+          />
+          Email me at the contact email above when a new review comes in
+        </label>
+        <Note>
+          Optional — off by default. This one takes effect right away, no publish needed.
+        </Note>
       </Card>
     </div>
   );
