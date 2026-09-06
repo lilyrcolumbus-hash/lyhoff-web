@@ -49,12 +49,17 @@ export function ThankYouClient({ locale }: { locale: Locale }) {
   }, []);
 
   const product = getProduct(reviewSlug);
-  // Some products (e.g. Sea Salt Spray) come in "For Her"/"For Him" variants
-  // that share one review card/QR — the review itself isn't gendered, so
-  // strip that suffix here rather than ask the customer about "your Sea Salt
-  // Spray — For Her" when they may have bought the Him version.
+  // Some products come in variants that share one review card/QR — the
+  // review itself doesn't depend on which one was bought, so strip the
+  // variant suffix here rather than ask about "your Sea Salt Spray — For
+  // Her" or "your Whipped Tallow Cream — Unscented" when the customer may
+  // have a different one. Covers Sea Salt Spray's For Her/Him and Tallow
+  // Cream's scent variants (Unscented/Peppermint/Vanilla) in both locales.
   const productName = product
-    ? product.name[locale].replace(/\s*—\s*(For (Her|Him)|Para (Ella|Él))\s*$/i, "")
+    ? product.name[locale].replace(
+        /\s*—\s*(For (Her|Him)|Para (Ella|Él)|Unscented|Peppermint|Vanilla|Sin Fragancia|Menta|Vainilla)\s*$/i,
+        ""
+      )
     : "";
 
   async function onSubmit(e: React.FormEvent) {

@@ -7,6 +7,7 @@ import {
   getProduct,
   getScentVariants,
   getSizeVariants,
+  getVariants,
   products,
   productsByCategory,
   SCENT_LABELS,
@@ -91,10 +92,19 @@ export default async function ProductDetailPage({
   const description = product.description[locale];
   const badge = product.badge?.[locale];
 
+  // One printed insert card/QR is shared across every real variant in a line
+  // (Tallow Cream's sizes x scents, Sea Salt Spray's Her/Him) — a review left
+  // through it isn't about one specific size or scent, so it belongs on every
+  // sibling's listing, not just whichever slug happened to be the QR's
+  // default. Pool reviews across the whole variantGroup instead of asking the
+  // customer to specify one (that only adds friction and loses customers).
   // A customer's review exists in the language they wrote it in. Showing it
   // untranslated on the other language's page would mix the two, which this
   // site never does — so it simply isn't shown there until it is translated.
-  const visibleReviews = (product.reviews ?? []).filter((r) => r.text[locale]?.trim());
+  const siblingProducts = product.variantGroup ? getVariants(product.variantGroup) : [product];
+  const visibleReviews = siblingProducts
+    .flatMap((p) => p.reviews ?? [])
+    .filter((r) => r.text[locale]?.trim());
 
   const localImages = getProductImageUrls(product.slug);
   const fallback = getProductImageUrl(product.slug, product.image);
