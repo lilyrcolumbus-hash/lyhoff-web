@@ -42,3 +42,7 @@ next-env.d.ts
 
 # scratch folder for owner-dropped raw photos, sorted into public/images/products/ manually
 /_fotos-nuevas/
+
+# Wrangler local state and local secrets
+.wrangler/
+.dev.vars

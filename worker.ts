@@ -33,6 +33,7 @@
 import { getProduct } from "./lib/products";
 import { FLAT_SHIPPING_CENTS } from "./lib/shipping";
 import { shipping as shippingSettings } from "./lib/settings";
+import { handleMcp } from "./mcp";
 
 interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
@@ -44,6 +45,10 @@ interface Env {
   GITHUB_TOKEN?: string;
   /** Proves to Postgres that a stock decrement came from this Worker. */
   STOCK_TOKEN?: string;
+  /** The shared secret an MCP client presents to read the shop's data. */
+  MCP_TOKEN?: string;
+  /** Proves to Postgres that an MCP read came from this Worker. */
+  MCP_DB_TOKEN?: string;
 }
 
 const WELCOME_CODE = "WELCOME10";
@@ -2488,6 +2493,13 @@ export default {
         return new Response("Method Not Allowed", { status: 405 });
       }
       return handleAccountNewsletter(request, env);
+    }
+    // MCP, for claude.ai connectors. The token may arrive as the last path
+    // segment because a client that only accepts a URL has no other way to
+    // authenticate; a bearer header works too and is preferred where offered.
+    if (url.pathname === "/api/mcp" || url.pathname.startsWith("/api/mcp/")) {
+      const pathToken = url.pathname.slice("/api/mcp/".length);
+      return handleMcp(request, env, pathToken);
     }
     if (url.pathname === "/api/stripe/webhook") {
       if (request.method !== "POST") {
