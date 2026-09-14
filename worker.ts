@@ -34,6 +34,7 @@ import { getProduct } from "./lib/products";
 import { FLAT_SHIPPING_CENTS } from "./lib/shipping";
 import { shipping as shippingSettings } from "./lib/settings";
 import { handleMcp } from "./mcp";
+import { productColumns } from "./lib/product-fields";
 
 interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
@@ -1291,41 +1292,12 @@ const ADMIN_COLLECTIONS: Record<string, AdminCollection> = {
     table: "products",
     key: "slug",
     order: "position.asc,slug.asc",
-    editable: [
-      "name",
-      "tagline",
-      "description",
-      "ingredients",
-      "benefits",
-      "how_to_use",
-      "gift",
-      "badge",
-      "reviews",
-      "price",
-      "size",
-      "category",
-      "active",
-      "position",
-      "photos",
-      "stock",
-    ],
-    creatable: [
-      "slug",
-      "category",
-      "name",
-      "tagline",
-      "description",
-      "how_to_use",
-      "gift",
-      "price",
-      "size",
-      "active",
-      "variant_group",
-      "scent",
-      "scent_group",
-      "position",
-      "stock",
-    ],
+    // Both lists come from product-fields.config.ts, which is also what draws
+    // the editor — so a brand that adds a field cannot end up with a box on
+    // screen that the server then refuses to write. That had already happened
+    // to the two search fields, whose column was never in the list.
+    editable: productColumns.editable,
+    creatable: productColumns.creatable,
     keyPattern: /^[a-z0-9]+(-[a-z0-9]+)*$/,
   },
   orders: {
