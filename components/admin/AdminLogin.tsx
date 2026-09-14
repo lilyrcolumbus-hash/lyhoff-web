@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { LogoMark } from "@/components/illustrations";
 import { Button, inputClass, labelClass } from "./ui";
+import { site } from "@/site.config";
 
 /**
  * The panel has its own way in, rather than sending the owner to the storefront
@@ -46,7 +47,7 @@ export function AdminLogin({ onSignedIn }: { onSignedIn: () => void }) {
     <div className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-6">
       <div className="text-center">
         <LogoMark className="mx-auto h-14 w-14 text-forest-950" textClassName="text-lg" />
-        <h1 className="mt-4 font-display text-2xl font-bold text-forest-950">LYHOFF Admin</h1>
+        <h1 className="mt-4 font-display text-2xl font-bold text-forest-950">{site.name} Admin</h1>
         <p className="mt-2 text-sm text-stone-600">Manage your store.</p>
       </div>
 

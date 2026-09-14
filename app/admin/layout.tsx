@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Zen_Kaku_Gothic_New, Inter } from "next/font/google";
 import "../globals.css";
+import { site } from "@/site.config";
 
 // The admin sits outside app/[lang]/ — it is one internal tool, not a
 // customer-facing page, so it is never translated and never carries the store
@@ -16,7 +17,7 @@ const zenKaku = Zen_Kaku_Gothic_New({
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "LYHOFF Admin",
+  title: `${site.name} Admin`,
   robots: { index: false, follow: false },
 };
 

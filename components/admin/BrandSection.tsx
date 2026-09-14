@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { LogoMark } from "@/components/illustrations";
 import { Button, Card, Empty, Note, patchRow, readCollection } from "./ui";
+import { site } from "@/site.config";
 
 interface Setting {
   key: string;
@@ -142,7 +143,7 @@ export function BrandSection() {
         </div>
         <div className="flex flex-col items-center gap-2">
           <span className="font-display text-2xl text-forest-950" style={{ letterSpacing: "0.18em" }}>
-            LYHOFF
+            {site.name}
           </span>
           <span className="text-[11px] text-stone-500">Wordmark</span>
         </div>

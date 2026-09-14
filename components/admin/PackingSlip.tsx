@@ -2,6 +2,7 @@
 
 import { business } from "@/lib/settings";
 import { day, money } from "./ui";
+import { site } from "@/site.config";
 
 interface Order {
   id: string;
@@ -39,7 +40,7 @@ export function PackingSlip({ order }: { order: Order }) {
     <div className="packing-slip hidden print:block" aria-hidden>
       <div style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif", fontSize: "12pt" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-          <strong style={{ fontSize: "16pt", letterSpacing: "0.16em" }}>LYHOFF</strong>
+          <strong style={{ fontSize: "16pt", letterSpacing: "0.16em" }}>{site.name}</strong>
           <span style={{ fontSize: "10pt" }}>{day(order.created_at)}</span>
         </div>
 

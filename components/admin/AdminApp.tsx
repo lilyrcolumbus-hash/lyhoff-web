@@ -18,6 +18,7 @@ import { PagesSection } from "./PagesSection";
 import { PreferencesSection } from "./PreferencesSection";
 import { ComingSection } from "./ComingSection";
 import { PublishBar } from "./PublishBar";
+import { site } from "@/site.config";
 
 export type SectionId =
   | "home"
@@ -140,7 +141,7 @@ export function AdminApp() {
         <div className="flex items-center gap-2.5 px-4 py-4">
           <LogoMark className="h-7 w-7 text-forest-950" textClassName="text-[9px]" />
           <span className="font-display text-[13px] text-forest-950" style={{ letterSpacing: "0.18em" }}>
-            LYHOFF
+            {site.name}
           </span>
           <button
             type="button"
