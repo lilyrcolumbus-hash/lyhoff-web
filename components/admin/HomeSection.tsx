@@ -63,7 +63,7 @@ export function HomeSection({ onGo }: { onGo: (section: SectionId) => void }) {
                 onClick={() => onGo(tile.go as SectionId)}
                 className="mt-2 text-[12px] text-indigo-600 underline underline-offset-2 hover:text-forest-950"
               >
-                Ver
+                View
               </button>
             )}
           </Card>
