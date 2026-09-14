@@ -4,7 +4,8 @@
 -- points at a column that already exists, which is why nothing had to move when
 -- the editor became declarative.
 --
--- A brand selling something else — roast level, wattage, fabric — declares its
+-- A brand that needs a field LYHOFF has no column for — a candle maker's burn
+-- time, a supplement's servings per container — declares its
 -- fields with `storage: { in: "json", column: "details", key: "…" }` and they
 -- all live in this one column, so adding a field never needs a schema change
 -- again. Same mechanism the two search fields already use with `seo`.

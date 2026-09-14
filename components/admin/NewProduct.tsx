@@ -31,7 +31,7 @@ const ERRORS: Record<string, string> = {
  * The fields this form asks for beyond the name, the address and the category.
  *
  * Drawn from the declaration rather than written out, so a brand whose products
- * have a weight or a wattage instead of a size gets the right box here without
+ * are measured in something other than size gets the right box here without
  * anyone editing this file. What it is comes before what it costs, which is the
  * order the form already read in.
  */

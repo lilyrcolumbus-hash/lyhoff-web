@@ -113,11 +113,12 @@ currency, flat shipping rate, countries, and their Supabase URL and anon key.
 
 **`product-fields.config.ts`** — what a product *is* here. Every box in the product editor, every
 column the panel is allowed to write, and every field the create form asks for are all drawn from
-this one list, so a brand whose products have a roast level instead of a scent is a list edit
+this one list, so a brand whose products are described differently from LYHOFF's is a list edit
 rather than a component edit.
 
 A field that LYHOFF's schema has no column for goes in the `details` json column
-(`storage: { in: "json", column: "details", key: "roast" }`) — run `product-details.sql` first.
+(`storage: { in: "json", column: "details", key: "burn_time" }`) — run `product-details.sql`
+first.
 Before choosing which fields are shared across variants and which differ, run
 `count(distinct …)` per variant group on the real catalogue, the way it was done here. Taste gets
 this wrong; the data does not.

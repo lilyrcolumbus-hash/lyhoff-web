@@ -14,9 +14,10 @@
  * before, so every product opens with its current values already in place.
  *
  * ── Adding a field for another brand ──────────────────────────────────────
- * A brand that needs something LYHOFF doesn't have — roast level, wattage,
- * fabric — adds an entry with `storage: { in: "json", column: "details", key:
- * "roast" }`. That is not new machinery: the two search fields below already
+ * A brand that needs something LYHOFF doesn't have — a candle maker's burn
+ * time, a supplement's servings per container — adds an entry with
+ * `storage: { in: "json", column: "details", key: "burn_time" }`. That is not
+ * new machinery: the two search fields below already
  * store themselves inside the `seo` json column the same way. Run
  * `supabase/product-details.sql` once to add the column.
  *
