@@ -84,11 +84,14 @@ outage nobody is told about.
 **In the build (both plans):**
 - A custom site designed for the brand — not a purchased theme
 - Fully bilingual, English and Spanish
-- Their products loaded, with their photos and copy
+- **Their products loaded, using the photos and copy they supply.** We place their material; we
+  do not produce it. Saying it this way matters — an earlier draft of this file promised "products
+  loaded with photos and copy" in one list and excluded "photography and copywriting" in the next,
+  which reads as a contradiction and would be argued about later.
 - Working Stripe checkout, proven with a real purchase
 - The admin panel
 - Every account opened **in the client's name**: domain, Stripe, database, hosting
-- A one-hour session teaching them to use it
+- Access to the recorded tutorials (below)
 
 **In the monthly (both plans):**
 - Database, hosting and checkout running
@@ -98,10 +101,27 @@ outage nobody is told about.
 - Support, including **up to 30 minutes of changes per month**
 
 **Not included — say so in writing or it will be expected for free:**
-- Product photography
-- Copywriting
+- **Producing** product photography (we place what they send; we do not shoot it)
+- **Writing** their product copy from scratch (we place what they send)
 - Any feature beyond the standard set
 - Integrations with other systems
+
+### Teaching them to use it: recorded, not live
+
+**No one-hour training session.** A live hour has to be repeated with every client, forever, and
+it is the first thing that makes a per-client business stop scaling.
+
+Instead: **six short recorded videos, about two minutes each** — edit a product, change a price,
+add a photo, publish, read an order, mark it shipped. Recorded once against the real panel, reused
+for every brand from then on. It is a template asset exactly like the code is.
+
+It is also better for the client: she rewatches the one she needs at eleven at night instead of
+writing to us.
+
+**And put the help where the work happens.** The panel already explains itself in one place
+("Saving and publishing are two things"). Extending that — a line of plain explanation next to the
+controls people get wrong — removes most support questions before they are asked, and costs
+nothing per client.
 
 ---
 
