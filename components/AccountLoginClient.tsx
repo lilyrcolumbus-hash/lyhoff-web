@@ -27,11 +27,22 @@ export function AccountLoginClient({ locale }: { locale: Locale }) {
   const [errorKey, setErrorKey] = useState<string>("");
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
     // The Worker sends people here with ?error=link when an emailed
     // confirmation or reset link has already been used or has expired.
-    if (new URLSearchParams(window.location.search).get("error") === "link") {
+    if (params.get("error") === "link") {
       setErrorKey("link_expired");
       setStatus("error");
+      window.history.replaceState(null, "", window.location.pathname);
+      return;
+    }
+
+    // The admin's "Forgot your password" link deep-links here with
+    // ?mode=forgot, since this page otherwise always opens on Login — the
+    // very screen someone who forgot their password can't get past.
+    if (params.get("mode") === "forgot") {
+      setMode("forgot");
       window.history.replaceState(null, "", window.location.pathname);
     }
   }, []);
