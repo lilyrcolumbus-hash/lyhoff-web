@@ -79,7 +79,7 @@ export function AdminLogin({ onSignedIn }: { onSignedIn: () => void }) {
         <Button type="submit" disabled={busy}>{busy ? "Signing in…" : "Sign in"}</Button>
         {error && <p className="text-[13px] text-clay-600">{error}</p>}
         <a
-          href="/es/account/login/"
+          href="/en/account/login/?mode=forgot"
           className="text-center text-[12px] text-stone-500 underline underline-offset-2 hover:text-forest-950"
         >
           Forgot your password
