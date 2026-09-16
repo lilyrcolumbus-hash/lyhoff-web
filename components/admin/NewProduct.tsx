@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button, Card, Note, createRow, inputClass, labelClass } from "./ui";
+import { productFields, writeField, type ProductField } from "@/lib/product-fields";
 
 /**
  * A URL, derived from the name but editable, because it is the one field here
@@ -17,6 +18,8 @@ export function slugify(value: string): string {
     .slice(0, 80);
 }
 
+const EMPTY = { en: "", es: "" };
+
 const ERRORS: Record<string, string> = {
   slug_taken: "There's already a product at that web address.",
   invalid_slug: "The web address can only use lowercase letters, numbers and hyphens.",
@@ -24,7 +27,17 @@ const ERRORS: Record<string, string> = {
   forbidden: "This account isn't allowed to create products.",
 };
 
-const EMPTY = { en: "", es: "" };
+/**
+ * The fields this form asks for beyond the name, the address and the category.
+ *
+ * Drawn from the declaration rather than written out, so a brand whose products
+ * are measured in something other than size gets the right box here without
+ * anyone editing this file. What it is comes before what it costs, which is the
+ * order the form already read in.
+ */
+const createFields: ProductField[] = productFields
+  .filter((field) => field.onCreate && (field.kind === "text" || field.kind === "price"))
+  .sort((a, b) => Number(a.kind === "price") - Number(b.kind === "price"));
 
 /**
  * Creating a product asks for the few things a person actually knows at that
@@ -45,8 +58,7 @@ export function NewProduct({
   const [slug, setSlug] = useState("");
   const [slugTouched, setSlugTouched] = useState(false);
   const [category, setCategory] = useState(categories[0] ?? "");
-  const [size, setSize] = useState("");
-  const [price, setPrice] = useState("");
+  const [values, setValues] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -58,15 +70,27 @@ export function NewProduct({
     setSaving(true);
     setError(null);
 
+    const row: Record<string, unknown> = {};
+    for (const field of createFields) {
+      const typed = (values[field.id] ?? "").trim();
+      Object.assign(
+        row,
+        writeField(row, field, field.kind === "price" ? Number(typed) || 0 : typed),
+      );
+    }
+
     const result = await createRow("products", {
+      ...row,
       slug: effectiveSlug,
       category,
       name: { en: name.trim(), es: name.trim() },
+      // The three columns that cannot be null, seeded blank so the row is legal
+      // before anyone has written a word. Gift and badge are pointedly NOT
+      // seeded: they are nullable, and an empty `{ en: "", es: "" }` is truthy,
+      // so the shop would show every new product an empty "+ Free gift" label.
       tagline: EMPTY,
       description: EMPTY,
       how_to_use: EMPTY,
-      size: size.trim(),
-      price: Number(price) || 0,
       // Hidden until she says otherwise: a product with no photos and no
       // description should never be one refresh away from the shop.
       active: false,
@@ -137,29 +161,35 @@ export function NewProduct({
               ))}
             </select>
           </div>
-          <div className="flex flex-col gap-1.5">
-            <span className={labelClass}>Size</span>
-            <input
-              className={inputClass}
-              value={size}
-              onChange={(event) => setSize(event.target.value)}
-              placeholder="2 oz"
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <span className={labelClass}>Price</span>
-            <div className="flex">
-              <span className="border border-r-0 border-stone-300 bg-stone-50 px-3 py-2 text-sm text-stone-500">
-                $
-              </span>
-              <input
-                className={`${inputClass} border-l-0`}
-                inputMode="decimal"
-                value={price}
-                onChange={(event) => setPrice(event.target.value)}
-              />
+          {createFields.map((field) => (
+            <div key={field.id} className="flex flex-col gap-1.5">
+              <span className={labelClass}>{field.label}</span>
+              {field.kind === "price" ? (
+                <div className="flex">
+                  <span className="border border-r-0 border-stone-300 bg-stone-50 px-3 py-2 text-sm text-stone-500">
+                    $
+                  </span>
+                  <input
+                    className={`${inputClass} border-l-0`}
+                    inputMode="decimal"
+                    value={values[field.id] ?? ""}
+                    onChange={(event) =>
+                      setValues((current) => ({ ...current, [field.id]: event.target.value }))
+                    }
+                  />
+                </div>
+              ) : (
+                <input
+                  className={inputClass}
+                  placeholder={field.placeholder}
+                  value={values[field.id] ?? ""}
+                  onChange={(event) =>
+                    setValues((current) => ({ ...current, [field.id]: event.target.value }))
+                  }
+                />
+              )}
             </div>
-          </div>
+          ))}
         </div>
 
         <div className="flex items-center gap-3 border-t border-stone-200 pt-4">

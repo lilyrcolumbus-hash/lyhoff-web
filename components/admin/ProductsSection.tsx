@@ -1,10 +1,18 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { BilingualField, type Bilingual } from "./BilingualField";
-import { BilingualList } from "./BilingualList";
+import type { Bilingual } from "./BilingualField";
 import { NewProduct, slugify } from "./NewProduct";
 import { PhotoManager, isUploaded, photoSrc } from "./PhotoManager";
+import { ProductFieldInput } from "./ProductField";
+import {
+  fieldColumns,
+  fieldsIn,
+  rawField,
+  readField,
+  writeField,
+  type ProductField,
+} from "@/lib/product-fields";
 import {
   Button,
   Card,
@@ -40,16 +48,19 @@ interface Product {
   active: boolean;
   photos: string[];
   seo: { title?: Bilingual; description?: Bilingual } | null;
+  /** Fields a brand declared for itself, which LYHOFF's own columns don't name. */
+  [column: string]: unknown;
 }
 
-const EMPTY: Bilingual = { en: "", es: "" };
-
-// Fields that are the same on every variant of a product. Checked against the
-// real catalogue before choosing them: tagline, how to use and the gift are
-// identical across all six tallow cream rows and all six comfrey rows, while
-// name, description and price genuinely differ per scent and per size. So
-// these three are edited once for the whole product, and the rest per variant.
-const SHARED = ["tagline", "how_to_use", "gift"] as const;
+// Which fields exist, whether each is shared or per variant, and where each one
+// is stored are all declared in product-fields.config.ts. This screen draws
+// whatever is listed there — for LYHOFF, the same fields it has always drawn,
+// each still reading and writing the column it already lived in.
+const sharedFields = fieldsIn("shared");
+const rowFields = fieldsIn("row");
+const textFields = fieldsIn("text");
+const seoFields = fieldsIn("seo");
+const photoField = fieldsIn("photos")[0];
 
 /** A product is its variants. One row with no variant_group is a group of one. */
 interface Group {
@@ -159,12 +170,19 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
   }
 
   /** A shared field is written onto every variant, so one edit covers the product. */
-  function setShared(field: (typeof SHARED)[number], value: Bilingual) {
-    setDraft((current) => (current ?? []).map((variant) => ({ ...variant, [field]: value })));
+  function setShared(field: ProductField, value: unknown) {
+    setDraft((current) =>
+      (current ?? []).map((variant) => ({ ...variant, ...writeField(variant, field, value) })),
+    );
   }
 
   function setVariant(slug: string, patch: Partial<Product>) {
     setDraft((current) => (current ?? []).map((v) => (v.slug === slug ? { ...v, ...patch } : v)));
+  }
+
+  /** The same, for a field that differs from one variant to the next. */
+  function setVariantField(variant: Product, field: ProductField, value: unknown) {
+    setVariant(variant.slug, writeField(variant, field, value) as Partial<Product>);
   }
 
   /**
@@ -191,14 +209,25 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
     // group of whichever variant is already that size.
     const sameSize = draft.find((v) => v.size === size);
 
+    // Everything declared shared is copied from the product, plus the name and
+    // description as a starting point — a new variant that arrives with empty
+    // copy is one nobody can tell apart from a mistake.
+    const inherited: Record<string, unknown> = {};
+    for (const field of sharedFields) {
+      if (!field.onCreate) continue;
+      // Raw, not readField: a field the parent leaves empty has to arrive empty
+      // rather than as a blank pair. See rawField for what that costs.
+      const value = rawField(parent, field);
+      if (value === null || value === undefined) continue;
+      Object.assign(inherited, writeField(inherited, field, value));
+    }
+
     const result = await createRow("products", {
+      ...inherited,
       slug,
       category: parent.category,
       name: { en: parent.name.en, es: parent.name.es },
-      tagline: parent.tagline,
       description: parent.description,
-      how_to_use: parent.how_to_use ?? { en: "", es: "" },
-      gift: parent.gift,
       size,
       price: Number(priceValue) || 0,
       active: false,
@@ -272,12 +301,15 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
       const before = original.find((v) => v.slug === variant.slug);
       if (!before) continue;
 
+      // Only the columns the declared fields actually live in. Diffing the whole
+      // row would also send identity columns — slug, the grouping — which are
+      // set once at creation and are not in the server's editable allowlist, so
+      // the write would be rejected whole.
       const patch: Record<string, unknown> = {};
-      for (const [key, value] of Object.entries(variant)) {
-        // Identity, not content: these are set once at creation and are not in
-        // the server's editable allowlist, so sending them would fail the write.
-        if (key === "slug" || key === "variant_group" || key === "scent" || key === "scent_group") continue;
-        if (JSON.stringify(value) !== JSON.stringify(before[key as keyof Product])) patch[key] = value;
+      for (const column of fieldColumns) {
+        if (JSON.stringify(variant[column]) !== JSON.stringify(before[column])) {
+          patch[column] = variant[column];
+        }
       }
       if (Object.keys(patch).length === 0) continue;
 
@@ -428,19 +460,14 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
               These are the same on every variant. Changing one changes all {draft.length}.
             </p>
           )}
-          <BilingualField title="Tagline" value={shared.tagline} onChange={(v) => setShared("tagline", v)} />
-          <BilingualField
-            title="How to use"
-            multiline
-            value={shared.how_to_use ?? EMPTY}
-            onChange={(v) => setShared("how_to_use", v)}
-          />
-          <BilingualField
-            title="Free gift"
-            value={shared.gift ?? EMPTY}
-            onChange={(v) => setShared("gift", v)}
-            hint="Leave empty if this product has no gift."
-          />
+          {sharedFields.map((field) => (
+            <ProductFieldInput
+              key={field.id}
+              field={field}
+              value={readField(shared, field)}
+              onChange={(value) => setShared(field, value)}
+            />
+          ))}
         </Card>
 
         <Card className="overflow-hidden">
@@ -464,48 +491,69 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
                       <span className="block truncate text-[11px] text-stone-500">{variant.slug}</span>
                     </span>
 
-                    <span className="flex shrink-0 items-center">
-                      <span className="border border-r-0 border-stone-300 bg-stone-50 px-2 py-1.5 text-[13px] text-stone-500">
-                        $
-                      </span>
-                      <input
-                        className={`${inputClass} w-24 border-l-0 py-1.5 text-[13px] tabular-nums`}
-                        inputMode="decimal"
-                        aria-label={`Price, ${variantLabel(variant)}`}
-                        value={variant.price}
-                        onChange={(event) =>
-                          setVariant(variant.slug, { price: event.target.value as unknown as number })
-                        }
-                      />
-                    </span>
+                    {/* The handful of things read at a glance across every variant.
+                        Which of them exist is declared; how each one looks is
+                        fixed by its kind, so a brand can drop stock or rename a
+                        label without the line turning into something else. */}
+                    {rowFields.map((field) => {
+                      if (field.kind === "price") {
+                        return (
+                          <span key={field.id} className="flex shrink-0 items-center">
+                            <span className="border border-r-0 border-stone-300 bg-stone-50 px-2 py-1.5 text-[13px] text-stone-500">
+                              $
+                            </span>
+                            <input
+                              className={`${inputClass} w-24 border-l-0 py-1.5 text-[13px] tabular-nums`}
+                              inputMode="decimal"
+                              aria-label={`${field.label}, ${variantLabel(variant)}`}
+                              value={readField(variant, field) as number}
+                              onChange={(event) =>
+                                setVariantField(variant, field, event.target.value as unknown as number)
+                              }
+                            />
+                          </span>
+                        );
+                      }
 
-                    <span className="flex shrink-0 flex-col">
-                      <input
-                        className={`${inputClass} w-24 py-1.5 text-[13px] tabular-nums`}
-                        inputMode="numeric"
-                        aria-label={`Units in stock, ${variantLabel(variant)}`}
-                        placeholder="Untracked"
-                        value={variant.stock ?? ""}
-                        onChange={(event) => {
-                          const raw = event.target.value.trim();
-                          // Blank means "don't count this one" — the state every
-                          // product is in until she decides to track it.
-                          setVariant(variant.slug, {
-                            stock: raw === "" ? null : Math.max(0, Math.floor(Number(raw) || 0)),
-                          });
-                        }}
-                      />
-                    </span>
+                      if (field.kind === "stock") {
+                        return (
+                          <span key={field.id} className="flex shrink-0 flex-col">
+                            <input
+                              className={`${inputClass} w-24 py-1.5 text-[13px] tabular-nums`}
+                              inputMode="numeric"
+                              aria-label={`${field.label}, ${variantLabel(variant)}`}
+                              placeholder={field.placeholder}
+                              value={(readField(variant, field) as number | null) ?? ""}
+                              onChange={(event) => {
+                                const raw = event.target.value.trim();
+                                // Blank means "don't count this one" — the state every
+                                // product is in until she decides to track it.
+                                setVariantField(
+                                  variant,
+                                  field,
+                                  raw === "" ? null : Math.max(0, Math.floor(Number(raw) || 0)),
+                                );
+                              }}
+                            />
+                          </span>
+                        );
+                      }
 
-                    <label className="flex shrink-0 items-center gap-1.5 text-[12px] text-stone-600">
-                      <input
-                        type="checkbox"
-                        checked={variant.active}
-                        onChange={(event) => setVariant(variant.slug, { active: event.target.checked })}
-                        className="h-4 w-4 accent-[#93906d]"
-                      />
-                      Visible
-                    </label>
+                      return (
+                        <label
+                          key={field.id}
+                          className="flex shrink-0 items-center gap-1.5 text-[12px] text-stone-600"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={readField(variant, field) as boolean}
+                            onChange={(event) => setVariantField(variant, field, event.target.checked)}
+                            className="h-4 w-4 accent-[#93906d]"
+                          />
+                          {field.label}
+                        </label>
+                      );
+                    })}
 
                     <span className="flex shrink-0 items-center gap-3">
                       <button
@@ -517,7 +565,7 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
                           openTab === "photos" ? "font-semibold text-forest-950" : "text-stone-500"
                         }`}
                       >
-                        Photos ({(variant.photos ?? []).length})
+                        {photoField.label} ({(variant.photos ?? []).length})
                       </button>
                       <button
                         type="button"
@@ -537,76 +585,39 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
                     <div className="border-t border-stone-200 bg-stone-50/60 px-4 py-4">
                       <PhotoManager
                         slug={variant.slug}
-                        photos={variant.photos ?? []}
-                        onChange={(photos) => setVariant(variant.slug, { photos })}
+                        photos={readField(variant, photoField) as string[]}
+                        onChange={(photos) => setVariantField(variant, photoField, photos)}
                       />
                     </div>
                   )}
 
                   {openTab === "text" && (
                     <div className="flex flex-col gap-5 border-t border-stone-200 bg-stone-50/60 px-4 py-4">
-                      <BilingualField
-                        title="Name"
-                        value={variant.name}
-                        onChange={(name) => setVariant(variant.slug, { name })}
-                      />
-                      <BilingualField
-                        title="Description"
-                        multiline
-                        value={variant.description}
-                        onChange={(description) => setVariant(variant.slug, { description })}
-                      />
-                      <div className="flex flex-col gap-1.5">
-                        <span className={labelClass}>Size</span>
-                        <input
-                          className={inputClass}
-                          value={variant.size ?? ""}
-                          onChange={(event) => setVariant(variant.slug, { size: event.target.value })}
+                      {textFields.map((field) => (
+                        <ProductFieldInput
+                          key={field.id}
+                          field={field}
+                          value={readField(variant, field)}
+                          onChange={(value) => setVariantField(variant, field, value)}
                         />
-                      </div>
+                      ))}
 
-                      <BilingualList
-                        title="Ingredients"
-                        hint="Shown as chips on the product page, in this order."
-                        items={variant.ingredients ?? []}
-                        onChange={(ingredients) => setVariant(variant.slug, { ingredients })}
-                      />
-
-                      <BilingualList
-                        title="Benefits"
-                        hint="The short bullets under the description."
-                        items={variant.benefits ?? []}
-                        onChange={(benefits) => setVariant(variant.slug, { benefits })}
-                      />
-
-                      <BilingualField
-                        title="Badge"
-                        value={variant.badge ?? EMPTY}
-                        onChange={(badge) => setVariant(variant.slug, { badge })}
-                        hint="The small label over the photo. Leave empty for none."
-                      />
-
-                      <div className="flex flex-col gap-5 border-t border-stone-200 pt-4">
-                        <p className="-mb-2 text-[11.5px] text-stone-500">
-                          Search results and shared links. Leave both empty and the name and
-                          description above are used, which is usually right.
-                        </p>
-                        <BilingualField
-                          title="Search title"
-                          value={variant.seo?.title ?? EMPTY}
-                          onChange={(title) =>
-                            setVariant(variant.slug, { seo: { ...(variant.seo ?? {}), title } })
-                          }
-                        />
-                        <BilingualField
-                          title="Search description"
-                          multiline
-                          value={variant.seo?.description ?? EMPTY}
-                          onChange={(description) =>
-                            setVariant(variant.slug, { seo: { ...(variant.seo ?? {}), description } })
-                          }
-                        />
-                      </div>
+                      {seoFields.length > 0 && (
+                        <div className="flex flex-col gap-5 border-t border-stone-200 pt-4">
+                          <p className="-mb-2 text-[11.5px] text-stone-500">
+                            Search results and shared links. Leave both empty and the name and
+                            description above are used, which is usually right.
+                          </p>
+                          {seoFields.map((field) => (
+                            <ProductFieldInput
+                              key={field.id}
+                              field={field}
+                              value={readField(variant, field)}
+                              onChange={(value) => setVariantField(variant, field, value)}
+                            />
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

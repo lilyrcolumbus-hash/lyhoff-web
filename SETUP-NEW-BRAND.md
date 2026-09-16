@@ -31,6 +31,7 @@ product-stock.sql
 products-position.sql
 order-detail.sql
 subscribers-account-access.sql
+product-details.sql   # only if the brand declares fields LYHOFF doesn't have
 mcp-read.sql          # only if the MCP connector is wanted
 ```
 
@@ -103,11 +104,24 @@ wrangler 3.x that cannot read `wrangler.jsonc`, and the deploy dies with `Missin
 which reads exactly like a broken token and has cost real hours. Keep it in step with the wrangler
 in `devDependencies`.
 
-## 6. `site.config.ts`
+## 6. `site.config.ts` and `product-fields.config.ts`
 
-The one file that makes this their brand: name, legal name, tagline, contact email, origin,
-locales, palette, fonts, currency, flat shipping rate, countries, and their Supabase URL and anon
-key.
+Two files, and between them they are the brand.
+
+**`site.config.ts`** — name, legal name, tagline, contact email, origin, locales, palette, fonts,
+currency, flat shipping rate, countries, and their Supabase URL and anon key.
+
+**`product-fields.config.ts`** — what a product *is* here. Every box in the product editor, every
+column the panel is allowed to write, and every field the create form asks for are all drawn from
+this one list, so a brand whose products are described differently from LYHOFF's is a list edit
+rather than a component edit.
+
+A field that LYHOFF's schema has no column for goes in the `details` json column
+(`storage: { in: "json", column: "details", key: "burn_time" }`) — run `product-details.sql`
+first.
+Before choosing which fields are shared across variants and which differ, run
+`count(distinct …)` per variant group on the real catalogue, the way it was done here. Taste gets
+this wrong; the data does not.
 
 ## 7. The owner's account
 
