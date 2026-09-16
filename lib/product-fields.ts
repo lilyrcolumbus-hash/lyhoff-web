@@ -67,6 +67,22 @@ export function readField(row: ProductRow, field: ProductField): unknown {
 }
 
 /**
+ * The field's stored value, with nothing substituted for a missing one.
+ *
+ * `readField` exists to feed a controlled input, so it turns null into an empty
+ * string or an empty pair. That is right on screen and wrong when copying a
+ * value from one row onto another: a product with no gift would hand its new
+ * variant `{ en: "", es: "" }`, which is not null, survives the build — only
+ * nulls are dropped — and is truthy, so the shop would advertise a free gift
+ * that is never going to ship.
+ */
+export function rawField(row: ProductRow, field: ProductField): unknown {
+  return field.storage.in === "column"
+    ? row[field.storage.column]
+    : (row[field.storage.column] as Record<string, unknown> | null | undefined)?.[field.storage.key];
+}
+
+/**
  * The change to apply to the row for this edit.
  *
  * A field inside a json column has to carry the whole column, merged onto what

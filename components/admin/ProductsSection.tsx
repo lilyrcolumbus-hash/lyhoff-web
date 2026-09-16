@@ -8,6 +8,7 @@ import { ProductFieldInput } from "./ProductField";
 import {
   fieldColumns,
   fieldsIn,
+  rawField,
   readField,
   writeField,
   type ProductField,
@@ -214,7 +215,11 @@ export function ProductsSection({ reportCount }: { reportCount: (key: string, n:
     const inherited: Record<string, unknown> = {};
     for (const field of sharedFields) {
       if (!field.onCreate) continue;
-      Object.assign(inherited, writeField(inherited, field, readField(parent, field)));
+      // Raw, not readField: a field the parent leaves empty has to arrive empty
+      // rather than as a blank pair. See rawField for what that costs.
+      const value = rawField(parent, field);
+      if (value === null || value === undefined) continue;
+      Object.assign(inherited, writeField(inherited, field, value));
     }
 
     const result = await createRow("products", {

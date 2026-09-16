@@ -55,7 +55,6 @@ export function ProductFieldInput({
           <span className={labelClass}>{field.label}</span>
           <input
             className={inputClass}
-            placeholder={field.placeholder}
             value={(value as string) ?? ""}
             onChange={(event) => onChange(event.target.value)}
           />
