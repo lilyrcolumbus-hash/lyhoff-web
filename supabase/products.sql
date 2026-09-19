@@ -40,6 +40,9 @@ create policy "anon can read products"
 grant select on public.products to anon;
 
 -- Only her logged-in admin session (authenticated role) can write.
+-- SECURITY WARNING (2026-09-18): the policy below lets ANY signed-in user (every customer)
+-- write products. Run supabase/products-admin-only.sql after this file. It is not folded
+-- in here because products.sql runs before public.is_admin() exists in this repo's order.
 drop policy if exists "authenticated can manage products" on public.products;
 create policy "authenticated can manage products"
   on public.products
