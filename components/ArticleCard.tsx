@@ -27,7 +27,7 @@ export function ArticleCard({
     >
       <Link
         href={`/${locale}/articles/${article.slug}/`}
-        className="group flex flex-col overflow-hidden rounded-sm border border-white/60 bg-cream/60 backdrop-blur-xl shadow-[0_8px_30px_rgba(43,42,37,0.05)] transition hover:-translate-y-1 hover:shadow-[0_12px_36px_rgba(43,42,37,0.09)]"
+        className="group flex flex-col min-w-0 overflow-hidden rounded-sm border border-white/60 bg-cream/60 backdrop-blur-xl shadow-[0_8px_30px_rgba(43,42,37,0.05)] transition hover:-translate-y-1 hover:shadow-[0_12px_36px_rgba(43,42,37,0.09)]"
       >
         <div className="overflow-hidden">
           <CoverImage
