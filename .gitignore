@@ -46,3 +46,7 @@ next-env.d.ts
 # Wrangler local state and local secrets
 .wrangler/
 .dev.vars
+
+# internal operating notes — not for public visibility
+CLAUDE.md
+BUSINESS-MODEL.md
