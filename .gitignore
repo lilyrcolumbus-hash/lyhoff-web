@@ -50,3 +50,6 @@ next-env.d.ts
 # internal operating notes — not for public visibility
 CLAUDE.md
 BUSINESS-MODEL.md
+
+# Claude Code local settings
+.claude/
