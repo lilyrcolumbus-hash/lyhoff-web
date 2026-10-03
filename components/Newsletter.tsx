@@ -81,6 +81,7 @@ export function Newsletter({
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder={dict.emailPlaceholder}
+            aria-label={dict.emailPlaceholder}
             className="flex-1 rounded-sm border border-stone-300 bg-white px-5 py-3 text-sm text-ink outline-none focus:border-indigo-500"
           />
           <button
