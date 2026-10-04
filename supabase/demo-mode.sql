@@ -47,3 +47,20 @@ begin
     );
   end loop;
 end $$;
+
+-- The demo account must not see people: customer emails, addresses and order
+-- notes stay invisible to it. A RESTRICTIVE policy is ANDed with every existing
+-- policy, so this can only narrow what the account sees, never widen it.
+do $$
+declare
+  t text;
+begin
+  foreach t in array array['subscribers', 'orders', 'order_notes', 'abandoned_checkouts'] loop
+    execute format('drop policy if exists demo_cannot_read on public.%I', t);
+    execute format(
+      'create policy demo_cannot_read on public.%I as restrictive for select to authenticated
+         using (not public.is_demo_account())',
+      t
+    );
+  end loop;
+end $$;
