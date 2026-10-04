@@ -53,3 +53,6 @@ BUSINESS-MODEL.md
 
 # Claude Code local settings
 .claude/
+
+# Private brand strategy (kept out of the public repo)
+docs/brand-research.md
