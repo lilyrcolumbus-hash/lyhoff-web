@@ -30,7 +30,10 @@ export async function startCheckout(items: CartItem[], locale: Locale): Promise<
     // legitimately be refused here. Name that case so the cart can say what
     // happened instead of showing the generic "something went wrong".
     const body = (await res.json().catch(() => ({}))) as { error?: string };
-    throw new Error(body.error === "out_of_stock" ? "out_of_stock" : "checkout_failed");
+    if (body.error === "out_of_stock" || body.error === "demo_checkout_disabled") {
+      throw new Error(body.error);
+    }
+    throw new Error("checkout_failed");
   }
 
   const data: { url?: string } = await res.json();

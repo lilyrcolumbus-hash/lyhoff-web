@@ -12,7 +12,7 @@ export function CartPageClient({ locale }: { locale: Locale }) {
   const dict = t(locale);
   const { items, removeItem, updateQty, total } = useCartStore();
   const [checkingOut, setCheckingOut] = useState(false);
-  const [error, setError] = useState<null | "generic" | "out_of_stock">(null);
+  const [error, setError] = useState<null | "generic" | "out_of_stock" | "demo">(null);
 
   async function onCheckout() {
     setError(null);
@@ -22,7 +22,8 @@ export function CartPageClient({ locale }: { locale: Locale }) {
     } catch (caught) {
       // Stock is checked live at checkout, so a cart can be refused here for a
       // reason that is worth naming rather than blaming on the site.
-      setError(caught instanceof Error && caught.message === "out_of_stock" ? "out_of_stock" : "generic");
+      const reason = caught instanceof Error ? caught.message : "";
+      setError(reason === "out_of_stock" ? "out_of_stock" : reason === "demo_checkout_disabled" ? "demo" : "generic");
       setCheckingOut(false);
     }
   }
@@ -119,7 +120,13 @@ export function CartPageClient({ locale }: { locale: Locale }) {
           </button>
           {error && (
               <p className="mt-3 text-sm text-clay-600">
-                {error === "out_of_stock" ? dict.cartSoldOut : dict.cartError}
+                {error === "out_of_stock"
+                  ? dict.cartSoldOut
+                  : error === "demo"
+                    ? locale === "es"
+                      ? "Demo de portafolio: el pago real está desactivado."
+                      : "Portfolio demo: real checkout is switched off."
+                    : dict.cartError}
               </p>
             )}
         </>

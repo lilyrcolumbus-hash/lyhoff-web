@@ -19,6 +19,7 @@ import { PreferencesSection } from "./PreferencesSection";
 import { ComingSection } from "./ComingSection";
 import { PublishBar } from "./PublishBar";
 import { site } from "@/site.config";
+import { DEMO_ADMIN_EMAIL } from "@/lib/demo";
 
 export type SectionId =
   | "home"
@@ -198,6 +199,12 @@ export function AdminApp() {
       </aside>
 
       <main className="min-w-0 px-4 py-6 sm:px-6">
+        {email.toLowerCase() === DEMO_ADMIN_EMAIL && (
+          <p className="mb-4 border border-stone-200 bg-white px-4 py-3 text-[13px] text-stone-600">
+            <span className="font-medium text-forest-950">Read-only demo.</span> Explore every screen;
+            saving, publishing and refunds are switched off.
+          </p>
+        )}
         <PublishBar />
         <h1 className="mb-5 font-display text-xl font-bold text-forest-950">{current?.label}</h1>
 

@@ -56,3 +56,6 @@ BUSINESS-MODEL.md
 
 # Private brand strategy (kept out of the public repo)
 docs/brand-research.md
+
+# Supabase CLI scratch state
+supabase/.temp/

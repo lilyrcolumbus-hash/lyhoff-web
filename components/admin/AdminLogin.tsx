@@ -4,6 +4,7 @@ import { useState } from "react";
 import { LogoMark } from "@/components/illustrations";
 import { Button, inputClass, labelClass } from "./ui";
 import { site } from "@/site.config";
+import { DEMO_ADMIN_EMAIL, DEMO_ADMIN_PASSWORD } from "@/lib/demo";
 
 /**
  * The panel has its own way in, rather than sending the owner to the storefront
@@ -51,7 +52,30 @@ export function AdminLogin({ onSignedIn }: { onSignedIn: () => void }) {
         <p className="mt-2 text-sm text-stone-600">Manage your store.</p>
       </div>
 
-      <form onSubmit={submit} className="mt-8 flex flex-col gap-4 border border-stone-200 bg-white p-6">
+      <div className="mt-8 border border-stone-200 bg-white p-4 text-[13px] text-stone-600">
+        <p className="font-medium text-forest-950">Portfolio demo — look around</p>
+        <p className="mt-1">
+          Sign in with the demo account to explore every screen. It is read-only: nothing you do
+          here is saved.
+        </p>
+        <p className="mt-2">
+          <span className="text-stone-500">Email</span> {DEMO_ADMIN_EMAIL}
+          <br />
+          <span className="text-stone-500">Password</span> {DEMO_ADMIN_PASSWORD}
+        </p>
+        <button
+          type="button"
+          onClick={() => {
+            setEmail(DEMO_ADMIN_EMAIL);
+            setPassword(DEMO_ADMIN_PASSWORD);
+          }}
+          className="mt-3 text-[12px] font-medium text-forest-950 underline underline-offset-2"
+        >
+          Fill in the demo account
+        </button>
+      </div>
+
+      <form onSubmit={submit} className="mt-4 flex flex-col gap-4 border border-stone-200 bg-white p-6">
         <div className="flex flex-col gap-1.5">
           <label className={labelClass} htmlFor="admin-email">Email</label>
           <input

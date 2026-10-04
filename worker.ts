@@ -34,6 +34,7 @@ import { getProduct } from "./lib/products";
 import { FLAT_SHIPPING_CENTS } from "./lib/shipping";
 import { shipping as shippingSettings } from "./lib/settings";
 import { handleMcp } from "./mcp";
+import { DEMO_ADMIN_EMAIL } from "./lib/demo";
 import { productColumns } from "./lib/product-fields";
 
 interface Env {
@@ -479,7 +480,12 @@ async function findOutOfStock(wanted: Map<string, number>, env: Env): Promise<st
     .map((row) => row.slug);
 }
 
+// LYHOFF is a portfolio project now, so real payments are switched off. Flip
+// this back to true to take orders again.
+const CHECKOUT_ENABLED = false;
+
 async function handleCheckout(request: Request, env: Env): Promise<Response> {
+  if (!CHECKOUT_ENABLED) return json({ error: "demo_checkout_disabled" }, 503);
   if (!env.STRIPE_SECRET_KEY) return json({ error: "not_configured" }, 503);
 
   let items: { slug?: string; quantity?: number }[] = [];
@@ -1242,6 +1248,13 @@ async function getAdminSession(
   }
 
   return { session, isAdmin: (await res.json()) === true, config };
+}
+
+/** Refuses an admin write when the caller is the public demo account. */
+async function demoWriteGuard(request: Request, env: Env): Promise<Response | null> {
+  const session = await getSession(request, env);
+  if (session.user?.email?.toLowerCase() !== DEMO_ADMIN_EMAIL) return null;
+  return jsonWithCookies({ error: "demo_read_only" }, session.setCookies, 403);
 }
 
 async function handleAdminMe(request: Request, env: Env): Promise<Response> {
@@ -2391,6 +2404,11 @@ export default {
         return new Response("Method Not Allowed", { status: 405 });
       }
       return handleReviews(request, env);
+    }
+    // The public demo account may look at every admin screen, never write.
+    if (url.pathname.startsWith("/api/admin/") && request.method !== "GET") {
+      const blocked = await demoWriteGuard(request, env);
+      if (blocked) return blocked;
     }
     if (url.pathname === "/api/admin/me") {
       if (request.method !== "GET") return new Response("Method Not Allowed", { status: 405 });
