@@ -97,7 +97,7 @@ export default async function ShippingReturnsPage({
         <h2>{en ? "Questions" : "Preguntas"}</h2>
         <p>
           {en ? "Email us at " : "Escríbenos a "}
-          <a href="mailto:lyhoffllc.info@gmail.com">lyhoffllc.info@gmail.com</a>
+          <a href="mailto:codebake.SaaS@outlook.com">codebake.SaaS@outlook.com</a>
           {en ? " — a real person (us) will get back to you." : " — te responde una persona real (nosotros)."}
         </p>
       </div>

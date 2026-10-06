@@ -39,10 +39,10 @@ export function Footer({ locale }: { locale: Locale }) {
               {dict.footerTagline}
             </p>
             <a
-              href="mailto:lyhoffllc.info@gmail.com"
+              href="mailto:codebake.SaaS@outlook.com"
               className="mt-3 inline-block text-sm text-stone-400 hover:text-cream transition-colors"
             >
-              lyhoffllc.info@gmail.com
+              codebake.SaaS@outlook.com
             </a>
             <div className="mt-5 flex flex-wrap gap-2">
               {SOCIAL_LINKS.map(({ name, href, Icon }) => (

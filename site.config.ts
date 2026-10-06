@@ -50,7 +50,7 @@ export const site: SiteConfig = {
     en: "Real roots. Nothing to hide.",
     es: "Raíces reales. Nada que esconder.",
   },
-  contactEmail: "lyhoffllc.info@gmail.com",
+  contactEmail: "codebake.SaaS@outlook.com",
   origin: "https://lyhoff.com",
 
   locales: ["en", "es"],

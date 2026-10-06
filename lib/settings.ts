@@ -25,7 +25,7 @@ export const shipping = {
 };
 
 export const business = {
-  email: read("business", "email", "lyhoffllc.info@gmail.com"),
+  email: read("business", "email", "codebake.SaaS@outlook.com"),
   legalName: read("business", "legalName", site.name),
 };
 

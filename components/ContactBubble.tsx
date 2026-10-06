@@ -20,7 +20,7 @@ export function ContactBubble({ locale }: { locale: Locale }) {
               : "Escríbenos directo — te responde una persona real (nosotros), normalmente en un día."}
           </p>
           <a
-            href="mailto:lyhoffllc.info@gmail.com"
+            href="mailto:codebake.SaaS@outlook.com"
             className="mt-3 inline-flex w-full items-center justify-center rounded-sm bg-forest-950 px-4 py-2.5 text-xs font-semibold text-cream hover:bg-forest-800"
           >
             {locale === "en" ? "Email us" : "Escribinos"}

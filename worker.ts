@@ -59,7 +59,7 @@ const WELCOME_CODE = "WELCOME10";
 const RETURNING_CODE = "THANKYOU15";
 const KNOWN_PROMO_CODES = [WELCOME_CODE, RETURNING_CODE];
 const WELCOME_FROM = "LYHOFF <hello@lyhoff.com>";
-const WELCOME_REPLY_TO = "lyhoffllc.info@gmail.com";
+const WELCOME_REPLY_TO = "codebake.SaaS@outlook.com";
 const WELCOME_SITE_URL = "https://lyhoff.com";
 
 // Public-safe defaults (same anon key already shipped in the sibling apps'
