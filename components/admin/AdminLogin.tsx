@@ -17,6 +17,25 @@ export function AdminLogin({ onSignedIn }: { onSignedIn: () => void }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
+  // The public read-only demo account: one click signs in, so nobody has to see or type a password.
+  async function enterDemo() {
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify({ email: DEMO_ADMIN_EMAIL, password: DEMO_ADMIN_PASSWORD }),
+    }).catch(() => null);
+    if (!res?.ok) {
+      setError("The demo is unavailable right now. Please try again in a moment.");
+      setBusy(false);
+      return;
+    }
+    onSignedIn();
+  }
+
   async function submit(event: React.FormEvent) {
     event.preventDefault();
     if (busy) return;
@@ -55,24 +74,12 @@ export function AdminLogin({ onSignedIn }: { onSignedIn: () => void }) {
       <div className="mt-8 border border-stone-200 bg-white p-4 text-[13px] text-stone-600">
         <p className="font-medium text-forest-950">Portfolio demo — look around</p>
         <p className="mt-1">
-          Sign in with the demo account to explore every screen. It is read-only: nothing you do
-          here is saved.
+          One click and you are inside every screen of the admin. It is read-only: nothing you do here is saved, and
+          customer data is hidden.
         </p>
-        <p className="mt-2">
-          <span className="text-stone-500">Email</span> {DEMO_ADMIN_EMAIL}
-          <br />
-          <span className="text-stone-500">Password</span> {DEMO_ADMIN_PASSWORD}
-        </p>
-        <button
-          type="button"
-          onClick={() => {
-            setEmail(DEMO_ADMIN_EMAIL);
-            setPassword(DEMO_ADMIN_PASSWORD);
-          }}
-          className="mt-3 text-[12px] font-medium text-forest-950 underline underline-offset-2"
-        >
-          Fill in the demo account
-        </button>
+        <div className="mt-3">
+          <Button type="button" onClick={enterDemo} disabled={busy}>{busy ? "Opening…" : "Enter the admin demo"}</Button>
+        </div>
       </div>
 
       <form onSubmit={submit} className="mt-4 flex flex-col gap-4 border border-stone-200 bg-white p-6">
