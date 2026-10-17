@@ -1259,10 +1259,31 @@ async function getAdminSession(
   return { session, isAdmin: (await res.json()) === true, config };
 }
 
-/** Refuses an admin write when the caller is the public demo account. */
-async function demoWriteGuard(request: Request, env: Env): Promise<Response | null> {
+/**
+ * What the public demo account may write.
+ *
+ * An employer trying the panel has to be able to actually edit a product and
+ * see it save — a demo where every click ends in "read only" proves nothing.
+ * So this is an allowlist, not a block-everything switch: ordinary catalogue
+ * writes (`/api/admin/collection`, products/pages/settings/reviews/orders)
+ * are plain Postgres rows, invisible to a real customer, because the live
+ * storefront is a static build that only moves on a real Publish — and
+ * Publish is not on this list. Restoring the catalogue is on it too, so any
+ * mess an edit makes is one click from gone.
+ *
+ * Deliberately NOT on this list, because each one reaches a real external
+ * service with its own cost or consequence, independent of whether the
+ * storefront ever rebuilds: Publish (a real GitHub Actions deploy),
+ * Discounts and Refund (real Stripe objects/money), Notify-shipped (a real
+ * email send), Photo (real, uncapped Supabase Storage writes).
+ */
+const DEMO_WRITABLE_PATHS = ["/api/admin/collection", "/api/admin/demo-restore"];
+
+/** Refuses an admin write the public demo account isn't allowed to make. */
+async function demoWriteGuard(request: Request, env: Env, pathname: string): Promise<Response | null> {
   const session = await getSession(request, env);
   if (session.user?.email?.toLowerCase() !== DEMO_ADMIN_EMAIL) return null;
+  if (DEMO_WRITABLE_PATHS.includes(pathname)) return null;
   return jsonWithCookies({ error: "demo_read_only" }, session.setCookies, 403);
 }
 
@@ -2428,9 +2449,10 @@ export default {
       }
       return handleReviews(request, env);
     }
-    // The public demo account may look at every admin screen, never write.
+    // The public demo account may look at every admin screen, and edit the
+    // parts of it that are safe to let a stranger touch -- see the allowlist.
     if (url.pathname.startsWith("/api/admin/") && request.method !== "GET") {
-      const blocked = await demoWriteGuard(request, env);
+      const blocked = await demoWriteGuard(request, env, url.pathname);
       if (blocked) return blocked;
     }
     if (url.pathname === "/api/admin/me") {
