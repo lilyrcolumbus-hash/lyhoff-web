@@ -33,6 +33,10 @@ export interface SiteConfig {
   tagline: Record<string, string>;
   contactEmail: string;
   origin: string;
+  /** The admin's own subdomain. Same Worker, same build, same database as
+   *  `origin` — this only tells the Worker which hostname to treat as the
+   *  admin's root instead of its usual `/admin/` path. */
+  adminOrigin: string;
   locales: string[];
   defaultLocale: string;
   palette: BrandPalette;
@@ -52,6 +56,7 @@ export const site: SiteConfig = {
   },
   contactEmail: "codebake.SaaS@outlook.com",
   origin: "https://lyhoff.com",
+  adminOrigin: "https://admin.lyhoff.com",
 
   locales: ["en", "es"],
   defaultLocale: "en",

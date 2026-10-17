@@ -17,6 +17,9 @@
     // worker.ts ever sees them. fetch()/XHR calls fall through fine, which is
     // why every /api route appeared to work while a link clicked out of an
     // email 404'd. Anything under /api must reach the Worker first.
-    "run_worker_first": ["/api/*"]
+    // "/" is here too, for the same reason: admin.lyhoff.com's root has to be
+    // rewritten to the admin page BEFORE the asset router's own storefront
+    // root-redirect would otherwise answer it first.
+    "run_worker_first": ["/api/*", "/"]
   }
 }

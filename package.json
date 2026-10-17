@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "node scripts/fetch-settings.mjs && node scripts/generate-theme.mjs && node scripts/fetch-products.mjs && node scripts/fetch-pages.mjs && next build && node scripts/postbuild.mjs",
-    "preview": "npx serve out"
+    "preview": "npx serve out",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.worker.json"
   },
   "dependencies": {
     "framer-motion": "^12.42.0",

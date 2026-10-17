@@ -36,6 +36,15 @@ import { shipping as shippingSettings } from "./lib/settings";
 import { handleMcp } from "./mcp";
 import { DEMO_ADMIN_EMAIL } from "./lib/demo";
 import { productColumns } from "./lib/product-fields";
+import { site } from "./site.config";
+
+/**
+ * The admin's own subdomain, same Worker and build as the storefront.
+ *
+ * Computed once at module scope, not per request — this value never changes
+ * while the Worker is running.
+ */
+const ADMIN_HOSTNAME = new URL(site.adminOrigin).hostname;
 
 interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
@@ -2387,6 +2396,20 @@ async function handleStripeWebhook(request: Request, env: Env): Promise<Response
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
+
+    // admin.lyhoff.com is the same Worker, the same build, the same database
+    // as lyhoff.com — it only needs the root path pointed at the already-built
+    // /admin/ page instead of the storefront's. Everything else — /_next/*
+    // chunks, images, /api/* — resolves identically on any hostname this
+    // Worker answers for, so nothing else needs rewriting. Cookies the demo
+    // login sets are host-only (no Domain= attribute), so a session opened
+    // here stays scoped to this subdomain on its own, with no extra code.
+    if (url.hostname === ADMIN_HOSTNAME && url.pathname === "/") {
+      const rewritten = new URL(request.url);
+      rewritten.pathname = "/admin/";
+      return env.ASSETS.fetch(new Request(rewritten, request));
+    }
+
     if (url.pathname === "/api/subscribe") {
       if (request.method !== "POST") {
         return new Response("Method Not Allowed", { status: 405 });

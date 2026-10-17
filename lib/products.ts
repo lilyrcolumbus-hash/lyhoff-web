@@ -77,9 +77,6 @@ export function translateSize(size: string, locale: Locale): string {
     .replace("each", "c/u");
 }
 
-const UNSPLASH = (id: string, w = 800, h = 900) =>
-  `https://images.unsplash.com/photo-${id}?w=${w}&h=${h}&q=90&auto=format&fit=crop`;
-
 // Local image path by slug — drop file in /public/images/products/{slug}.jpg
 // and it auto-replaces the Unsplash placeholder. No code change needed.
 export const localImagePath = (slug: string) => `/images/products/${slug}.jpg`;
