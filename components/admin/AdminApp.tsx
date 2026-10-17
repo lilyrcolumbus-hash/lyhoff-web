@@ -200,9 +200,13 @@ export function AdminApp() {
 
       <main className="min-w-0 px-4 py-6 sm:px-6">
         {email.toLowerCase() === DEMO_ADMIN_EMAIL && (
-          <p className="mb-4 border border-stone-200 bg-white px-4 py-3 text-[13px] text-stone-600">
-            <span className="font-medium text-forest-950">Read-only demo.</span> Explore every screen;
-            saving, publishing and refunds are switched off.
+          <p className="mb-4 flex flex-wrap items-center gap-x-2 gap-y-1 border border-stone-200 bg-white px-4 py-3 text-[13px] text-stone-600">
+            <span>
+              <span className="font-medium text-forest-950">Public demo.</span> Edit a product,
+              page or setting and it really saves — publishing, refunds and anything that costs
+              real money stay switched off.
+            </span>
+            <DemoRestoreButton />
           </p>
         )}
         <PublishBar />
@@ -223,5 +227,42 @@ export function AdminApp() {
         {section === "preferences" && <PreferencesSection />}
       </main>
     </div>
+  );
+}
+
+/**
+ * Puts the demo catalogue back the way it really is, in one click — so
+ * whatever a visitor just tried is never something the next one has to live
+ * with. Only products are restored today; see `handleAdminDemoRestore` in
+ * `worker.ts` for why pages/settings aren't included yet.
+ */
+function DemoRestoreButton() {
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
+
+  async function restore() {
+    if (busy) return;
+    setBusy(true);
+    setMessage("");
+    const res = await fetch("/api/admin/demo-restore", {
+      method: "POST",
+      credentials: "same-origin",
+    }).catch(() => null);
+    setBusy(false);
+    setMessage(res?.ok ? "Back to the real catalogue." : "Couldn't restore it — try again in a moment.");
+  }
+
+  return (
+    <span className="inline-flex shrink-0 items-center gap-2">
+      <button
+        type="button"
+        onClick={restore}
+        disabled={busy}
+        className="text-[12.5px] font-semibold text-indigo-600 underline underline-offset-2 hover:text-forest-950 disabled:opacity-50"
+      >
+        {busy ? "Restoring…" : "Restore demo data"}
+      </button>
+      {message && <span className="text-[12px] text-stone-500">{message}</span>}
+    </span>
   );
 }

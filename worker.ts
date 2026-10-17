@@ -30,7 +30,7 @@
  * collects the full address there, same as every other line item.
  */
 
-import { getProduct } from "./lib/products";
+import { getProduct, products as baselineProducts } from "./lib/products";
 import { FLAT_SHIPPING_CENTS } from "./lib/shipping";
 import { shipping as shippingSettings } from "./lib/settings";
 import { handleMcp } from "./mcp";
@@ -1553,6 +1553,79 @@ async function handleAdminCollection(request: Request, env: Env): Promise<Respon
 }
 
 /**
+ * Puts every product back to the real catalogue, undoing whatever the demo
+ * account has edited.
+ *
+ * The baseline is `lib/products.ts`'s own `products` array — the exact
+ * catalogue the last real Publish built, already bundled into this Worker, so
+ * a separate baseline export was never needed. Only the columns the panel
+ * itself can write are touched (same set `productColumns.editable` names),
+ * with two deliberate exceptions:
+ *
+ * - `reviews` is left alone, on purpose. The generated catalogue's `reviews`
+ *   field is a *merge* of the product's own row with approved
+ *   `review_submissions` (see `scripts/fetch-products.mjs`) — writing it back
+ *   here would inject real customer review text into a column it was never
+ *   written through.
+ * - `position` isn't in the generated file at all (dropped on the way out),
+ *   so it's reconstructed from the array's own order — the same convention
+ *   `ProductsSection.tsx`'s `saveOrder()` already uses.
+ *
+ * Runs as whichever admin calls it, not a service role — Postgres RLS still
+ * decides whether the write is allowed, same as every other admin write.
+ */
+async function handleAdminDemoRestore(request: Request, env: Env): Promise<Response> {
+  const { session, isAdmin, config } = await getAdminSession(request, env);
+  if (!config) return json({ error: "not_configured" }, 503);
+  if (!session.user || !session.accessToken) {
+    return jsonWithCookies({ error: "unauthorized" }, session.setCookies, 401);
+  }
+  if (!isAdmin) return jsonWithCookies({ error: "not_admin" }, session.setCookies, 403);
+
+  // One fixed shape for every row — PostgREST's bulk upsert requires it, and
+  // "absent means null" for the optional fields matches how the generated
+  // catalogue already treats them.
+  const rows = baselineProducts.map((product, index) => ({
+    slug: product.slug,
+    category: product.category,
+    name: product.name,
+    tagline: product.tagline,
+    description: product.description,
+    ingredients: product.ingredients,
+    price: product.price,
+    size: product.size,
+    badge: product.badge ?? null,
+    active: product.active,
+    benefits: product.benefits,
+    how_to_use: product.howToUse,
+    gift: product.gift ?? null,
+    photos: product.photos ?? [],
+    stock: product.stock ?? null,
+    seo: product.seo ?? null,
+    details: null,
+    position: index * 10,
+  }));
+
+  const res = await fetch(`${config.url}/rest/v1/products`, {
+    method: "POST",
+    headers: {
+      apikey: config.key,
+      Authorization: `Bearer ${session.accessToken}`,
+      "Content-Type": "application/json",
+      Prefer: "resolution=merge-duplicates,return=minimal",
+    },
+    body: JSON.stringify(rows),
+  });
+
+  if (!res.ok) {
+    console.error("demo restore failed", res.status, await res.text().catch(() => ""));
+    return jsonWithCookies({ error: "restore_failed" }, session.setCookies, 502);
+  }
+
+  return jsonWithCookies({ ok: true, restored: rows.length }, session.setCookies);
+}
+
+/**
  * Photo upload.
  *
  * The browser never holds a Supabase token — the session is an HttpOnly cookie —
@@ -2484,6 +2557,10 @@ export default {
         return handleAdminPhoto(request, env);
       }
       return new Response("Method Not Allowed", { status: 405 });
+    }
+    if (url.pathname === "/api/admin/demo-restore") {
+      if (request.method !== "POST") return new Response("Method Not Allowed", { status: 405 });
+      return handleAdminDemoRestore(request, env);
     }
     if (url.pathname === "/api/admin/collection") {
       if (request.method === "GET" || request.method === "PATCH" || request.method === "POST") {
