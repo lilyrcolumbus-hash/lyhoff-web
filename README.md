@@ -1,11 +1,13 @@
+<p align="center"><img src="docs/card.png" alt="LYHOFF Store + Admin"></p>
+
 # LYHOFF — Website + Admin
 
-**Live:** [lyhoff.com](https://lyhoff.com)
+**Live (temporary address while the domain is moved):** [lyhoff-web.lilyrcolumbus.workers.dev](https://lyhoff-web.lilyrcolumbus.workers.dev) · **Admin demo:** [/admin](https://lyhoff-web.lilyrcolumbus.workers.dev/admin/) (press "Enter the admin demo": read-only, no password)
 
-A bilingual (EN/ES) e-commerce platform for LYHOFF, a small-batch skincare and home-goods brand —
+A bilingual (EN/ES) e-commerce platform for LYHOFF, a natural products brand with no synthetic chemicals —
 built, owned and operated independently of any third-party platform (no Shopify, no monthly
-platform fee). The storefront takes real payments; the owner runs the entire business herself
-from a self-service admin panel, with no developer in the loop for day-to-day changes.
+platform fee). The storefront has its own Stripe checkout (turned off in the public demo), and the owners run
+the business from a self-service admin panel, with no developer in the loop for day-to-day changes.
 
 **Built as a reusable engine, not a one-off site.** The same codebase — generic storefront,
 generic admin, one config file per brand — has been cloned and stood up for a second, independent
